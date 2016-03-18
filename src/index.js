@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-    render
+  render
 }
 from 'react-dom';
 import App from './containers/app';
 import {
-    Provider
+  Provider
 }
 from 'react-redux';
 import './assets';
@@ -18,8 +18,8 @@ injectTapEventPlugin();
 const store = configureStore();
 
 render(
-    <Provider store={store}>
-		<App />
-	</Provider>,
-    document.getElementById('app')
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app')
 );

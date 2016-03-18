@@ -1,0 +1,43 @@
+.touchIcon {
+  height: 48px;
+  width: 48px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.searchContainer {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  height: 48px;
+  background-color: white;
+  overflow: hidden;
+
+  transition: width .5s;
+
+  &.hidden {
+    width: 0px;
+  }
+
+  &.show {
+    width: 308px;
+  }
+
+  .searchInput {
+    margin-left: 48px;
+    width: 300px;
+  }
+
+  .searchIcon {
+    @extend .touchIcon;
+    position: absolute;
+    left: 0;
+  }
+
+  .clearIcon {
+    @extend .touchIcon;
+    position: absolute;
+    padding-right: 8px;
+    right: 0;
+  }
+}
