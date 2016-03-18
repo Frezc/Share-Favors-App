@@ -126,22 +126,60 @@ function RepositoriesExplorer (props) {
         </div>
         <Divider />
         <Subheader>Recent Updated Items</Subheader>
-        <Table>
-          <TableBody>
+        <Table className="abstractTable">
+          <TableBody
+            displayRowCheckbox={false}
+            selectable={false}>
             <TableRow>
-              <TableRowColumn>4</TableRowColumn>
-              <TableRowColumn>Steve Brown</TableRowColumn>
-              <TableRowColumn>Employed</TableRowColumn>
+              <TableRowColumn
+                style={{ width: 8 }}>
+                <ContentLink
+                  style={styles.columnIcon}
+                  color={Colors.grey900}
+                />
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnName">
+                这是很黄很暴力的链接字数补丁字数补丁字数补丁
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnDate">
+                2016-03-19
+              </TableRowColumn>
             </TableRow>
             <TableRow>
-              <TableRowColumn>4</TableRowColumn>
-              <TableRowColumn>Steve Brown</TableRowColumn>
-              <TableRowColumn>Employed</TableRowColumn>
+              <TableRowColumn
+                style={{ width: 8 }}>
+                <FileFolderShared
+                  style={styles.columnIcon}
+                  color={Colors.grey900}
+                />
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnName">
+                这是其他库
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnDate">
+                2016-03-19
+              </TableRowColumn>
             </TableRow>
             <TableRow>
-              <TableRowColumn>4</TableRowColumn>
-              <TableRowColumn>Steve Brown</TableRowColumn>
-              <TableRowColumn>Employed</TableRowColumn>
+              <TableRowColumn
+                style={{ width: 8 }}>
+                <ContentLink
+                  style={styles.columnIcon}
+                  color={Colors.grey900}
+                />
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnName">
+                依旧是很黄很暴力的链接
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnDate">
+                2016-03-19
+              </TableRowColumn>
             </TableRow>
           </TableBody>
         </Table>
@@ -155,6 +193,10 @@ const styles = {
   subtitleIcon: {
     width: 18, 
     height: 18
+  },
+  columnIcon: {
+    width: 24,
+    height: 24
   }
 }
 
