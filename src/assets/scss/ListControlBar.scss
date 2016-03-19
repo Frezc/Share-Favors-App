@@ -1,6 +1,7 @@
 $darkColor: #e7edf3;
 $lightColor: #e7672e;
 $grey: #7089a9;
+$peekLight: #f36322;
 
 .listControl {
 	position: relative;
@@ -19,11 +20,26 @@ $grey: #7089a9;
 		height: 100%;
 		width: 100%;
 
-		.slider-top {
+		.slider-peek {
 			position: absolute;
-			top: 0;
 			font-size: 8px;
 			color: $grey;
+			cursor: pointer;
+
+			&:hover {
+				color: $peekLight;
+			}
+		}
+
+		.slider-top {
+			@extend .slider-peek;
+			top: 0;
+			
+		}
+
+		.slider-bottom {
+			@extend .slider-peek;
+			bottom: 0;
 		}
 
 		.slider-bar {
@@ -32,6 +48,7 @@ $grey: #7089a9;
 			height: calc(100% - 48px);
 			top: 24px;
 			width: 100%;
+			cursor: pointer;
 			
 			.slider-bar-before {
 				position: absolute;
@@ -80,13 +97,6 @@ $grey: #7089a9;
 				border-left: 1px solid $darkColor;
 				height: 64px;
 			}
-		}
-
-		.slider-bottom {
-			position: absolute;
-			bottom: 0;
-			font-size: 8px;
-			color: $grey;
 		}
 	}
 }
