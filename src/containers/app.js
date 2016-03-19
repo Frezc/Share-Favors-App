@@ -1,25 +1,23 @@
 import React, { PropTypes } from 'react';
 
-import { setNavOpen } from '../actions';
-
 //import your components
 import MaterialDrawer from './MaterialDrawer';
 import MaterialAppBar from './MaterialAppBar';
 import RepositoriesExplorer from './RepositoriesExplorer';
-
+import RepositoryDetail from './RepositoryDetail';
 
 //App Entry
 class App extends React.Component {
   render () {
 
     return (
-    	<div>
+    	<div className="page">
         <MaterialDrawer />
         <div className="content">
           <MaterialAppBar />
 
           <div className="mainContainer">
-            <RepositoriesExplorer />
+            <RepositoryDetail />
           </div>
         </div>
     	</div>

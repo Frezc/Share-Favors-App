@@ -1,7 +1,9 @@
 $linkColor: #4078c0;
 $grey500: #9e9e9e;
+$lightBlue500: #03a9f4;
 
-.repo {
+.repoAbstract {
+	margin: 16px 0 16px 0;
 
 	.repoTitle {
 		display: inline-block;
@@ -74,12 +76,12 @@ $grey500: #9e9e9e;
 	}
 
 	.description {
-		margin-bottom: 24px;
+		margin: 0 8px 24px 8px;
 		font-size: 16px;
 	}
 
 	.tagList {
-		margin-bottom: 24px;
+		margin: 0 8px 24px 8px;
 
 		.tagContainer {
 			display: inline-block;
@@ -102,19 +104,49 @@ $grey500: #9e9e9e;
 			}
 		}
 	}
+}
 
-  .abstractTable {
+@mixin colname {
+	cursor: pointer;
+	font-weight: 500;
 
-    .columnName {
-      color: $linkColor;
-      cursor: pointer;
-      font-weight: 500;
-      width: calc(100% - 56px - 120px);
-    }
-
-    .columnDate {
-      color: $grey500;
-      width: 72px;
-    }
+	a {
+  	text-decoration: none;
+  	color: $linkColor;
   }
+}
+
+@mixin coldate {
+	color: $grey500;
+	width: 72px;
+}
+
+.abstractTable {
+
+	.columnName {
+	  @include colname;
+	  width: calc(100% - 56px - 120px);
+	}
+
+	.columnDate {
+	  @include coldate;
+	}
+}
+
+.repoList {
+	.columnName {
+		@include colname;
+	}
+
+	.columnDate {
+		@include coldate;
+	}
+
+	.columnMore {
+		width: 12px;
+	}
+}
+
+.repoDetail {
+	
 }

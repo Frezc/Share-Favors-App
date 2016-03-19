@@ -4,11 +4,23 @@
 
 	.mainContainer {
 		position: relative;
-		max-width: 760px;
-		min-width: 400px;
 		margin: 0 auto;
 		padding: 8px;
 		top: 64px;
 	}
+	
+	@media (min-width: 1160px) {
+		.mainContainer {
+			max-width: 810px;
+		}
+	}
+
+	@media (max-width: 1160px) {
+		.mainContainer {
+			max-width: 530px;
+			min-width: 400px;
+		}
+	}
+	
 }
 
