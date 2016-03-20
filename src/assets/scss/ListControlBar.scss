@@ -4,99 +4,107 @@ $grey: #7089a9;
 $peekLight: #f36322;
 
 .listControl {
-	position: relative;
-	width: 150px;
-	height: 100%;
-	max-height: 500px;
-	min-height: 200px;
+  position: relative;
+  width: 150px;
+  height: 100%;
+  max-height: 500px;
+  min-height: 200px;
 
-	font-size: 13px;
-	color: #111;
-	line-height: 1.5;
-	text-align: left;
-	list-style: none;
+  font-size: 13px;
+  color: #111;
+  line-height: 1.5;
+  text-align: left;
+  list-style: none;
 
-	.slider {
-		position: absolute;
-		height: 100%;
-		width: 100%;
+  .slider {
+    position: absolute;
+    height: 100%;
+    width: 100%;
 
-		.slider-peek {
-			position: absolute;
-			font-size: 8px;
-			color: $grey;
-			cursor: pointer;
+    .slider-peek {
+      position: absolute;
+      font-size: 8px;
+      color: $grey;
+      cursor: pointer;
 
-			&:hover {
-				color: $peekLight;
-			}
-		}
+      &:hover {
+        color: $peekLight;
+      }
+    }
 
-		.slider-top {
-			@extend .slider-peek;
-			top: 0;
-			
-		}
+    .slider-top {
+      @extend .slider-peek;
+      top: 0;
+      
+    }
 
-		.slider-bottom {
-			@extend .slider-peek;
-			bottom: 0;
-		}
+    .slider-bottom {
+      @extend .slider-peek;
+      bottom: 0;
+    }
 
-		.slider-bar {
-			box-sizing: border-box;
-			position: absolute;
-			height: calc(100% - 88px);
-			top: 24px;
-			width: 100%;
-			cursor: pointer;
-			
-			.slider-bar-before {
-				position: absolute;
-				top: 0;
-				border-left: 1px solid $darkColor;
-			}
+    .slider-bar-container {
+      height: calc(100% - 48px);
+      position: absolute;
+      box-sizing: border-box;
+      top: 24px;
+      width: 100%;
+      cursor: pointer;
+
+      .slider-bar {
+        position: absolute;
+        height: calc(100% - 40px);
+        top: 0;
+        width: 100%;
+        
+        .slider-bar-before {
+          position: absolute;
+          top: 0;
+          border-left: 1px solid $darkColor;
+        }
 
 
-			.slider-bar-after {
-				position: absolute;
-				bottom: -40px;
-				border-left: 1px solid $darkColor;
-			}
+        .slider-bar-after {
+          position: absolute;
+          bottom: -40px;
+          border-left: 1px solid $darkColor;
+        }
 
-			.slider-bar-handle {
-				position: absolute;
-				top: 100%;
-				width: 100%;
-				height: 40px;
-				cursor: move;
+        .slider-bar-handle {
+          position: absolute;
+          top: 100%;
+          width: 100%;
+          height: 40px;
+          cursor: move;
 
-				.slider-bar {
-					position: absolute;
-					top: 0;
-					height: 100%;
-					width: 5px;
-					background-color: $lightColor;
-					border-radius: 4px;
-					margin-left: -2px;
-				}
+          .slider-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background-color: $lightColor;
+            border-radius: 4px;
+            margin-left: -2px;
+          }
 
-				.slider-info {
-					position: absolute;
-					width: 100%;
-					left: 15px;
-					top: 50%;
-					margin-top: -1.5em;
+          .slider-info {
+            position: absolute;
+            width: 100%;
+            left: 15px;
+            top: 50%;
+            margin-top: -1.5em;
 
-					.slider-index {
-						
-					}
+            .slider-index {
+              
+            }
 
-					.slider-description {
-						color: $grey;
-					}
-				}
-			}
-		}
-	}
+            .slider-description {
+              color: $grey;
+            }
+          }
+        }
+      }
+
+    }
+  }
 }

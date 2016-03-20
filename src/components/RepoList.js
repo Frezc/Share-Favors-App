@@ -56,6 +56,7 @@ function RepoList (props) {
         style={{ right: 16, top: '30%' }}
         index={80}
         sum={100}
+        description={'This is Repos'}
       />
       <Card>
         <CardText>
