@@ -54,9 +54,10 @@ function RepoList (props) {
     <div className="repoList">
       <ListControlBar
         style={{ right: 16, top: '30%' }}
-        index={80}
+        index={20}
         sum={100}
         description={'This is Repos'}
+        onChange={item => console.log(item)}
       />
       <Card>
         <CardText>

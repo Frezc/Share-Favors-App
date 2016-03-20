@@ -29,10 +29,21 @@ class ListControlBar extends React.Component {
     return false;
   }
 
-  render () {
-    let { style, description } = this.props;
+  getItemLocation (offsetY) {
+    const { index, sum } = this.validNumber(this.props);
 
-    let { index, sum } = this.validNumber(this.props);
+    const handleHeight = this.refs.handleArea.offsetHeight;
+    let offsetItem = Math.floor(offsetY / handleHeight * sum);
+
+    return index + offsetItem;
+  }
+
+  render () {
+    let { style, description, onChange } = this.props;
+
+    const { index, sum } = this.validNumber(this.props);
+
+    let zeroIndex = index - 1;
 
     return (
       <div 
@@ -41,9 +52,15 @@ class ListControlBar extends React.Component {
       >
         <div className="listControl">
           <div className="slider">
-            <div className="slider-top">Top</div>
+            <div 
+              className="slider-top"
+              onClick={e => onChange(0)}
+            >Top</div>
             <div className="slider-bar-container">
-              <div className="slider-bar">
+              <div 
+                className="slider-bar"
+                ref="handleArea"
+              >
                 <div 
                   className="slider-bar-before"
                   style={{ height: this.generateHeightCSS(index / sum) }}  
@@ -53,14 +70,13 @@ class ListControlBar extends React.Component {
                   style={{ top: this.generatePercent(index / sum) }}
                   onMouseDown={e => {
                     e.preventDefault();
-                    console.log(e.clientY);
                     this.lastLocation = e.clientY;
                     this.isDragging = true;
                   }}
                   onMouseMove={e => {
                     e.preventDefault();
                     if (this.isDragging) {
-                      console.log(e.clientY - this.lastLocation);
+                      onChange(this.getItemLocation(e.clientY - this.lastLocation));
                       this.lastLocation = e.clientY;
                     }
                   }}
@@ -89,7 +105,10 @@ class ListControlBar extends React.Component {
                 ></div>
               </div>
             </div>
-            <div className="slider-bottom">Last</div>
+            <div 
+              className="slider-bottom"
+              onClick={e => onChange(sum)}
+            >Last</div>
           </div>
         </div>
       </div>
@@ -113,7 +132,8 @@ ListControlBar.defaultProps = {
 const styles = {
   controlBar: {
     position: 'fixed',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    height: '40%'
   }
 };
 
