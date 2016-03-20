@@ -3,150 +3,164 @@ $grey500: #9e9e9e;
 $lightBlue500: #03a9f4;
 
 .repoAbstract {
-	margin: 16px 0 16px 0;
+  margin: 16px 0 16px 0;
 
-	.repoTitle {
-		display: inline-block;
-		font-size: 20px;
-		color: $linkColor;
+  .repoTitle {
+    display: inline-block;
+    font-size: 20px;
+    color: $linkColor;
 
-		a {
-			text-decoration: none;
-			cursor: pointer;
+    a {
+      text-decoration: none;
+      cursor: pointer;
 
-			&:hover {
-				color: lighten($linkColor, 10%);
-			}
-		}
-	}
+      &:hover {
+        color: lighten($linkColor, 10%);
+      }
+    }
+  }
 
-	.repoSubTitle {
-		margin-top: 2px;
-		position: relative;
-		font-size: 16px;
-		color: $grey500;
+  .repoSubTitle {
+    margin-top: 2px;
+    position: relative;
+    font-size: 16px;
+    color: $grey500;
 
-		@mixin subtitleIcon ($count) {
-			position: relative;
-			top: 3px;
-			left: 16px * $count;
-		}
+    @mixin subtitleIcon ($count) {
+      position: relative;
+      top: 3px;
+      left: 16px * $count;
+    }
 
-		@mixin subtitleText ($count) {
-			position: relative;
-			left: 16px * $count + 6px;
-		}
+    @mixin subtitleText ($count) {
+      position: relative;
+      left: 16px * $count + 6px;
+    }
 
-		.starIcon {
-			@include subtitleIcon (0);
-			margin-right: 3px;
-		}
+    .starIcon {
+      @include subtitleIcon (0);
+      margin-right: 3px;
+    }
 
-		.visibilityIcon {
-			@include subtitleIcon (1);
-		}
+    .visibilityIcon {
+      @include subtitleIcon (1);
+    }
 
-		.dateIcon {
-			@include subtitleIcon (2);
-		}
+    .dateIcon {
+      @include subtitleIcon (2);
+    }
 
-		.linkIcon {
-			@include subtitleIcon (3);
-		}
+    .linkIcon {
+      @include subtitleIcon (3);
+    }
 
-		.folderIcon {
-			@include subtitleIcon (4);
-		}
+    .folderIcon {
+      @include subtitleIcon (4);
+    }
 
-		.starText {
-			@include subtitleText (0);
-		}
+    .starText {
+      @include subtitleText (0);
+    }
 
-		.dateText {
-			@include subtitleText (2);
-		}
+    .dateText {
+      @include subtitleText (2);
+    }
 
-		.linkText {
-			@include subtitleText (3);
-		}
+    .linkText {
+      @include subtitleText (3);
+    }
 
-		.folderText {
-			@include subtitleText (4);
-		}
-	}
+    .folderText {
+      @include subtitleText (4);
+    }
+  }
 
-	.description {
-		margin: 0 8px 24px 8px;
-		font-size: 16px;
-	}
+  .description {
+    margin: 0 8px 24px 8px;
+    font-size: 16px;
+  }
 
-	.tagList {
-		margin: 0 8px 24px 8px;
+  .tagList {
+    margin: 0 8px 24px 8px;
 
-		.tagContainer {
-			display: inline-block;
-			position: relative;
-			margin-right: 8px;
-			margin-bottom: 4px;
-			height: 16px;
+    .tagContainer {
+      display: inline-block;
+      position: relative;
+      margin-right: 8px;
+      margin-bottom: 4px;
+      height: 16px;
 
-			.tagText {
-				position: relative;
-				top: -4px;
-				left: 2px;
-				color: $grey500;
-				font-size: 12px;
-				cursor: pointer;
+      .tagText {
+        position: relative;
+        top: -4px;
+        left: 2px;
+        color: $grey500;
+        font-size: 12px;
+        cursor: pointer;
 
-				&:hover {
-					color: lighten($grey500, 10%);
-				}
-			}
-		}
-	}
+        &:hover {
+          color: lighten($grey500, 10%);
+        }
+      }
+    }
+  }
 }
 
 @mixin colname {
-	cursor: pointer;
-	font-weight: 500;
+  cursor: pointer;
+  font-weight: 500;
 
-	a {
-  	text-decoration: none;
-  	color: $linkColor;
+  a {
+    text-decoration: none;
+    color: $linkColor;
   }
 }
 
 @mixin coldate {
-	color: $grey500;
-	width: 72px;
+  color: $grey500;
+  width: 72px;
 }
 
 .abstractTable {
 
-	.columnName {
-	  @include colname;
-	  width: calc(100% - 56px - 120px);
-	}
+  .columnName {
+    @include colname;
+    width: calc(100% - 56px - 120px);
+  }
 
-	.columnDate {
-	  @include coldate;
-	}
+  .columnDate {
+    @include coldate;
+  }
 }
 
 .repoList {
-	.columnName {
-		@include colname;
-	}
+  .columnName {
+    @include colname;
+  }
 
-	.columnDate {
-		@include coldate;
-	}
+  .columnDate {
+    @include coldate;
+  }
 
-	.columnMore {
-		width: 12px;
-	}
+  .columnMore {
+    width: 12px;
+  }
 }
 
 .repoDetail {
-	
+  @media (min-width: 1160px) {
+    .listControler {
+      left: calc(50% + 450px);
+    }
+  }
+  
+  @media (max-width: 1160px) {
+    .listControler {
+      left: calc(50% + 300px);
+    }
+  }
+
+  .listControler {
+    top: 30%;
+  }
 }

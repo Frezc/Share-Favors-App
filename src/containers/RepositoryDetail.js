@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import RepositoryAbstract from '../components/RepositoryAbstract';
 import RepoList from '../components/RepoList';
-
+import ListControlBar from '../components/ListControlBar';
 
 function RepositoryDetail (props) {
 
@@ -17,6 +17,12 @@ function RepositoryDetail (props) {
         actions={actions}
       />
       <RepoList />
+      <ListControlBar
+        className="listControler"
+        index={20}
+        sum={100}
+        description={'This is Repos'}
+      />
     </div>
   );
 }

@@ -12,7 +12,6 @@ import FileFolderShared from 'material-ui/lib/svg-icons/file/folder-shared';
 import ContentLink from 'material-ui/lib/svg-icons/content/link';
 import NavigationMoreVert from 'material-ui/lib/svg-icons/navigation/more-vert';
 import * as Colors from 'material-ui/lib/styles/colors';
-import ListControlBar from './ListControlBar';
 
 function renderRows () {
   let arr = [];
@@ -52,13 +51,6 @@ function RepoList (props) {
 
   return (
     <div className="repoList">
-      <ListControlBar
-        style={{ right: 16, top: '30%' }}
-        index={20}
-        sum={100}
-        description={'This is Repos'}
-        onChange={item => console.log(item)}
-      />
       <Card>
         <CardText>
           <Table
