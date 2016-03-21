@@ -15,7 +15,7 @@ class ListControlBar extends React.Component {
 
   validNumber (index, sum) {
     sum = Math.max(1, sum);
-    index = Math.min(Math.max(1, index), sum);
+    index = Math.min(Math.max(index, 1), sum);
     return { index, sum };
   }
 
@@ -40,44 +40,63 @@ class ListControlBar extends React.Component {
     return false;
   }
 
-  getItemLocation (offsetY) {
-    const { index, sum } = this.validNumber(this.state.showIndex, this.props.sum);
+  // get length of handle bar. min: 15%.
+  getHandlerLength() {
+    const { offsetHeight } = this.refs.handler;
 
-    const handleHeight = this.refs.handleArea.offsetHeight;
-    let offsetItem = Math.floor(offsetY / handleHeight * sum);
-    return index + offsetItem;
+    return offsetHeight;
+  }
+
+  generateHandlerLengthStyle () {
+    const { sum } = this.props;
+
+    let length = this.generatePercent(Math.max(1.0 / sum, 0.15));
+    return length;
   }
 
   // offsetTop -> index
   getItemIndex (offsetTop) {
-    const { handleArea } = this.refs;
+    const { handleBarContainer } = this.refs;
     const { sum } = this.props;
-    
-    return Math.floor(offsetTop / handleArea.offsetHeight * (sum - 1)) + 1;
+
+    let index = Math.ceil(offsetTop / ((handleBarContainer.offsetHeight - this.getHandlerLength()) / sum));
+    if (index == 0) index = 1;
+    return index;
+    // return Math.floor(offsetTop / handleBarContainer.offsetHeight * (sum - 1)) + 1;
   }
 
   getOffsetTop (offsetY) {
     const { offsetTop } = this.state;
-    const { handleArea } = this.refs;
+    const { handleBarContainer } = this.refs;
     let newOffsetTop = offsetTop + offsetY;
 
-    return Math.max(Math.min(newOffsetTop, handleArea.offsetHeight), 0);
+    return Math.max(Math.min(newOffsetTop, handleBarContainer.offsetHeight - this.getHandlerLength()), 0);
   }
 
   // index -> offsetTop
   pinToLocation (index) {
+    console.log('pin to', index)
+
     const { sum } = this.props;
-    const { handleArea } = this.refs;
+    const { handleBarContainer } = this.refs;
 
     // play transition
     this.setState({ showTransition: true });
 
-    let offsetTop = handleArea.offsetHeight * (index - 1) / (sum - 1);
-    this.setState({
-      showIndex: index,
-      offsetTop: offsetTop,
-      isDragging: false
-    })
+    if (sum === 1) {
+      this.setState({
+        isDragging: false
+      });
+    } else {
+
+      let offsetTop = (handleBarContainer.offsetHeight - this.getHandlerLength()) 
+        * (index - 1) / (sum - 1);
+      this.setState({
+        showIndex: index,
+        offsetTop: offsetTop,
+        isDragging: false
+      });
+    }
   }
 
   // fix transition bug
@@ -97,8 +116,12 @@ class ListControlBar extends React.Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    //
+  }
+
   render () {
-    let { style, description, onDragChange, onDoneChange, className } = this.props;
+    let { description, onDragChange, onDoneChange, className } = this.props;
 
     const { index, sum } = this.validNumber(this.state.showIndex, this.props.sum);
 
@@ -106,10 +129,15 @@ class ListControlBar extends React.Component {
       <div>
         <div 
           className={this.getEventHandlerClassName()}
+          onMouseDown={e => {
+            // 防止出现一直拖动的bug
+            if (this.state.isDragging) {
+              this.setState({ isDragging: false });
+            }
+          }}
           onMouseMove={e => {
             if (this.state.isDragging) {
               console.log('onMouseMove')
-              // let newIndex = this.getItemLocation(e.clientY - this.lastLocation);
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               let newIndex = this.getItemIndex(offsetTop);
               onDragChange && onDragChange(newIndex);
@@ -130,7 +158,7 @@ class ListControlBar extends React.Component {
         ></div>
         <div
           className={className}
-          style={Object.assign(style, styles.controlBar)}
+          style={styles.controlBar}
           ref="container"
         >
           <div className="listControl">
@@ -144,50 +172,47 @@ class ListControlBar extends React.Component {
               >Top</div>
               <div 
                 className="slider-bar-container"
+                ref="handleBarContainer"
                 onClick={e => {
                   const { offsetTop } = this.refs.container;
-                  const { offsetHeight } = this.refs.handleArea;
+                  const { offsetHeight } = this.refs.handleBarContainer;
                   let offsetY = e.clientY - offsetTop - 24;
-                  // 完善区间判断
-                  this.pinToLocation(this.getItemIndex(() % offsetHeight));
+                  offsetY = Math.min(Math.max(offsetY, 0), offsetHeight - this.getHandlerLength());
+                  this.pinToLocation(this.getItemIndex(offsetY));
                 }}
               >
                 <div 
-                  className="slider-bar"
-                  ref="handleArea"
+                  className="slider-bar-before"
+                  style={{ height: this.state.offsetTop - 4 }}  
+                ></div>
+                <div
+                  className="slider-bar-handle"
+                  style={{ 
+                    top: this.state.offsetTop,
+                    height: this.generateHandlerLengthStyle(),
+                    transition: this.getTransition()
+                  }}
+                  ref="handler"
+                  onMouseDown={e => {
+                    console.log('onMouseDown')
+                    this.setState({ showTransition: false });
+                    this.lastLocation = e.clientY;
+                    this.setState({ isDragging: true });
+                  }}
                 >
-                  <div 
-                    className="slider-bar-before"
-                    style={{ height: this.state.offsetTop - 4 }}  
-                  ></div>
-                  <div
-                    className="slider-bar-handle"
-                    style={{ 
-                      top: this.state.offsetTop,
-                      transition: this.getTransition()
-                    }}
-                    ref="handler"
-                    onMouseDown={e => {
-                      console.log('onMouseDown')
-                      this.setState({ showTransition: false });
-                      this.lastLocation = e.clientY;
-                      this.setState({ isDragging: true });
-                    }}
-                  >
-                    <div className="slider-bar">
-                    </div>
-                    <div className="slider-info">
-                      <strong>
-                        <div className="slider-index">{index} of {sum} items</div>
-                      </strong>
-                      <div className="slider-description">{description}</div>
-                    </div>
+                  <div className="slider-bar">
                   </div>
-                  <div 
-                    className="slider-bar-after"
-                    style={{ height: `calc(100% - ${this.state.offsetTop + 4}px)` }}
-                  ></div>
+                  <div className="slider-info">
+                    <strong>
+                      <div className="slider-index">{index} of {sum} items</div>
+                    </strong>
+                    <div className="slider-description">{description}</div>
+                  </div>
                 </div>
+                <div 
+                  className="slider-bar-after"
+                  style={{ height: `calc(${this.generatePercent(1.0 - Math.max(1.0 / sum, 0.15))} - ${this.state.offsetTop + 12}px)` }}
+                ></div>
               </div>
               <div 
                 className="slider-bottom"
@@ -205,7 +230,6 @@ class ListControlBar extends React.Component {
 }
 
 ListControlBar.propTypes = {
-  style: PropTypes.object,
   className: PropTypes.string,
   index: PropTypes.number.isRequired,
   sum: PropTypes.number.isRequired,
@@ -215,7 +239,6 @@ ListControlBar.propTypes = {
 };
 
 ListControlBar.defaultProps = {
-  style: {},
   className: '',
   description: '0%'
 };

@@ -19,7 +19,6 @@ function RepositoryDetail (props) {
       <RepoList />
       <ListControlBar
         className="listControler"
-        index={20}
         sum={100}
         description={'This is Repos'}
       />

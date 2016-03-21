@@ -7,7 +7,7 @@ $peekLight: #f36322;
   position: relative;
   width: 150px;
   height: 100%;
-  max-height: 500px;
+  max-height: 400px;
   min-height: 200px;
 
   font-size: 13px;
@@ -51,57 +51,50 @@ $peekLight: #f36322;
       width: 100%;
       cursor: pointer;
 
-      .slider-bar {
+      .slider-bar-before {
         position: absolute;
-        height: calc(100% - 40px);
         top: 0;
-        width: 100%;
+        border-left: 1px solid $darkColor;
+      }
 
-        .slider-bar-before {
+
+      .slider-bar-after {
+        position: absolute;
+        bottom: 0;
+        border-left: 1px solid $darkColor;
+      }
+
+      .slider-bar-handle {
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        min-height: 40px;
+        cursor: move;
+        z-index: 1;
+
+        .slider-bar {
           position: absolute;
           top: 0;
-          border-left: 1px solid $darkColor;
+          height: 100%;
+          width: 5px;
+          background-color: $lightColor;
+          border-radius: 4px;
+          margin-left: -2px;
         }
 
-
-        .slider-bar-after {
+        .slider-info {
           position: absolute;
-          bottom: -40px;
-          border-left: 1px solid $darkColor;
-        }
-
-        .slider-bar-handle {
-          position: absolute;
-          top: 100%;
           width: 100%;
-          height: 40px;
-          cursor: move;
-          z-index: 1;
+          left: 15px;
+          top: 50%;
+          margin-top: -1.5em;
 
-          .slider-bar {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 5px;
-            background-color: $lightColor;
-            border-radius: 4px;
-            margin-left: -2px;
+          .slider-index {
+            
           }
 
-          .slider-info {
-            position: absolute;
-            width: 100%;
-            left: 15px;
-            top: 50%;
-            margin-top: -1.5em;
-
-            .slider-index {
-              
-            }
-
-            .slider-description {
-              color: $grey;
-            }
+          .slider-description {
+            color: $grey;
           }
         }
       }
