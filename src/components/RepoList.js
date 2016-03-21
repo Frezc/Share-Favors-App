@@ -15,7 +15,7 @@ import * as Colors from 'material-ui/lib/styles/colors';
 
 function renderRows () {
   let arr = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 98; i++) {
     arr.push(
       <TableRow key={i}>
         <TableRowColumn
@@ -27,7 +27,7 @@ function renderRows () {
         </TableRowColumn>
         <TableRowColumn
           className="columnName">
-          <a href="#">这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
+          <a href="#">{'index: ' + (i+1)} 这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
         </TableRowColumn>
         <TableRowColumn
           className="columnDate">
@@ -48,9 +48,15 @@ function renderRows () {
 }
 
 function RepoList (props) {
+  const { rootRef } = props;
 
   return (
-    <div className="repoList">
+    <div 
+      className="repoList"
+      ref={ref => {
+        rootRef && rootRef(ref);
+      }}
+    >
       <Card>
         <CardText>
           <Table
@@ -144,6 +150,10 @@ function RepoList (props) {
     </div>
   );
 }
+
+RepoList.propTypes = {
+  rootRef: PropTypes.func
+};
 
 const styles = {
   subtitleIcon: {

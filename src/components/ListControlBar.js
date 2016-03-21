@@ -74,14 +74,14 @@ class ListControlBar extends React.Component {
   }
 
   // index -> offsetTop
-  pinToLocation (index) {
+  pinToLocation (index, transition = true) {
     console.log('pin to', index)
 
     const { sum } = this.props;
     const { handleBarContainer } = this.refs;
 
     // play transition
-    this.setState({ showTransition: true });
+    this.setState({ showTransition: transition });
 
     if (sum === 1) {
       this.setState({
@@ -117,11 +117,11 @@ class ListControlBar extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    //
+    this.pinToLocation(props.index, false);
   }
 
   render () {
-    let { description, onDragChange, onDoneChange, className } = this.props;
+    let { description, onDragChange, onDragDoneChange, onDoneChange, className } = this.props;
 
     const { index, sum } = this.validNumber(this.state.showIndex, this.props.sum);
 
@@ -151,8 +151,8 @@ class ListControlBar extends React.Component {
           onMouseUp={e => {
             if (this.state.isDragging) {
               console.log('onMouseUp')
-              this.pinToLocation(this.state.showIndex);
-              onDoneChange && onDoneChange(index);
+              this.pinToLocation(index, false);
+              onDragDoneChange && onDragDoneChange(index);
             }
           }}
         ></div>
@@ -178,7 +178,9 @@ class ListControlBar extends React.Component {
                   const { offsetHeight } = this.refs.handleBarContainer;
                   let offsetY = e.clientY - offsetTop - 24;
                   offsetY = Math.min(Math.max(offsetY, 0), offsetHeight - this.getHandlerLength());
-                  this.pinToLocation(this.getItemIndex(offsetY));
+                  let newIndex = this.getItemIndex(offsetY);
+                  this.pinToLocation(newIndex);
+                  onDoneChange && onDoneChange(newIndex);
                 }}
               >
                 <div 
@@ -235,6 +237,7 @@ ListControlBar.propTypes = {
   sum: PropTypes.number.isRequired,
   description: PropTypes.string,
   onDragChange: PropTypes.func,
+  onDragDoneChange: PropTypes.func,
   onDoneChange: PropTypes.func
 };
 

@@ -3,27 +3,84 @@ import RepositoryAbstract from '../components/RepositoryAbstract';
 import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
 
-function RepositoryDetail (props) {
+class RepositoryDetail extends React.Component {
 
-  const actions = [{
-    label: 'Star'
-  }, {
-    label: 'Edit'
-  }];
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="repoDetail">
-      <RepositoryAbstract
-        actions={actions}
-      />
-      <RepoList />
-      <ListControlBar
-        className="listControler"
-        sum={100}
-        description={'This is Repos'}
-      />
-    </div>
-  );
+    this.state = {
+      index: 1
+    }
+
+    this.scrollListener = () => {
+      let index = (window.scrollY + window.innerHeight - this.repoList.offsetTop - 64 - 72) / 49;
+      index = Math.floor(index);
+      if (index != this.state.index) {
+        this.setState({ index: index });
+      }
+    }
+
+    this.onDoneChange = index => {
+      let scrollOffset = this.repoList.offsetTop + 64 + 72 + 49 * index - window.innerHeight;
+      const scrollStep = (scrollOffset - window.scrollY) / 10;
+      let step = 0;
+
+      window.clearInterval(this.timer);
+      this.timer = window.setInterval(() => {
+        window.scrollBy(0, scrollStep);
+        step++;
+        if (step >= 10) {
+          window.clearInterval(this.timer);
+        }
+      }, 17);
+    };
+  }
+
+  componentDidMount () {
+    window.addEventListener('scroll', this.scrollListener);
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.scrollListener);
+  }
+
+  render () {
+
+    const actions = [{
+      label: 'Star'
+    }, {
+      label: 'Edit'
+    }];
+
+    
+
+    return (
+      <div 
+        className="repoDetail"
+      >
+        <RepositoryAbstract
+          actions={actions}
+        />
+        <RepoList
+          rootRef={ref => {
+            this.repoList = ref;
+          }}
+        />
+        <ListControlBar
+          className="listControler"
+          index={this.state.index}
+          sum={100}
+          description={'This is Repos'}
+          onDragChange={index => {
+            // let scrollOffset = this.repoList.offsetTop + 64 + 72 + 49 * index - window.innerHeight;
+            // window.scrollTo(0, scrollOffset);
+          }}
+          onDragDoneChange={this.onDoneChange}
+          onDoneChange={this.onDoneChange}
+        />
+      </div>
+    );
+  }
 }
 
 const styles = {

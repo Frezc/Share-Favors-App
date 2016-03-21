@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var autoprefixer = require('autoprefixer');
 
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR = path.resolve(__dirname, 'src');
@@ -26,8 +27,8 @@ module.exports = {
 			include: APP_DIR,
 			loader: 'babel'
 		},{
-			test: /\.scss$/,
-			loaders: ['style', 'css', 'sass'],
+			test: /\.(scss|css)$/,
+			loaders: ['style', 'css', 'postcss', 'sass'],
 			include: APP_DIR
 		},{
 			test: /\.(svg|woff([\?]?.*)|ttf([\?]?.*)|eot([\?]?.*)|svg([\?]?.*))$/i,
@@ -37,6 +38,7 @@ module.exports = {
         loader: 'url?limit=40000'
     }]
 	},
+	postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
 
 	plugins: [
 		/** enable in production
