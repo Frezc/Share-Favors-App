@@ -75,7 +75,7 @@ class ListControlBar extends React.Component {
 
   // index -> offsetTop
   pinToLocation (index, transition = true) {
-    console.log('pin to', index)
+    // console.log('pin to', index)
 
     const { sum } = this.props;
     const { handleBarContainer } = this.refs;

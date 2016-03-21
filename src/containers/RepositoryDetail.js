@@ -12,11 +12,17 @@ class RepositoryDetail extends React.Component {
       index: 1
     }
 
+    // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
+    this.activeScrollListener = true;
+
     this.scrollListener = () => {
-      let index = (window.scrollY + window.innerHeight - this.repoList.offsetTop - 64 - 72) / 49;
-      index = Math.floor(index);
-      if (index != this.state.index) {
-        this.setState({ index: index });
+      console.log('scroll', window.scrollY)
+      if (this.activeScrollListener) {
+        let index = (window.scrollY + window.innerHeight - this.repoList.offsetTop - 64 - 72) / 49;
+        index = Math.floor(index);
+        if (index != this.state.index) {
+          this.setState({ index: index });
+        }
       }
     }
 
@@ -26,11 +32,14 @@ class RepositoryDetail extends React.Component {
       let step = 0;
 
       window.clearInterval(this.timer);
+      this.activeScrollListener = false;
       this.timer = window.setInterval(() => {
-        window.scrollBy(0, scrollStep);
         step++;
-        if (step >= 10) {
+        if (step > 10) {
           window.clearInterval(this.timer);
+          this.activeScrollListener = true;
+        } else {
+          window.scrollBy(0, scrollStep);
         }
       }, 17);
     };
