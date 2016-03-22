@@ -66,9 +66,8 @@ $peekLight: #f36322;
 
       .slider-bar-handle {
         position: absolute;
-        top: 100%;
+        top: 0;
         width: 100%;
-        min-height: 40px;
         cursor: move;
         z-index: 1;
 

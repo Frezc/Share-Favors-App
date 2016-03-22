@@ -193,7 +193,7 @@ function RepositoryAbstract (props) {
               <FlatButton 
                   key={action.label} 
                   label={action.label} 
-                  onClick={action.onClick}
+                  onTouchTap={action.onTap}
                   primary={i % 2 == 0}
                   secondary={i % 2 == 1}
               />
@@ -208,7 +208,7 @@ function RepositoryAbstract (props) {
 RepositoryAbstract.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
-    onClick: PropTypes.func
+    onTap: PropTypes.func
   }))
 };
 

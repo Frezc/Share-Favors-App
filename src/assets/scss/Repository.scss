@@ -149,18 +149,26 @@ $lightBlue500: #03a9f4;
 
 .repoDetail {
   @media (min-width: 1160px) {
-    .listControler {
+    .listController {
       left: calc(50% + 450px);
+      visibility: visible;
     }
   }
   
   @media (max-width: 1160px) {
-    .listControler {
+    .listController {
       left: calc(50% + 300px);
+      visibility: visible;
     }
   }
 
-  .listControler {
+  @media (max-width: 800px) {
+    .listController {
+      visibility: hidden;
+    }
+  }
+
+  .listController {
     top: 30%;
   }
 }
