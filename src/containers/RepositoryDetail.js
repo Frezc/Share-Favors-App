@@ -9,7 +9,8 @@ class RepositoryDetail extends React.Component {
     super(props);
 
     this.state = {
-      index: 1
+      index: 1,
+      percent: 0
     }
 
     // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
@@ -78,14 +79,17 @@ class RepositoryDetail extends React.Component {
         <ListControlBar
           className="listControler"
           index={this.state.index}
+          percent={this.state.percent}
           sum={100}
           description={'This is Repos'}
           onDragChange={index => {
             // let scrollOffset = this.repoList.offsetTop + 64 + 72 + 49 * index - window.innerHeight;
             // window.scrollTo(0, scrollOffset);
           }}
-          onDragDoneChange={this.onDoneChange}
-          onDoneChange={this.onDoneChange}
+          onDoneChange={percent => {
+            console.log(percent);
+            this.setState({ percent: percent })
+          }}
         />
       </div>
     );

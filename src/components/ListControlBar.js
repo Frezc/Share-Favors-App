@@ -19,7 +19,7 @@ class ListControlBar extends React.Component {
     return { index, sum };
   }
 
-  generatePercent (number) {
+  generatePercentString (number) {
     return number * 100 + '%';
   }
 
@@ -40,17 +40,18 @@ class ListControlBar extends React.Component {
     return false;
   }
 
-  // get length of handle bar. min: 15%.
+  // get length of handler on px;
   getHandlerLength() {
     const { offsetHeight } = this.refs.handler;
 
     return offsetHeight;
   }
 
+  // get length of handle bar. min: 15%.
   generateHandlerLengthStyle () {
     const { sum } = this.props;
 
-    let length = this.generatePercent(Math.max(1.0 / sum, 0.15));
+    let length = this.generatePercentString(Math.max(1.0 / sum, 0.15));
     return length;
   }
 
@@ -73,7 +74,32 @@ class ListControlBar extends React.Component {
     return Math.max(Math.min(newOffsetTop, handleBarContainer.offsetHeight - this.getHandlerLength()), 0);
   }
 
+  // offsetTop -> percent
+  getPercentFromOffsetTop (offsetTop) {
+    const { handleBarContainer } = this.refs;
+
+    return offsetTop / (handleBarContainer.offsetHeight - this.getHandlerLength());
+  }
+
+  // props.percent -> offsetTop(percent) of handler
+  getPercentTopFromPercent () {
+    const { sum, percent } = this.props;
+    return (1 - Math.max(1.0 / sum, 0.15)) * percent;
+  }
+
+  // props.percent -> index
+  // [1, sum]
+  getIndexFromPercent () {
+    const { sum, percent } = this.props;
+    if (sum == 1) {
+      return 1;
+    } else {
+      return Math.ceil(sum * percent);
+    }
+  }
+
   // index -> offsetTop
+  // desperate
   pinToLocation (index, transition = true) {
     // console.log('pin to', index)
 
@@ -121,9 +147,9 @@ class ListControlBar extends React.Component {
   }
 
   render () {
-    let { description, onDragChange, onDragDoneChange, onDoneChange, className } = this.props;
+    let { percent, description, onDragChange, onDoneChange, className, sum } = this.props;
 
-    const { index, sum } = this.validNumber(this.state.showIndex, this.props.sum);
+    percent = Math.max(Math.min(percent, 1), 0);
 
     return (
       <div>
@@ -140,19 +166,15 @@ class ListControlBar extends React.Component {
               console.log('onMouseMove')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               let newIndex = this.getItemIndex(offsetTop);
-              onDragChange && onDragChange(newIndex);
-              this.setState({ 
-                showIndex: newIndex,
-                offsetTop: offsetTop
-              });
+              onDragChange && onDragChange(this.getPercentFromOffsetTop());
               this.lastLocation = e.clientY;
             }
           }}
           onMouseUp={e => {
             if (this.state.isDragging) {
               console.log('onMouseUp')
-              this.pinToLocation(index, false);
-              onDragDoneChange && onDragDoneChange(index);
+              // this.pinToLocation(index, false);
+              onDoneChange && onDoneChange(this.getPercentFromOffsetTop());
             }
           }}
         ></div>
@@ -185,35 +207,37 @@ class ListControlBar extends React.Component {
               >
                 <div 
                   className="slider-bar-before"
-                  style={{ height: this.state.offsetTop - 4 }}  
+                  style={{ height: this.generateHeightCSS(this.getPercentTopFromPercent()) }}  
                 ></div>
                 <div
                   className="slider-bar-handle"
                   style={{ 
-                    top: this.state.offsetTop,
+                    top: this.generatePercentString(this.getPercentTopFromPercent()),
                     height: this.generateHandlerLengthStyle(),
                     transition: this.getTransition()
                   }}
                   ref="handler"
                   onMouseDown={e => {
                     console.log('onMouseDown')
-                    this.setState({ showTransition: false });
+                    this.setState({ 
+                      showTransition: false,
+                      isDragging: true
+                    });
                     this.lastLocation = e.clientY;
-                    this.setState({ isDragging: true });
                   }}
                 >
                   <div className="slider-bar">
                   </div>
                   <div className="slider-info">
                     <strong>
-                      <div className="slider-index">{index} of {sum} items</div>
+                      <div className="slider-index">{this.getIndexFromPercent()} of {sum} items</div>
                     </strong>
                     <div className="slider-description">{description}</div>
                   </div>
                 </div>
                 <div 
                   className="slider-bar-after"
-                  style={{ height: `calc(${this.generatePercent(1.0 - Math.max(1.0 / sum, 0.15))} - ${this.state.offsetTop + 12}px)` }}
+                  style={{ height: `calc(${this.generatePercentString(1.0 - Math.max(1.0 / sum, 0.15) - this.getPercentTopFromPercent())} - 12px)` }}
                 ></div>
               </div>
               <div 
@@ -233,11 +257,10 @@ class ListControlBar extends React.Component {
 
 ListControlBar.propTypes = {
   className: PropTypes.string,
-  index: PropTypes.number.isRequired,
   sum: PropTypes.number.isRequired,
+  percent: PropTypes.number.isRequired, // [0, 1]
   description: PropTypes.string,
   onDragChange: PropTypes.func,
-  onDragDoneChange: PropTypes.func,
   onDoneChange: PropTypes.func
 };
 
