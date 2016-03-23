@@ -18,11 +18,18 @@ import * as Colors from 'material-ui/lib/styles/colors';
 import CardActions from 'material-ui/lib/card/card-actions';
 import FlatButton from 'material-ui/lib/flat-button';
 
+function getRootClassName (className) {
+  return 'repoAbstract ' + className;
+}
+
 function RepositoryAbstract (props) {
-  const { actions } = props;
+  const { actions, className, style } = props;
 
   return (
-    <div className="repoAbstract">
+    <div 
+      className={getRootClassName(className)}
+      style={style}
+    >
       <Card>
         <CardHeader
           actAsExpander={false}
@@ -209,11 +216,15 @@ RepositoryAbstract.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
     onTap: PropTypes.func
-  }))
+  })),
+  className: PropTypes.string,
+  style: PropTypes.object
 };
 
 RepositoryAbstract.defaultProps = {
-  actions: []
+  actions: [],
+  className: '',
+  style: {}
 }
 
 const styles = {
