@@ -12,143 +12,158 @@ import FileFolderShared from 'material-ui/lib/svg-icons/file/folder-shared';
 import ContentLink from 'material-ui/lib/svg-icons/content/link';
 import NavigationMoreVert from 'material-ui/lib/svg-icons/navigation/more-vert';
 import * as Colors from 'material-ui/lib/styles/colors';
+import Popover from 'material-ui/lib/popover/popover';
 
-function renderRows () {
-  let arr = [];
-  for (let i = 0; i < 98; i++) {
-    arr.push(
-      <TableRow key={i}>
-        <TableRowColumn
-          style={{ width: 8 }}>
-          <ContentLink
-            style={styles.columnIcon}
-            color={Colors.grey900}
-          />
-        </TableRowColumn>
-        <TableRowColumn
-          className="columnName">
-          <a href="#">{'index: ' + (i+1)} 这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
-        </TableRowColumn>
-        <TableRowColumn
-          className="columnDate">
-          a hour ago
-        </TableRowColumn>
-        <TableRowColumn
-          className="columnMore">
-          <NavigationMoreVert 
-            style={styles.columnIcon}
-            color={Colors.grey700}
-          />
-        </TableRowColumn>
-      </TableRow>
-    );
+class RepoList extends React.Component {
+
+  constructor (props) {
+    super(props);
+
+    this.state = {
+    }
   }
 
-  return arr;
-}
+  renderRows () {
+    let arr = [];
+    for (let i = 0; i < 98; i++) {
+      arr.push(
+        <TableRow 
+          key={i}
+        >
+          <TableRowColumn
+            style={{ width: 8 }}>
+            <ContentLink
+              style={styles.columnIcon}
+              color={Colors.grey900}
+            />
+          </TableRowColumn>
+          <TableRowColumn
+            className="columnName">
+            <a href="#">{'index: ' + (i+1)} 这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
+          </TableRowColumn>
+          <TableRowColumn
+            className="columnDate">
+            a hour ago
+          </TableRowColumn>
+          <TableRowColumn
+            className="columnMore">
+            <NavigationMoreVert 
+              style={styles.columnIcon}
+              color={Colors.grey700}
+            />
+          </TableRowColumn>
+        </TableRow>
+      );
+    }
 
-function RepoList (props) {
-  const { rootRef } = props;
+    return arr;
+  }
 
-  return (
-    <div 
-      className="repoList"
-      ref={ref => {
-        rootRef && rootRef(ref);
-      }}
-    >
-      <Card>
-        <CardText>
-          <Table
-            selectable={false}
-          >
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}
-              style={{ 
-                borderBottom: 0 //fix table header border-bottom bug
-            }}>
-              <TableRow
-                style={{ 
-                  borderBottom: 0 //same
-              }}>
-                <TableHeaderColumn
-                  style={{ width: 8 }}>
-                  Type
-                </TableHeaderColumn>
-                <TableHeaderColumn>
-                  Title
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  style={{ width: 72 }}>
-                  Updated At
-                </TableHeaderColumn>
-                <TableHeaderColumn
-                  style={{ width: 12 }}>
-                  More
-                </TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              displayRowCheckbox={false}
+
+  render () {
+    const { rootRef } = this.props;
+
+    return (
+      <div 
+        className="repoList"
+        ref={ref => {
+          rootRef && rootRef(ref);
+        }}
+        {...this.props}
+      >
+        <Card>
+          <CardText>
+            <Table
+              selectable={false}
             >
-              { 
-                renderRows()
-              }
-              <TableRow>
-                <TableRowColumn
-                  style={{ width: 8 }}>
-                  <FileFolderShared
-                    style={styles.columnIcon}
-                    color={Colors.grey900}
-                  />
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnName">
-                  <a href="#">这是其他库</a>
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnDate">
-                  2016-03-19
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnMore">
-                  <NavigationMoreVert 
-                    style={styles.columnIcon}
-                    color={Colors.grey700}
-                  />
-                </TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn
-                  style={{ width: 8 }}>
-                  <ContentLink
-                    style={styles.columnIcon}
-                    color={Colors.grey900}
-                  />
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnName">
-                  <a href="#">依旧是很黄很暴力的链接</a>
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnDate">
-                  2016-03-19
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnMore">
-                  <NavigationMoreVert 
-                    style={styles.columnIcon}
-                    color={Colors.grey700}
-                  />
-                </TableRowColumn>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardText>
-      </Card>
-    </div>
-  );
+              <TableHeader
+                displaySelectAll={false}
+                adjustForCheckbox={false}
+                style={{ 
+                  borderBottom: 0 //fix table header border-bottom bug
+              }}>
+                <TableRow
+                  style={{ 
+                    borderBottom: 0 //same
+                }}>
+                  <TableHeaderColumn
+                    style={{ width: 8 }}>
+                    Type
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    Title
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    style={{ width: 72 }}>
+                    Updated At
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    style={{ width: 12 }}>
+                    More
+                  </TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                displayRowCheckbox={false}
+              >
+                { 
+                  this.renderRows()
+                }
+                <TableRow>
+                  <TableRowColumn
+                    style={{ width: 8 }}>
+                    <FileFolderShared
+                      style={styles.columnIcon}
+                      color={Colors.grey900}
+                    />
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnName">
+                    <a href="#">这是其他库</a>
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnDate">
+                    2016-03-19
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnMore">
+                    <NavigationMoreVert 
+                      style={styles.columnIcon}
+                      color={Colors.grey700}
+                    />
+                  </TableRowColumn>
+                </TableRow>
+                <TableRow>
+                  <TableRowColumn
+                    style={{ width: 8 }}>
+                    <ContentLink
+                      style={styles.columnIcon}
+                      color={Colors.grey900}
+                    />
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnName">
+                    <a href="#">依旧是很黄很暴力的链接</a>
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnDate">
+                    2016-03-19
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnMore">
+                    <NavigationMoreVert 
+                      style={styles.columnIcon}
+                      color={Colors.grey700}
+                    />
+                  </TableRowColumn>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardText>
+        </Card>
+      </div>
+    );
+  }
 }
 
 RepoList.propTypes = {
