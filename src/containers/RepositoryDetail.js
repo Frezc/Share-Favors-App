@@ -133,7 +133,7 @@ class RepositoryDetail extends React.Component {
           modal={false}
           onRequestClose={() => {}}
         >
-          {this.renderLink()}
+          {this.renderLinkDetail()}
         </Dialog>
       </div>
     );

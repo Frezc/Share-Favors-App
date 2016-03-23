@@ -8,7 +8,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 let SelectableList = SelectableContainerEnhance(List);
 
-import { setNavOpen } from '../actions';
+import { setNavOpen, showDialog } from '../actions';
 
 function MaterialDrawer(props) {
   const { navOpen, dispatch } = props;
@@ -23,7 +23,10 @@ function MaterialDrawer(props) {
     >
       <NavHeader
         img={'https://avatars0.githubusercontent.com/u/6942296?v=3&s=460'}
-        name={'Frezc'} />
+        name={'Frezc'}
+        onTouchTap={e => {
+        }}
+      />
       <Divider />
       <SelectableList
         valueLink={{ value: 0, requestChange: (e, index) => {console.log(index)} }}

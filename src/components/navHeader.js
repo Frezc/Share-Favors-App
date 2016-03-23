@@ -3,10 +3,13 @@ import Avatar from 'material-ui/lib/avatar';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function NavHeader (props) {
-  const { img, name } = props;
+  const { img, name, onTouchTap } = props;
 
   return (
-    <MenuItem style={{ position: 'relative', height: 64 }}>
+    <MenuItem 
+      style={{ position: 'relative', height: 64 }}
+      onTouchTap={onTouchTap}
+    >
       <Avatar
         src={img}
         size={32}
@@ -32,7 +35,8 @@ const styles = {
 
 NavHeader.propTypes = {
   img: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  onTouchTap: PropTypes.func
 };
 
 export default NavHeader;
