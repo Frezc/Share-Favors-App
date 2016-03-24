@@ -34,9 +34,7 @@ function LinkDetailDialog (props) {
       actions={dialogActions}
       open={true}
       modal={false}
-      onRequestClose={() => {
-        this.setState({ showDialog: false })
-      }}
+      onRequestClose={() => {}}
     >
       
       <div className="linkDetail">
