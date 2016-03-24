@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
+
+//custom components
 import RepositoryAbstract from '../components/RepositoryAbstract';
 import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
-import Dialog from 'material-ui/lib/dialog';
-import Subheader from 'material-ui/lib/Subheader';
-import MapsLocalOffer from 'material-ui/lib/svg-icons/maps/local-offer';
-import * as Colors from 'material-ui/lib/styles/colors';
-import FlatButton from 'material-ui/lib/flat-button';
+import LinkDetailDialog from '../components/LinkDetailDialog';
+
+// libs
 
 class RepositoryDetail extends React.Component {
 
@@ -17,8 +17,7 @@ class RepositoryDetail extends React.Component {
       index: 1,
       percent: 0,
       sum: 100,
-      showDialog: false,
-      showEditDialog: false
+      showDialog: false
     }
 
     // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
@@ -62,53 +61,6 @@ class RepositoryDetail extends React.Component {
     window.removeEventListener('scroll', this.scrollListener);
   }
 
-  renderLinkDetail () {
-    return (
-      <div>
-        <div>Link: http://12450.com</div>
-        <div>Description: 在在啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧啧咋</div>
-        <div className="tagList">
-          <div className="tagContainer">
-            <MapsLocalOffer
-              style={{ width: 16, height: 16 }}
-              color={Colors.teal500}
-            />
-            <span className="tagText">
-              发发呆发呆发呆发呆sa时发生的发生地方大幅度dddDd多大的第三代
-            </span>
-          </div>
-          <div className="tagContainer">
-            <MapsLocalOffer
-              style={{ width: 16, height: 16 }}
-              color={Colors.teal500}
-            />
-            <span className="tagText">
-              发发呆发呆发呆发呆
-            </span>
-          </div>
-          <div className="tagContainer">
-            <MapsLocalOffer
-              style={{ width: 16, height: 16 }}
-              color={Colors.teal500}
-            />
-            <span className="tagText">
-              发发呆发呆发呆发呆时发生地方大幅度
-            </span>
-          </div>
-          <div className="tagContainer">
-            <MapsLocalOffer
-              style={{ width: 16, height: 16 }}
-              color={Colors.teal500}
-            />
-            <span className="tagText">
-              发发发呆时发生的发生地方大幅度
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   render () {
 
     const actions = [{
@@ -116,21 +68,6 @@ class RepositoryDetail extends React.Component {
     }, {
       label: 'Edit'
     }];
-
-    const dialogActions = [
-      <FlatButton
-        label="Go To"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => { this.setState({ showEditDialog: true }) }}
-      />,
-      <FlatButton
-        label="Cancel"
-        secondary={true}
-        onTouchTap={() => {}}
-      />,
-    ];
-    
 
     return (
       <div 
@@ -166,28 +103,7 @@ class RepositoryDetail extends React.Component {
           }}
         />
 
-        <Dialog
-          title="Dialog"
-          actions={dialogActions}
-          open={this.state.showDialog}
-          modal={false}
-          onRequestClose={() => {
-            this.setState({ showDialog: false })
-          }}
-        >
-          {this.renderLinkDetail()}
-        </Dialog>
-        <Dialog
-          title="Dialog"
-          actions={dialogActions}
-          open={this.state.showEditDialog}
-          modal={false}
-          onRequestClose={() => {
-            this.setState({ showEditDialog: false })
-          }}
-        >
-          {this.renderLinkDetail()}
-        </Dialog>
+        <LinkDetailDialog />
       </div>
     );
   }

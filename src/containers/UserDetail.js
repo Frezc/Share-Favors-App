@@ -10,7 +10,7 @@ function UserDetail(props) {
   return (
     <div className="userDetail">
       <Avatar
-        src={'https://avatars0.githubusercontent.com/u/6942296?v=3&s=460'}
+        src={'../../design/avatar.gif'}
         size={160}
         className="avatar"
       />
@@ -18,7 +18,7 @@ function UserDetail(props) {
       <div className="email">504021398@qq.com</div>
       <div className="sign">风雨都放假时间反馈的数据方式创建付款了圣诞节开发商可的反馈了数据的科林费斯佛挡杀佛里的数据开放上课了对方几款是来得及覅看记得深刻理解付款了</div>
       <Divider style={{ width: '100%' }} />
-      <Subheader>Repositories</Subheader>
+      <Subheader>[Repositories] (<strong>2</strong>)</Subheader>
       <div className="repoList">
         <RepositoryAbstract
           style={{ marginTop: '8px' }}
@@ -28,7 +28,7 @@ function UserDetail(props) {
         />
       </div>
       <Divider style={{ width: '100%' }}/>
-      <Subheader>Star Repositories</Subheader>
+      <Subheader>[Star Repositories] (<strong>1</strong>)</Subheader>
       <div className="repoList">
         <RepositoryAbstract
           style={{ marginTop: '8px' }}

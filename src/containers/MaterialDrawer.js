@@ -22,7 +22,7 @@ function MaterialDrawer(props) {
       docked={false}
     >
       <NavHeader
-        img={'https://avatars0.githubusercontent.com/u/6942296?v=3&s=460'}
+        img={'../../design/avatar.gif'}
         name={'Frezc'}
         onTouchTap={e => {
         }}

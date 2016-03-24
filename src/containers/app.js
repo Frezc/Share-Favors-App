@@ -58,9 +58,8 @@ class App extends React.Component {
           <MaterialAppBar />
 
           <div className="mainContainer">
-            <UserDetail 
-              user={showUserData}
-            />
+            
+            <RepositoryDetail />
           </div>
         </div>
 
