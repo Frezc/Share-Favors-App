@@ -7,6 +7,8 @@ import ListControlBar from '../components/ListControlBar';
 import LinkDialog from '../components/LinkDialog';
 
 // libs
+import { connect } from 'react-redux';
+
 
 class RepositoryDetail extends React.Component {
 
@@ -63,6 +65,8 @@ class RepositoryDetail extends React.Component {
 
   render () {
 
+    const { linkDialog, repositories, tags, links } = this.props;
+
     const actions = [{
       label: 'Star'
     }, {
@@ -102,11 +106,31 @@ class RepositoryDetail extends React.Component {
             this.onDoneChange(percent)
           }}
         />
-        <LinkDialog />
+        <LinkDialog
+          type="watch"
+          loading={linkDialog.loading}
+          show={linkDialog.show}
+          error={linkDialog.error}
+          link={links[linkDialog.link]}
+          tags={tags}
+        />
       </div>
     );
   }
 }
+
+RepositoryDetail.propTypes = {
+  repositories: PropTypes.object.isRequired,
+  links: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  linkDialog: PropTypes.shape({
+    type: PropTypes.oneOf(['watch', 'edit']).isRequired,
+    show: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    link: PropTypes.number.isRequired,
+    error: PropTypes.string.isRequired
+  }).isRequired
+};
 
 const styles = {
   subtitleIcon: {
@@ -119,4 +143,13 @@ const styles = {
   }
 }
 
-export default RepositoryDetail;
+function select (state) {
+  return {
+    repositories: state.data.repositories,
+    links: state.data.links,
+    tags: state.data.tags,
+    linkDialog: state.view.dialogs.linkDialog
+  };
+}
+
+export default connect(select)(RepositoryDetail);

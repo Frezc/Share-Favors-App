@@ -7,14 +7,14 @@
 					type: 'auth' or 'register',
 					loading: bool,  //是否在加载状态
 					show: bool,  //是否显示
-					error: bool  //是否出现错误
+					error: string  //是否出现错误
 				},
 				linkDialog: {
 					type: 'watch' or 'edit',
 					show: bool,
 					loading: bool,
 					link: linkId,
-					error: bool
+					error: string
 				}
 			},
 			showUser: userId,  // none with -1

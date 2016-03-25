@@ -4,15 +4,15 @@ const DEFAULT_AUTHDIALOG = {
   type: 'auth',
   loading: false,
   show: false,
-  error: true
+  error: 'display error happened'
 };
 
 const DEFAULT_LINKDIALOG = {
   type: 'watch',
-  show: false,
+  show: true,
   loading: false,
-  link: 'default',
-  error: true
+  link: -1,
+  error: 'display error happened'
 };
 
 function authDialog(state = DEFAULT_AUTHDIALOG, action) {

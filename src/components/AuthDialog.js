@@ -39,7 +39,7 @@ class AuthDialog extends React.Component {
 
   renderAuth() {
     return (
-      <div className="authDialog">
+      <div className="authDialog centerContent">
         <TextField
           floatingLabelText="Email"
           errorText={this.state.emailError}

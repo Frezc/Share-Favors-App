@@ -11,7 +11,7 @@ function navOpen(state = false, action) {
   }
 }
 
-function showUser(state = 'default', action) {
+function showUser(state = -1, action) {
   switch (action.type) {
 
     default:
@@ -19,7 +19,7 @@ function showUser(state = 'default', action) {
   }
 }
 
-function loginUser(state = 'default', action) {
+function loginUser(state = -1, action) {
   switch (action.type) {
 
     default:

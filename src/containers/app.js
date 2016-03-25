@@ -11,6 +11,9 @@ import UserDetail from './UserDetail';
 import Dialog from 'material-ui/lib/dialog';
 import { connect } from 'react-redux';
 
+// custom components
+import AuthDialog from '../components/AuthDialog';
+
 // actions
 import { TYPE_USER } from '../constants/actionTypes';
 import { showDialog, setDialogContent } from '../actions';
@@ -33,7 +36,6 @@ class App extends React.Component {
           </div>
         </div>
 
-        
     	</div>
     );
   }
@@ -44,7 +46,7 @@ App.propTypes = {
     type: PropTypes.oneOf(['auth', 'register']).isRequired,
     show: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    error: PropTypes.bool.isRequired
+    error: PropTypes.string.isRequired
   }).isRequired
 }
 

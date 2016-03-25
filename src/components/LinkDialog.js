@@ -6,6 +6,79 @@ import * as Colors from 'material-ui/lib/styles/colors';
 import Dialog from 'material-ui/lib/dialog';
 import IconButton from 'material-ui/lib/icon-button';
 import TextField from 'material-ui/lib/text-field';
+import CircularProgress from 'material-ui/lib/circular-progress';
+
+
+const cancelActions = [
+  <FlatButton
+    label="Cancel"
+    secondary={true}
+    onTouchTap={() => {}}
+  />
+];
+
+const detailActions = [
+  <IconButton
+    style={{ top: 6 }}
+  >
+    <ImageEdit />
+  </IconButton>,
+  <FlatButton
+    label="Go To"
+    primary={true}
+    keyboardFocused={true}
+    onTouchTap={() => {}}
+  />,
+  <FlatButton
+    label="Cancel"
+    secondary={true}
+    onTouchTap={() => {}}
+  />
+];
+
+const editorActions = [
+  <FlatButton
+    label="Ok"
+    primary={true}
+    onTouchTap={() => {}}
+  />,
+  <FlatButton
+    label="Cancel"
+    secondary={true}
+    onTouchTap={() => {}}
+  />
+];
+
+function getActions (props) {
+  const { type, loading, error } = props;
+
+  if (loading || error != '') {
+    return cancelActions;
+  }
+
+  switch(type) {
+    case 'watch':
+      return detailActions;
+    case 'edit':
+      return editorActions;
+  }
+
+  return cancelActions;
+}
+
+function getTitle (props) {
+  const { type, loading, error, link } = props;
+
+  if (loading) {
+    return 'Loading...';
+  } else if (error != '') {
+    return 'Error happened!!!';
+  } else if (type === 'edit') {
+    return '';
+  } else {
+    return link.title;
+  }
+}
 
 function renderLinkDetail (props) {
   return (
@@ -81,51 +154,67 @@ function renderLinkEditor (props) {
   );
 }
 
+function renderError (error) {
+  return (
+    <div>{error}</div>
+  );
+}
+
+function renderContent (props) {
+  const { type, loading, error } = props;
+
+  if (loading) {
+    return (
+      <CircularProgress />
+    );
+  } else if (error != '') {
+    return renderError(error);
+  } else if (type === 'edit') {
+    return renderLinkEditor(props);
+  } else {
+    return renderLinkDetail(props);
+  }
+}
+
 function LinkDialog (props) {
+  const { show, loading } = props;
 
   return (
     <Dialog
-      title="这是标题啊这是标题啊这是标题啊这是标题啊这是标题啊"
-      actions={detailActions}
-      open={true}
+      title={getTitle(props)}
+      actions={getActions(props)}
+      open={show}
       modal={false}
       onRequestClose={() => {}}
+      bodyClassName="centerContent"
     >
-      {renderLinkEditor(props)}      
+      {
+        renderContent(props)
+      }
     </Dialog>
   );
 }
 
-const detailActions = [
-  <IconButton
-    style={{ top: 6 }}
-  >
-    <ImageEdit />
-  </IconButton>,
-  <FlatButton
-    label="Go To"
-    primary={true}
-    keyboardFocused={true}
-    onTouchTap={() => {}}
-  />,
-  <FlatButton
-    label="Cancel"
-    secondary={true}
-    onTouchTap={() => {}}
-  />
-];
+LinkDialog.propTypes = {
+  type: PropTypes.oneOf(['watch', 'edit']),
+  loading: PropTypes.bool,
+  show: PropTypes.bool,
+  error: PropTypes.string,
+  link: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.number).isRequired
+  }).isRequired,
+  tags: PropTypes.object.isRequired
+};
 
-const editorActions = [
-  <FlatButton
-    label="Ok"
-    primary={true}
-    onTouchTap={() => {}}
-  />,
-  <FlatButton
-    label="Cancel"
-    secondary={true}
-    onTouchTap={() => {}}
-  />
-];
+LinkDialog.defaultProps = {
+  type: 'watch',
+  loading: false,
+  show: false,
+  error: ''
+};
 
 export default LinkDialog;
