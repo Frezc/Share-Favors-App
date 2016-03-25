@@ -33,6 +33,13 @@
   align-items: center;
 }
 
+.errorText {
+  align-self: flex-start;
+  margin-top: 16px;
+  font-size: 12px;
+  color: $errorText;
+}
+
 .linkEditor {
   .input {
     width: 100%;

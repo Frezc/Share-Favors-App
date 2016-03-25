@@ -35,7 +35,9 @@ class App extends React.Component {
             <RepositoryDetail />
           </div>
         </div>
-
+        <AuthDialog
+          
+        />
     	</div>
     );
   }

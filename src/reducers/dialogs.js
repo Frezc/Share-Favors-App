@@ -9,7 +9,7 @@ const DEFAULT_AUTHDIALOG = {
 
 const DEFAULT_LINKDIALOG = {
   type: 'watch',
-  show: true,
+  show: false,
   loading: false,
   link: -1,
   error: 'display error happened'

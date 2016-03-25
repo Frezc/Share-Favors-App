@@ -46,6 +46,7 @@ class AuthDialog extends React.Component {
         />
         <TextField 
           floatingLabelText="Password"
+          type="password"
           errorText={this.state.passwordError}
         />
       </div>
@@ -113,7 +114,24 @@ class AuthDialog extends React.Component {
     );
   }
 
+  renderContent () {
+    const { type, loading } = this.props;
+
+    if (loading) {
+      return (
+        <CircularProgress />
+      );
+    } else if (type === 'register') {
+      return renderRegister(props);
+    } else {
+      return renderAuth(props);
+    }
+  }
+
   render() {
+
+    const { error } = this.props;
+
     const dialogActions = [
       <FlatButton
         label="Login"
@@ -135,12 +153,30 @@ class AuthDialog extends React.Component {
         modal={false}
         onRequestClose={() => {}}
         contentStyle={styles.authDialog}
+        bodyClassName="centerContent"
       >
         {this.renderAuth()}
+        {error != '' &&
+          <div className="errorText">!! {error}</div>
+        }
       </Dialog>
     );
   }
 }
+
+AuthDialog.propTypes = {
+  type: PropTypes.oneOf(['watch', 'edit']),
+  loading: PropTypes.bool,
+  show: PropTypes.bool,
+  error: PropTypes.string
+};
+
+AuthDialog.defaultProps = {
+  type: 'watch',
+  loading: false,
+  show: false,
+  error: ''
+};
 
 const styles = {
   authDialog: {

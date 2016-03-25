@@ -50,9 +50,9 @@ const editorActions = [
 ];
 
 function getActions (props) {
-  const { type, loading, error } = props;
+  const { type, loading } = props;
 
-  if (loading || error != '') {
+  if (loading) {
     return cancelActions;
   }
 
@@ -67,12 +67,10 @@ function getActions (props) {
 }
 
 function getTitle (props) {
-  const { type, loading, error, link } = props;
+  const { type, loading, link } = props;
 
   if (loading) {
     return 'Loading...';
-  } else if (error != '') {
-    return 'Error happened!!!';
   } else if (type === 'edit') {
     return '';
   } else {
@@ -154,21 +152,13 @@ function renderLinkEditor (props) {
   );
 }
 
-function renderError (error) {
-  return (
-    <div>{error}</div>
-  );
-}
-
 function renderContent (props) {
-  const { type, loading, error } = props;
+  const { type, loading } = props;
 
   if (loading) {
     return (
       <CircularProgress />
     );
-  } else if (error != '') {
-    return renderError(error);
   } else if (type === 'edit') {
     return renderLinkEditor(props);
   } else {
@@ -177,7 +167,7 @@ function renderContent (props) {
 }
 
 function LinkDialog (props) {
-  const { show, loading } = props;
+  const { show, loading, error } = props;
 
   return (
     <Dialog
@@ -191,6 +181,9 @@ function LinkDialog (props) {
       {
         renderContent(props)
       }
+      {error != '' &&
+        <div className="errorText">!! {error}</div>
+      }
     </Dialog>
   );
 }
@@ -200,14 +193,14 @@ LinkDialog.propTypes = {
   loading: PropTypes.bool,
   show: PropTypes.bool,
   error: PropTypes.string,
-  link: PropTypes.shape({
+  link: PropTypes.shape({  // 
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.number).isRequired
+    tags: PropTypes.arrayOf(PropTypes.number).isRequired  // tag的id
   }).isRequired,
-  tags: PropTypes.object.isRequired
+  tags: PropTypes.object.isRequired  // 所有tag对象
 };
 
 LinkDialog.defaultProps = {
