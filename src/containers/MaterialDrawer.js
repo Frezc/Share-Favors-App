@@ -47,7 +47,6 @@ MaterialDrawer.propTypes = {
 };
 
 function select (state) {
-  console.log(state)
   return {
     navOpen: state.view.navOpen
   };

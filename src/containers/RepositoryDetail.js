@@ -4,8 +4,7 @@ import React, { PropTypes } from 'react';
 import RepositoryAbstract from '../components/RepositoryAbstract';
 import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
-import LinkDetailDialog from '../components/LinkDetailDialog';
-import LinkEditorDialog from '../components/LinkEditorDialog';
+import LinkDialog from '../components/LinkDialog';
 
 // libs
 
@@ -103,7 +102,7 @@ class RepositoryDetail extends React.Component {
             this.onDoneChange(percent)
           }}
         />
-        <LinkEditorDialog />
+        <LinkDialog />
       </div>
     );
   }
