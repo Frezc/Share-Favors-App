@@ -18,7 +18,7 @@ class MaterialAppBar extends React.Component {
     };
   }
 
-  getSearchClassName(showSearch) {
+  getSearchClassName (showSearch) {
     if (showSearch) {
       return 'searchContainer card show';
     } else {
@@ -74,7 +74,7 @@ MaterialAppBar.propTypes = {
 
 function select (state) {
   return {
-    navOpen: state.navOpen
+    navOpen: state.view.navOpen
   };
 }
 

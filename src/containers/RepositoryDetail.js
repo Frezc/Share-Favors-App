@@ -6,7 +6,6 @@ import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
 import LinkDetailDialog from '../components/LinkDetailDialog';
 import LinkEditorDialog from '../components/LinkEditorDialog';
-import AuthDialog from '../components/AuthDialog';
 
 // libs
 
@@ -105,7 +104,6 @@ class RepositoryDetail extends React.Component {
           }}
         />
         <LinkEditorDialog />
-        <AuthDialog />
       </div>
     );
   }

@@ -40,11 +40,10 @@ class AuthDialog extends React.Component {
   renderAuth() {
     return (
       <div className="authDialog">
-        <TextField 
+        <TextField
           floatingLabelText="Email"
           errorText={this.state.emailError}
         />
-        <br />
         <TextField 
           floatingLabelText="Password"
           errorText={this.state.passwordError}
@@ -135,10 +134,17 @@ class AuthDialog extends React.Component {
         open={true}
         modal={false}
         onRequestClose={() => {}}
+        contentStyle={styles.authDialog}
       >
-        {this.renderRegister()}      
+        {this.renderAuth()}
       </Dialog>
     );
+  }
+}
+
+const styles = {
+  authDialog: {
+    width: 342
   }
 }
 

@@ -18,38 +18,8 @@ import { showDialog, setDialogContent } from '../actions';
 //App Entry
 class App extends React.Component {
 
-  renderUserDetailDialog() {
-    const { dispatch, dialog, showUserData } = this.props;
-
-    const dialogActions = [
-      <FlatButton
-        label="Repositories"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={() => {}}
-      />,
-      <FlatButton
-        label="Star List"
-        secondary={true}
-        onTouchTap={() => {}}
-      />,
-    ];
-
-    return (
-      <Dialog
-        title={showUserData.nickname}
-        actions={dialogActions}
-        open={dialog.show}
-        modal={false}
-        onRequestClose={() => dispatch(showDialog(false))}
-      >
-        This is User profile
-      </Dialog>
-    );
-  }
-
   render() {
-    const { dispatch, dialog, showUserData } = this.props;
+    const { dispatch, dialog } = this.props;
 
     return (
     	<div className="page">
@@ -70,18 +40,17 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  dialog: PropTypes.shape({
+  authDialog: PropTypes.shape({
+    type: PropTypes.oneOf(['auth', 'register']).isRequired,
     show: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    contentType: PropTypes.oneOf([TYPE_USER]).isRequired
-  }).isRequired,
-  showUserData: PropTypes.object.isRequired
+    error: PropTypes.bool.isRequired
+  }).isRequired
 }
 
 function select (state) {
   return {
-    dialog: state.dialog,
-    showUserData: state.showUserData
+    authDialog: state.view.dialogs.authDialog,
   }
 }
 
