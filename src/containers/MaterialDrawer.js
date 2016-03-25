@@ -11,7 +11,7 @@ let SelectableList = SelectableContainerEnhance(List);
 import { setNavOpen, showDialog } from '../actions';
 
 function MaterialDrawer(props) {
-  const { navOpen, dispatch } = props;
+  const { navOpen, user, dispatch } = props;
 
   return (
     <LeftNav
@@ -23,7 +23,7 @@ function MaterialDrawer(props) {
     >
       <NavHeader
         img={'../../design/avatar.gif'}
-        name={'Frezc'}
+        name={user.nickname}
         onTouchTap={e => {
         }}
       />
@@ -48,7 +48,8 @@ MaterialDrawer.propTypes = {
 
 function select (state) {
   return {
-    navOpen: state.view.navOpen
+    navOpen: state.view.navOpen,
+    user: state.data.users[state.view.loginUser]
   };
 }
 
