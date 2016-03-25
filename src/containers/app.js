@@ -22,7 +22,7 @@ import { showDialog, setDialogContent } from '../actions';
 class App extends React.Component {
 
   render() {
-    const { dispatch, dialog } = this.props;
+    const { dispatch, authDialog } = this.props;
 
     return (
     	<div className="page">
@@ -36,7 +36,10 @@ class App extends React.Component {
           </div>
         </div>
         <AuthDialog
-          
+          type={authDialog.type}
+          show={authDialog.show}
+          loading={authDialog.loading}
+          error={authDialog.error}
         />
     	</div>
     );

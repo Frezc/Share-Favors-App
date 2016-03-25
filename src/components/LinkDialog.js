@@ -8,62 +8,61 @@ import IconButton from 'material-ui/lib/icon-button';
 import TextField from 'material-ui/lib/text-field';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
-
-const cancelActions = [
-  <FlatButton
-    label="Cancel"
-    secondary={true}
-    onTouchTap={() => {}}
-  />
-];
-
-const detailActions = [
-  <IconButton
-    style={{ top: 6 }}
-  >
-    <ImageEdit />
-  </IconButton>,
-  <FlatButton
-    label="Go To"
-    primary={true}
-    keyboardFocused={true}
-    onTouchTap={() => {}}
-  />,
-  <FlatButton
-    label="Cancel"
-    secondary={true}
-    onTouchTap={() => {}}
-  />
-];
-
-const editorActions = [
-  <FlatButton
-    label="Ok"
-    primary={true}
-    onTouchTap={() => {}}
-  />,
-  <FlatButton
-    label="Cancel"
-    secondary={true}
-    onTouchTap={() => {}}
-  />
-];
-
 function getActions (props) {
   const { type, loading } = props;
 
   if (loading) {
-    return cancelActions;
+    return [
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onTouchTap={() => {}}
+      />
+    ];
   }
 
   switch(type) {
     case 'watch':
-      return detailActions;
+      return [
+        <IconButton
+          style={{ top: 6 }}
+        >
+          <ImageEdit />
+        </IconButton>,
+        <FlatButton
+          label="Go To"
+          primary={true}
+          keyboardFocused={true}
+          onTouchTap={() => {}}
+        />,
+        <FlatButton
+          label="Cancel"
+          secondary={true}
+          onTouchTap={() => {}}
+        />
+      ];
     case 'edit':
-      return editorActions;
+      return [
+        <FlatButton
+          label="Ok"
+          primary={true}
+          onTouchTap={() => {}}
+        />,
+        <FlatButton
+          label="Cancel"
+          secondary={true}
+          onTouchTap={() => {}}
+        />
+      ];
   }
 
-  return cancelActions;
+  return [
+    <FlatButton
+      label="Cancel"
+      secondary={true}
+      onTouchTap={() => {}}
+    />
+  ];
 }
 
 function getTitle (props) {
