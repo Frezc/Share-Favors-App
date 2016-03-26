@@ -28,7 +28,11 @@ const DEFAULT_AUTH = {
 function auth(state = DEFAULT_AUTH, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
-      return action.auth;
+      return {
+        user: action.auth.user.id,
+        token: action.auth.token,
+        expired_at: action.auth.expired_at
+      };
     case AUTH_DENIED:
       return DEFAULT_AUTH;
   }

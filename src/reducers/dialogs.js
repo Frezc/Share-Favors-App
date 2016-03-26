@@ -29,16 +29,19 @@ function authDialog(state = DEFAULT_AUTHDIALOG, action) {
         });
       case DIALOG_CONTENT_CHANGE:
         return Object.assign({}, state, {
-          type: action.content
+          type: action.content,
+          error: ''
         });
       case DIALOG_LOADING_CHANGE:
         return Object.assign({}, state, {
-          loading: action.loading
+          loading: action.loading,
+          error: ''
         });
       case AUTH_SUCCESS:
         return Object.assign({}, state, {
           visible: false,
-          loading: false
+          loading: false,
+          error: ''
         });
       case AUTH_DENIED:
         return Object.assign({}, state, {

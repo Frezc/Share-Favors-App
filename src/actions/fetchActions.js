@@ -37,13 +37,12 @@ export function auth(email, password) {
         if (response.ok) {
           return response.json();
         } else {
-          dispatch(failAuth('Email or Password wrong'));
+          throw { message: 'Email or Password wrong' };
         }
       })
       .then(json => {
-        if (json) {
-          dispatch(successAuth(json));
-        }
+        // console.log('json',json)
+        dispatch(successAuth(json));
       })
       .catch(error => {
         dispatch(failAuth(error.message));
