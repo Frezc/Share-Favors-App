@@ -166,13 +166,13 @@ function renderContent (props) {
 }
 
 function LinkDialog (props) {
-  const { show, loading, error } = props;
+  const { visible, loading, error } = props;
 
   return (
     <Dialog
       title={getTitle(props)}
       actions={getActions(props)}
-      open={show}
+      open={visible}
       modal={false}
       onRequestClose={() => {}}
       bodyClassName="centerContent"
@@ -190,7 +190,7 @@ function LinkDialog (props) {
 LinkDialog.propTypes = {
   type: PropTypes.oneOf(['watch', 'edit']),
   loading: PropTypes.bool,
-  show: PropTypes.bool,
+  visible: PropTypes.bool,
   error: PropTypes.string,
   link: PropTypes.shape({  // 
     id: PropTypes.number.isRequired,
@@ -205,7 +205,7 @@ LinkDialog.propTypes = {
 LinkDialog.defaultProps = {
   type: 'watch',
   loading: false,
-  show: false,
+  visible: false,
   error: ''
 };
 

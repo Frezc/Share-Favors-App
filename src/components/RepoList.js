@@ -18,9 +18,7 @@ class RepoList extends React.Component {
 
   constructor (props) {
     super(props);
-
-    this.state = {
-    }
+    
   }
 
   renderRows () {
@@ -61,7 +59,7 @@ class RepoList extends React.Component {
 
 
   render () {
-    const { rootRef } = this.props;
+    const { rootRef, style } = this.props;
 
     return (
       <div 
@@ -69,7 +67,7 @@ class RepoList extends React.Component {
         ref={ref => {
           rootRef && rootRef(ref);
         }}
-        {...this.props}
+        style={style}
       >
         <Card>
           <CardText>
@@ -167,7 +165,12 @@ class RepoList extends React.Component {
 }
 
 RepoList.propTypes = {
-  rootRef: PropTypes.func
+  rootRef: PropTypes.func,
+  type: PropTypes.object
+};
+
+RepoList.defaultProps = {
+  type: {}
 };
 
 const styles = {

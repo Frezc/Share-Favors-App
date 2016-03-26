@@ -5,6 +5,13 @@ import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
+// actions
+import { setDialogVisible, setDialogContent } from '../actions/dialog';
+import { auth } from '../actions/fetchActions';
+
+// constants
+import { DIALOG } from '../constants';
+
 class AuthDialog extends React.Component {
 
   constructor(props) {
@@ -16,15 +23,21 @@ class AuthDialog extends React.Component {
       passwordError: '',
       comfirmPasswordError: '',
       codeError: ''
-    }
+    };
 
     this.input = {
-      email: '',
-      nickname: '',
-      password: '',
-      comfirmPassword: '',
-      code: ''
-    }
+      auth: {
+        email: '',
+        password: ''
+      },
+      register: {
+        email: '',
+        nickname: '',
+        password: '',
+        comfirmPassword: '',
+        code: ''
+      }
+    };
   }
 
   // 
@@ -43,6 +56,11 @@ class AuthDialog extends React.Component {
           return true;
         }
         break;
+      case 'comfirmPassword':
+        if (value === this.input.password) {
+          return true;
+        }
+        break;
       case 'code':
         if (value.length == 6) {
           return true;
@@ -53,10 +71,20 @@ class AuthDialog extends React.Component {
     return false;
   }
 
+  validateAuth() {
+    console.log(this.input)
+    if (this.validate('email', this.input.auth.email) 
+      && this.validate('password', this.input.auth.password)) {
+      return true;
+    }
+
+    return false;
+  }
+
   getDialogTitle () {
     const { type } = this.props;
 
-    if (type == 'register') {
+    if (type === types[1]) {
       return 'Create a new User';
     } else {
       return 'Login';
@@ -71,7 +99,7 @@ class AuthDialog extends React.Component {
         <FlatButton
           label="Cancel"
           secondary={true}
-          onTouchTap={() => {}}
+          onTouchTap={() => this.onClose()}
         />
       ];
     }
@@ -83,12 +111,12 @@ class AuthDialog extends React.Component {
             label="Login"
             primary={true}
             keyboardFocused={true}
-            onTouchTap={() => {}}
+            onTouchTap={() => this.onLoginPress()}
           />,
           <FlatButton
-            label="Cancel"
+            label="To Resiger"
             secondary={true}
-            onTouchTap={() => {}}
+            onTouchTap={() => this.onChangeType(types[1])}
           />
         ];
       case 'register':
@@ -99,9 +127,9 @@ class AuthDialog extends React.Component {
             onTouchTap={() => {}}
           />,
           <FlatButton
-            label="Cancel"
+            label="To Login"
             secondary={true}
-            onTouchTap={() => {}}
+            onTouchTap={() => this.onChangeType(types[0])}
           />
         ];
     }
@@ -110,9 +138,30 @@ class AuthDialog extends React.Component {
       <FlatButton
         label="Cancel"
         secondary={true}
-        onTouchTap={() => {}}
+        onTouchTap={onClose}
       />
     ];
+  }
+
+  onLoginPress() {
+    const { dispatch } = this.props;
+
+    // 验证输入是否合法
+    if (this.validateAuth()) {
+      dispatch(auth(this.input.auth.email, this.input.auth.password));
+    }
+  }
+
+  onClose() {
+    const { dispatch } = this.props;
+
+    dispatch(setDialogVisible(DIALOG.AUTH, false));
+  }
+
+  onChangeType(type) {
+    const { dispatch } = this.props;
+
+    dispatch(setDialogContent(DIALOG.AUTH, type));
   }
 
   renderAuth() {
@@ -121,11 +170,30 @@ class AuthDialog extends React.Component {
         <TextField
           floatingLabelText="Email"
           errorText={this.state.emailError}
+          fullWidth
+          onChange={e => {
+            this.input.auth.email = e.currentTarget.value;
+            if (this.validate('email', this.input.auth.email)) {
+              this.setState({ emailError: '' });
+            } else {
+              this.setState({ emailError: 'invalid email address' });
+            }
+          }}
+          value={this.input.auth.email}
         />
         <TextField 
           floatingLabelText="Password"
           type="password"
           errorText={this.state.passwordError}
+          fullWidth
+          onChange={e => {
+            this.input.auth.password = e.currentTarget.value;
+            if (this.validate('password', this.input.auth.password)) {
+              this.setState({ passwordError: '' });
+            } else {
+              this.setState({ passwordError: 'please input property password' });
+            }
+          }}
         />
       </div>
     );
@@ -139,8 +207,8 @@ class AuthDialog extends React.Component {
           errorText={this.state.emailError}
           fullWidth
           onChange={e => {
-            this.input.email = e.currentTarget.value;
-            if (this.validate('email', this.input.email)) {
+            this.input.register.email = e.currentTarget.value;
+            if (this.validate('email', this.input.register.email)) {
               this.setState({ emailError: '' });
             } else {
               this.setState({ emailError: 'invalid email address' });
@@ -153,14 +221,14 @@ class AuthDialog extends React.Component {
           fullWidth
           style={styles.codeTextField}
           onChange={e => {
-            this.input.code = e.currentTarget.value.slice(0, 6);
-            if (this.validate('code', this.input.code)) {
+            this.input.register.code = e.currentTarget.value.slice(0, 6);
+            if (this.validate('code', this.input.register.code)) {
               this.setState({ codeError: '' });
             } else {
-              this.setState({ codeError: 'length must be 6' })
+              this.setState({ codeError: 'length must be 6' });
             }
           }}
-          value={this.input.code}
+          value={this.input.register.code}
         />
         <RaisedButton 
           label="Get Code" 
@@ -172,8 +240,8 @@ class AuthDialog extends React.Component {
           errorText={this.state.nicknameError}
           fullWidth
           onChange={e => {
-            this.input.nickname = e.currentTarget.value;
-            if (this.validate('nickname', this.input.nickname)) {
+            this.input.register.nickname = e.currentTarget.value;
+            if (this.validate('nickname', this.input.register.nickname)) {
               this.setState({ nicknameError: '' });
             } else {
               this.setState({ nicknameError: 'length of nickname should between 1 ~ 16' });
@@ -186,8 +254,8 @@ class AuthDialog extends React.Component {
           type="password"
           fullWidth
           onChange={e => {
-            this.input.password = e.currentTarget.value;
-            if (this.validate('password', this.input.password)) {
+            this.input.register.password = e.currentTarget.value;
+            if (this.validate('password', this.input.register.password)) {
               this.setState({ passwordError: '' });
             } else {
               this.setState({ passwordError: 'length of password should between 6 ~ 60' });
@@ -200,8 +268,8 @@ class AuthDialog extends React.Component {
           type="password"
           fullWidth
           onChange={e => {
-            this.input.comfirmPassword = e.currentTarget.value;
-            if (this.input.password === this.input.comfirmPassword) {
+            this.input.register.comfirmPassword = e.currentTarget.value;
+            if (this.validate('comfirmPassword', this.input.register.comfirmPassword)) {
               this.setState({ comfirmPasswordError: '' });
             } else {
               this.setState({ comfirmPasswordError: 'twice password should be same' });
@@ -228,15 +296,15 @@ class AuthDialog extends React.Component {
 
   render() {
 
-    const { error, show } = this.props;
+    const { error, visible } = this.props;
       
     return (
       <Dialog
-        title={"Login"}
+        title={this.getDialogTitle()}
         actions={this.getActions()}
-        open={show}
+        open={visible}
         modal={false}
-        onRequestClose={() => {}}
+        onRequestClose={() => this.onClose()}
         contentStyle={styles.authDialog}
         bodyClassName="centerContent"
       >
@@ -249,17 +317,20 @@ class AuthDialog extends React.Component {
   }
 }
 
+const types = ['auth', 'register'];
+
 AuthDialog.propTypes = {
-  type: PropTypes.oneOf(['auth', 'register']),
+  type: PropTypes.oneOf(types),
   loading: PropTypes.bool,
-  show: PropTypes.bool,
-  error: PropTypes.string
+  visible: PropTypes.bool,
+  error: PropTypes.string,
+  dispatch: PropTypes.func
 };
 
 AuthDialog.defaultProps = {
   type: 'auth',
   loading: false,
-  show: false,
+  visible: false,
   error: ''
 };
 

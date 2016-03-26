@@ -14,9 +14,6 @@ import { connect } from 'react-redux';
 // custom components
 import AuthDialog from '../components/AuthDialog';
 
-// actions
-import { TYPE_USER } from '../constants/actionTypes';
-import { showDialog, setDialogContent } from '../actions';
 
 //App Entry
 class App extends React.Component {
@@ -29,17 +26,16 @@ class App extends React.Component {
         <MaterialDrawer />
         <div className="content">
           <MaterialAppBar />
-
           <div className="mainContainer">
-            
             <RepositoryDetail />
           </div>
         </div>
         <AuthDialog
           type={authDialog.type}
-          show={authDialog.show}
+          visible={authDialog.visible}
           loading={authDialog.loading}
           error={authDialog.error}
+          dispatch={dispatch}
         />
     	</div>
     );
@@ -49,7 +45,7 @@ class App extends React.Component {
 App.propTypes = {
   authDialog: PropTypes.shape({
     type: PropTypes.oneOf(['auth', 'register']).isRequired,
-    show: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string.isRequired
   }).isRequired

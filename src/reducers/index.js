@@ -6,18 +6,23 @@
 				authDialog: {
 					type: 'auth' or 'register',
 					loading: bool,  //是否在加载状态
-					show: bool,  //是否显示
+					visible: bool,  //是否显示
 					error: string  //是否出现错误
 				},
 				linkDialog: {
 					type: 'watch' or 'edit',
-					show: bool,
+					visible: bool,
 					loading: bool,
 					link: linkId,
 					error: string
 				}
 			},
 			showUser: userId,  // none with -1
+			auth: {
+				user: userId,
+				token: string,
+				expired_at: timestamp
+			}
 			loginUser: userId
 		},
 		data: {
@@ -77,7 +82,6 @@
 import { combineReducers } from 'redux';
 import view from './view';
 import data from './data';
-import { NAV_OPEN, DIALOG_SHOW, DIALOG_SET_CONTENT, TYPE_USER } from '../constants/actionTypes';
 
 /** default state **/
 /*const NONEUSER = {

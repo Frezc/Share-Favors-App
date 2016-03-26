@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { NAV_OPEN } from '../constants/actionTypes';
+import { NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED } from '../constants/actionTypes';
 import dialogs from './dialogs';
 
 function navOpen(state = false, action) {
@@ -19,19 +19,27 @@ function showUser(state = -1, action) {
   }
 }
 
-function loginUser(state = -1, action) {
-  switch (action.type) {
+const DEFAULT_AUTH = {
+  user: -1,
+  token: '',
+  expired_at: null
+};
 
-    default:
-      return state;
+function auth(state = DEFAULT_AUTH, action) {
+  switch (action.type) {
+    case AUTH_SUCCESS:
+      return action.auth;
+    case AUTH_DENIED:
+      return DEFAULT_AUTH;
   }
+  return state;
 }
 
 const view = combineReducers({
   navOpen,
   dialogs,
   showUser,
-  loginUser
+  auth
 });
 
 export default view;

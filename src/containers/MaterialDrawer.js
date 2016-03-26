@@ -6,9 +6,18 @@ import Divider from 'material-ui/lib/divider';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
-let SelectableList = SelectableContainerEnhance(List);
 
-import { setNavOpen, showDialog } from '../actions';
+// actions
+import { setNavOpen } from '../actions';
+import { setDialogVisible } from '../actions/dialog';
+
+// constants
+import { DIALOG } from '../constants';
+
+//helper
+import { generateAvatarUrl } from '../helpers';
+
+let SelectableList = SelectableContainerEnhance(List);
 
 function MaterialDrawer(props) {
   const { navOpen, user, dispatch } = props;
@@ -22,9 +31,10 @@ function MaterialDrawer(props) {
       docked={false}
     >
       <NavHeader
-        img={'../../design/avatar.gif'}
+        img={generateAvatarUrl(user.email, 40)}
         name={user.nickname}
         onTouchTap={e => {
+          dispatch(setDialogVisible(DIALOG.AUTH, true));
         }}
       />
       <Divider />
@@ -49,7 +59,7 @@ MaterialDrawer.propTypes = {
 function select (state) {
   return {
     navOpen: state.view.navOpen,
-    user: state.data.users[state.view.loginUser]
+    user: state.data.users[state.view.auth.user]
   };
 }
 

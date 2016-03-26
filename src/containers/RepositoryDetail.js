@@ -81,6 +81,7 @@ class RepositoryDetail extends React.Component {
           actions={actions}
         />
         <RepoList
+          style={styles.repoList}
           rootRef={ref => {
             this.repoList = ref;
           }}
@@ -109,7 +110,7 @@ class RepositoryDetail extends React.Component {
         <LinkDialog
           type="watch"
           loading={linkDialog.loading}
-          show={linkDialog.show}
+          visible={linkDialog.visible}
           error={linkDialog.error}
           link={links[linkDialog.link]}
           tags={tags}
@@ -125,7 +126,7 @@ RepositoryDetail.propTypes = {
   tags: PropTypes.object.isRequired,
   linkDialog: PropTypes.shape({
     type: PropTypes.oneOf(['watch', 'edit']).isRequired,
-    show: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     link: PropTypes.number.isRequired,
     error: PropTypes.string.isRequired
@@ -140,6 +141,9 @@ const styles = {
   columnIcon: {
     width: 24,
     height: 24
+  },
+  repoList: {
+    marginTop: 24
   }
 }
 

@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
+import { AUTH_SUCCESS } from '../constants/actionTypes';
 
 const defaultUser = {
   id: -1,
-  email: 'itoumakoto@overflow.com',
-  nickname: 'itou_makoto',
-  sign: '都是世界的错',
+  email: 'youremail@email.com',
+  nickname: 'not login',
+  sign: '',
   starlist: [-1],
   repositories: [-1]
 };
@@ -52,10 +53,12 @@ const defaultTag = {
 
 function users(state = { '-1': defaultUser }, action) {
   switch (action.type) {
-
-    default:
-      return state;
+    case AUTH_SUCCESS:
+      return Object.assign({}, state, {
+        [action.auth.user.id]: action.auth.user
+      });
   }
+  return state;
 }
 
 function repositories(state = { '-1': defaultRepo }, action) {
@@ -74,7 +77,7 @@ function links(state = { '-1': defaultLink }, action) {
   }
 }
 
-function tags(state = { default: defaultTag }, action) {
+function tags(state = { '-1': defaultTag }, action) {
   switch (action.type) {
 
     default:

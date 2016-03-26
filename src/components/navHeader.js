@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Avatar from 'material-ui/lib/avatar';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import ActionAccountCircle from 'material-ui/lib/svg-icons/action/account-circle';
 
 function NavHeader (props) {
   const { img, name, onTouchTap } = props;
@@ -13,7 +14,8 @@ function NavHeader (props) {
       <Avatar
         src={img}
         size={32}
-        style={styles.avatar} />
+        style={styles.avatar}
+      />
       <div style={styles.name}>{name}</div>
     </MenuItem>
   );
