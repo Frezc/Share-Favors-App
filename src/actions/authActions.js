@@ -1,7 +1,7 @@
 import Api from '../api';
 import { AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_COUNTING } from '../constants/actionTypes';
 
-import { setDialogLoading } from './dialog';
+import { setDialogLoading, setDialogError } from './dialog';
 import { showSnackbar } from './index';
 import { DIALOG } from '../constants';
 
@@ -33,11 +33,11 @@ export function auth(email, password) {
         if (response.ok) {
           response.json().then(json => dispatch(successAuth(json)));
         } else {
-          response.json().then(json => dispatch(failAuth(json.error)));
+          json => dispatch(setDialogError(DIALOG.auth, 'Email or password invalid.'));
         }
       })
       .catch(error => {
-        dispatch(failAuth(error.message));
+        dispatch(setDialogError(DIALOG.auth, error.message));
       });
   }
 }
@@ -63,11 +63,11 @@ export function getCodeByEmail(email) {
           dispatch(showSnackbar(`Email has been sent to ${email}.`));
           dispatch(setEmailCount());
         } else {
-          response.json().then(json => dispatch(failAuth(json.error)));
+          dispatch(setDialogError(DIALOG.auth, 'bad request'));
         }
       })
       .catch(error => {
-        dispatch(failAuth(error.message));
+        dispatch(setDialogError(DIALOG.auth, error.message));
       })
   }
 }

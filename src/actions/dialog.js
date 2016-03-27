@@ -1,4 +1,4 @@
-import { DIALOG_VISIBLE_CHANGE, DIALOG_CONTENT_CHANGE, DIALOG_LOADING_CHANGE } from '../constants/actionTypes';
+import { DIALOG_VISIBLE_CHANGE, DIALOG_CONTENT_CHANGE, DIALOG_LOADING_CHANGE, DIALOG_ERROR_CHANGE } from '../constants/actionTypes';
 
 export function setDialogVisible (dialog, visible = true) {
   return {
@@ -21,5 +21,12 @@ export function setDialogLoading (dialog, loading = true) {
     type: DIALOG_LOADING_CHANGE,
     dialog: dialog,
     loading: loading
+  }
+}
+
+export function setDialogError (dialog, error = '') {
+  return {
+    type: DIALOG_ERROR_CHANGE,
+    error: error
   }
 }

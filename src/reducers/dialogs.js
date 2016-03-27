@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { 
   DIALOG_VISIBLE_CHANGE, DIALOG_CONTENT_CHANGE, DIALOG_LOADING_CHANGE, 
-  AUTH_DENIED, AUTH_SUCCESS 
+  AUTH_DENIED, AUTH_SUCCESS, DIALOG_ERROR_CHANGE
 } from '../constants/actionTypes';
 import { DIALOG } from '../constants';
 import { DEFAULT_AUTHDIALOG, DEFAULT_LINKDIALOG } from '../constants/defaultStates';
@@ -29,7 +29,7 @@ function authDialog(state = DEFAULT_AUTHDIALOG, action) {
           loading: false,
           error: ''
         });
-      case AUTH_DENIED:
+      case DIALOG_ERROR_CHANGE:
         return Object.assign({}, state, {
           loading: false,
           error: action.error

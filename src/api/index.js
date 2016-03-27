@@ -12,6 +12,7 @@ export default {
       body: `email=${email}&password=${password}`
     });
   },
+  
   sendEmail(email) {
     return fetch(`${SENDEMAIL_URL}?email=${email}`);
   }

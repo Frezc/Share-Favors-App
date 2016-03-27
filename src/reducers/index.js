@@ -22,8 +22,8 @@
 				user: userId,
 				token: string,
 				expired_at: timestamp
-			}
-			loginUser: userId
+			},
+			sendEmailCounting: bool, // 发送邮件的功能是否在倒计时中
 		},
 		data: {
 			users: {

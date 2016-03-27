@@ -7,7 +7,7 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 
 // actions
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
-import { auth } from '../actions/authActions';
+import { auth, getCodeByEmail, setEmailCount } from '../actions/authActions';
 
 // constants
 import { DIALOG } from '../constants';
@@ -25,7 +25,9 @@ class AuthDialog extends React.Component {
       nicknameError: '',
       passwordError: '',
       comfirmPasswordError: '',
-      codeError: ''
+      codeError: '',
+
+      count: 1
     };
 
     this.input = {
@@ -146,18 +148,35 @@ class AuthDialog extends React.Component {
     ];
   }
 
+  startCounter() {
+    const { dispatch } = this.props;
+    console.log('startCounter')
+
+    this.setState({ count: 60 });
+    clearInterval(this.timer);
+    this.timer = setInterval(() => {
+      this.setState({ count: this.state.count - 1 })
+      if (this.state.count <= 1) {
+        clearInterval(this.timer);
+        dispatch(setEmailCount(false));
+      }
+    }, 1000);
+  }
+
   onLoginPress() {
     const { dispatch } = this.props;
 
     // 验证输入是否合法
     if (this.validateAuth()) {
       dispatch(auth(this.input.auth.email, this.input.auth.password));
+      this.startCounter();
     }
   }
 
   onGetCodePress() {
     if (this.validate('email', this.input.register.email)) {
-      // todo 
+      const { dispatch } = this.props;
+      dispatch(getCodeByEmail(this.input.register.email));
     }
   }
 
@@ -241,8 +260,9 @@ class AuthDialog extends React.Component {
           value={this.input.register.code}
         />
         <RaisedButton 
-          label="Get Code"
+          label={this.props.sendEmailCounting ? this.state.count : "Get Code"}
           primary={true}
+          disabled={this.props.sendEmailCounting}
           style={Object.assign({}, styles.getcodeButton, {
             top: this.state.emailError == '' ? 170 : 190
           })}
@@ -337,7 +357,8 @@ AuthDialog.propTypes = {
   loading: PropTypes.bool,
   visible: PropTypes.bool,
   error: PropTypes.string,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  sendEmailCounting: PropTypes.bool.isRequired
 };
 
 AuthDialog.defaultProps = {
