@@ -9,17 +9,20 @@ import UserDetail from './UserDetail';
 
 // from libs
 import Dialog from 'material-ui/lib/dialog';
+import Snackbar from 'material-ui/lib/snackbar';
 import { connect } from 'react-redux';
 
 // custom components
 import AuthDialog from '../components/AuthDialog';
 
+// actions
+import { hideSnackbar } from '../actions';
 
 //App Entry
 class App extends React.Component {
 
   render() {
-    const { dispatch, authDialog } = this.props;
+    const { dispatch, authDialog, snackbar } = this.props;
 
     return (
     	<div className="page">
@@ -37,6 +40,18 @@ class App extends React.Component {
           error={authDialog.error}
           dispatch={dispatch}
         />
+        <Snackbar
+          message={snackbar.message}
+          open={snackbar.visible}
+          onRequestClose={() => {
+            dispatch(hideSnackbar());
+          }}
+          autoHideDuration={4000}
+          action="GOT IT"
+          onActionTouchTap={() => {
+            dispatch(hideSnackbar());
+          }}
+        />
     	</div>
     );
   }
@@ -48,12 +63,17 @@ App.propTypes = {
     visible: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string.isRequired
+  }).isRequired,
+  snackbar: PropTypes.shape({
+    visible: PropTypes.bool.isRequired,
+    message: PropTypes.string.isRequired
   }).isRequired
 }
 
 function select (state) {
   return {
     authDialog: state.view.dialogs.authDialog,
+    snackbar: state.view.snackbar
   }
 }
 

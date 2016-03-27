@@ -5,11 +5,13 @@ import NavHeader from '../components/NavHeader';
 import Divider from 'material-ui/lib/divider';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 
 // actions
 import { setNavOpen } from '../actions';
 import { setDialogVisible } from '../actions/dialog';
+import { logout } from '../actions/authActions';
 
 // constants
 import { DIALOG } from '../constants';
@@ -34,7 +36,9 @@ function MaterialDrawer(props) {
         img={generateAvatarUrl(user.email, 40)}
         name={user.nickname}
         onTouchTap={e => {
-          dispatch(setDialogVisible(DIALOG.AUTH, true));
+          if (user.id == -1) {
+            dispatch(setDialogVisible(DIALOG.AUTH, true));
+          }
         }}
       />
       <Divider />
@@ -48,6 +52,16 @@ function MaterialDrawer(props) {
         <ListItem
           value={1}>Menu Item 2</ListItem>
       </SelectableList>
+
+      <Divider />
+      <MenuItem
+        disabled={user.id == -1}
+        onTouchTap={e => {
+          dispatch(logout());
+        }}
+      >
+        Logout
+      </MenuItem>
     </LeftNav>
   );
 }

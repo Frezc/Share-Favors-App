@@ -7,7 +7,7 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 
 // actions
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
-import { auth } from '../actions/fetchActions';
+import { auth } from '../actions/authActions';
 
 // constants
 import { DIALOG } from '../constants';
@@ -18,6 +18,9 @@ class AuthDialog extends React.Component {
     super(props);
 
     this.state = {
+
+      authEmailError: '',
+      authPasswordError: '',
       emailError: '',
       nicknameError: '',
       passwordError: '',
@@ -152,6 +155,12 @@ class AuthDialog extends React.Component {
     }
   }
 
+  onGetCodePress() {
+    if (this.validate('email', this.input.register.email)) {
+      // todo 
+    }
+  }
+
   onClose() {
     const { dispatch } = this.props;
 
@@ -169,14 +178,14 @@ class AuthDialog extends React.Component {
       <div className="authDialog centerContent">
         <TextField
           floatingLabelText="Email"
-          errorText={this.state.emailError}
+          errorText={this.state.authEmailError}
           fullWidth
           onChange={e => {
             this.input.auth.email = e.currentTarget.value;
             if (this.validate('email', this.input.auth.email)) {
-              this.setState({ emailError: '' });
+              this.setState({ authEmailError: '' });
             } else {
-              this.setState({ emailError: 'invalid email address' });
+              this.setState({ authEmailError: 'invalid email address' });
             }
           }}
           value={this.input.auth.email}
@@ -184,14 +193,14 @@ class AuthDialog extends React.Component {
         <TextField 
           floatingLabelText="Password"
           type="password"
-          errorText={this.state.passwordError}
+          errorText={this.state.authPasswordError}
           fullWidth
           onChange={e => {
             this.input.auth.password = e.currentTarget.value;
             if (this.validate('password', this.input.auth.password)) {
-              this.setState({ passwordError: '' });
+              this.setState({ authPasswordError: '' });
             } else {
-              this.setState({ passwordError: 'please input property password' });
+              this.setState({ authPasswordError: 'please input property password' });
             }
           }}
         />
@@ -214,6 +223,7 @@ class AuthDialog extends React.Component {
               this.setState({ emailError: 'invalid email address' });
             }
           }}
+          value={this.input.register.email}
         />
         <TextField
           floatingLabelText="Code"
@@ -231,9 +241,12 @@ class AuthDialog extends React.Component {
           value={this.input.register.code}
         />
         <RaisedButton 
-          label="Get Code" 
+          label="Get Code"
           primary={true}
-          style={styles.getcodeButton}
+          style={Object.assign({}, styles.getcodeButton, {
+            top: this.state.emailError == '' ? 170 : 190
+          })}
+          onTouchTap={e => this.onGetCodePress()}
         />
         <TextField 
           floatingLabelText="Nick Name"

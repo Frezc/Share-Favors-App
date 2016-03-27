@@ -1,6 +1,17 @@
-import { combineReducers } from 'redux';
-import { NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED } from '../constants/actionTypes';
+import {
+  combineReducers
+}
+from 'redux';
+import {
+  NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SNACKBAR_SHOWMSG,
+  SENDEMAIL_COUNTING
+}
+from '../constants/actionTypes';
 import dialogs from './dialogs';
+import {
+  DEFAULT_AUTH, DEFAULT_SNACKBAR
+}
+from '../constants/defaultStates';
 
 function navOpen(state = false, action) {
   switch (action.type) {
@@ -14,16 +25,9 @@ function navOpen(state = false, action) {
 function showUser(state = -1, action) {
   switch (action.type) {
 
-    default:
-      return state;
+    default: return state;
   }
 }
-
-const DEFAULT_AUTH = {
-  user: -1,
-  token: '',
-  expired_at: null
-};
 
 function auth(state = DEFAULT_AUTH, action) {
   switch (action.type) {
@@ -34,8 +38,30 @@ function auth(state = DEFAULT_AUTH, action) {
         expired_at: action.auth.expired_at
       };
     case AUTH_DENIED:
+    case LOGOUT:
       return DEFAULT_AUTH;
   }
+  return state;
+}
+
+function snackbar(state = DEFAULT_SNACKBAR, action) {
+  switch (action.type) {
+    case SNACKBAR_SHOWMSG:
+      return {
+        visible: action.visible,
+        message: action.message
+      }
+  }
+
+  return state;
+}
+
+function sendEmailCounting(state = false, action) {
+  switch (action.type) {
+    case SENDEMAIL_COUNTING:
+      return action.counting;
+  }
+
   return state;
 }
 
@@ -43,7 +69,9 @@ const view = combineReducers({
   navOpen,
   dialogs,
   showUser,
-  auth
+  auth,
+  snackbar,
+  sendEmailCounting
 });
 
 export default view;

@@ -83,17 +83,6 @@ import { combineReducers } from 'redux';
 import view from './view';
 import data from './data';
 
-/** default state **/
-/*const NONEUSER = {
-	email: 'youremail@email.com',
-	nickname: 'click to login',
-	sign: 'you can login to save and share your favorites',
-	starlist: [],
-	repositories: []
-};*/
-
-/** reducers **/
-
 const rootRuducer = combineReducers({
 	view,
 	data

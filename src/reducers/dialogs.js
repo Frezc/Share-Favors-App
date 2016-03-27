@@ -4,21 +4,7 @@ import {
   AUTH_DENIED, AUTH_SUCCESS 
 } from '../constants/actionTypes';
 import { DIALOG } from '../constants';
-
-const DEFAULT_AUTHDIALOG = {
-  type: 'auth',
-  loading: false,
-  visible: false,
-  error: ''
-};
-
-const DEFAULT_LINKDIALOG = {
-  type: 'watch',
-  visible: false,
-  loading: false,
-  link: -1,
-  error: ''
-};
+import { DEFAULT_AUTHDIALOG, DEFAULT_LINKDIALOG } from '../constants/defaultStates';
 
 function authDialog(state = DEFAULT_AUTHDIALOG, action) {
   if (!action.dialog || action.dialog === DIALOG.AUTH) {
