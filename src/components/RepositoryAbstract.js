@@ -7,6 +7,7 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
 import ActionVisibilityOff from 'material-ui/lib/svg-icons/action/visibility-off';
+import ActionVisibility from 'material-ui/lib/svg-icons/action/visibility';
 import ToggleStar from 'material-ui/lib/svg-icons/toggle/star';
 import ActionDateRange from 'material-ui/lib/svg-icons/action/date-range';
 import MapsLocalOffer from 'material-ui/lib/svg-icons/maps/local-offer';
@@ -23,7 +24,19 @@ function getRootClassName (className) {
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style } = props;
+  const { actions, className, style, repoId, repositories, links, tags } = props;
+
+  const repository = repositories[repoId];
+  let linkNum = 0;
+  let repoNum = 0;
+
+  repository.items.map(item => {
+    if (item.type == 'repo') {
+      repoNum++;
+    } else {
+      linkNum++;
+    }
+  })
 
   return (
     <div 
@@ -37,11 +50,11 @@ function RepositoryAbstract (props) {
         >
           <div className="repoTitle">
             <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              Frezc
+              {repository.creatorName}
             </a>
             /
             <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              MyFavors
+              {repository.name}
             </a>
           </div>
           <div className="repoSubTitle">
@@ -51,13 +64,22 @@ function RepositoryAbstract (props) {
               color={Colors.grey500}
             />
             <span>
-              12450
+              {repository.stars}
             </span>
-            <ActionVisibilityOff
-              className="visibilityIcon"
-              style={styles.subtitleIcon}
-              color={Colors.grey500}
-            />
+            {
+              repository.status == 0 ?
+                <ActionVisibilityOff
+                  className="visibilityIcon"
+                  style={styles.subtitleIcon}
+                  color={Colors.grey500}
+                />
+                :
+                <ActionVisibility
+                  className="visibilityIcon"
+                  style={styles.subtitleIcon}
+                  color={Colors.grey500}
+                />
+            }
             <ActionDateRange
               className="dateIcon"
               style={styles.subtitleIcon}
@@ -65,7 +87,7 @@ function RepositoryAbstract (props) {
             />
             <span
               className="dateText">
-              2015-01-12
+              {repository.created_at.slice(0, 10)}
             </span>
             <ContentLink
               className="linkIcon"
@@ -74,7 +96,7 @@ function RepositoryAbstract (props) {
             />
             <span
               className="linkText">
-              76
+              {linkNum}
             </span>
             <FileFolderShared
               className="folderIcon"
@@ -83,7 +105,7 @@ function RepositoryAbstract (props) {
             />
             <span
               className="folderText">
-              15
+              {repoNum}
             </span>
           </div>
         </CardHeader>
@@ -91,48 +113,25 @@ function RepositoryAbstract (props) {
           <Divider />
           <Subheader>Description</Subheader>
           <div className="description">
-            This is a very simple link repository.<br />
-            If You Like it, please give me a star.
+            {repository.description}
           </div>
           <Divider />
           <Subheader>Tags</Subheader>
           <div className="tagList">
-            <div className="tagContainer">
-              <MapsLocalOffer
-                style={{ width: 16, height: 16 }}
-                color={Colors.teal500}
-              />
-              <span className="tagText">
-                发发呆发呆发呆发呆sa时发生的发生地方大幅度dddDd多大的第三代
-              </span>
-            </div>
-            <div className="tagContainer">
-              <MapsLocalOffer
-                style={{ width: 16, height: 16 }}
-                color={Colors.teal500}
-              />
-              <span className="tagText">
-                发发呆发呆发呆发呆
-              </span>
-            </div>
-            <div className="tagContainer">
-              <MapsLocalOffer
-                style={{ width: 16, height: 16 }}
-                color={Colors.teal500}
-              />
-              <span className="tagText">
-                发发呆发呆发呆发呆时发生地方大幅度
-              </span>
-            </div>
-            <div className="tagContainer">
-              <MapsLocalOffer
-                style={{ width: 16, height: 16 }}
-                color={Colors.teal500}
-              />
-              <span className="tagText">
-                发发发呆时发生的发生地方大幅度
-              </span>
-            </div>
+            {repository.tags.map(tagId => 
+              <div 
+                className="tagContainer"
+                key={tagId}
+              >
+                <MapsLocalOffer
+                  style={{ width: 16, height: 16 }}
+                  color={Colors.teal500}
+                />
+                <span className="tagText">
+                  {tags[tagId].text}
+                </span>
+              </div>
+            )}
           </div>
           <Divider />
           <Subheader>Recent Updated Items</Subheader>
@@ -218,7 +217,11 @@ RepositoryAbstract.propTypes = {
     onTap: PropTypes.func
   })),
   className: PropTypes.string,
-  style: PropTypes.object
+  style: PropTypes.object,
+  repoId: PropTypes.number.isRequired,
+  repositories: PropTypes.object.isRequired,
+  links: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired
 };
 
 RepositoryAbstract.defaultProps = {

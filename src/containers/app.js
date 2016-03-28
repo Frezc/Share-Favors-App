@@ -30,7 +30,7 @@ class App extends React.Component {
         <div className="content">
           <MaterialAppBar />
           <div className="mainContainer">
-            <RepositoryDetail />
+            <UserDetail />
           </div>
         </div>
         <AuthDialog
