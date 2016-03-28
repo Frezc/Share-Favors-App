@@ -30,6 +30,8 @@ class AuthDialog extends React.Component {
       count: 1
     };
 
+    this.isCounting = false;
+
     this.input = {
       auth: {
         email: '',
@@ -152,6 +154,8 @@ class AuthDialog extends React.Component {
     const { dispatch } = this.props;
     console.log('startCounter')
 
+    this.isCounting = true;
+
     this.setState({ count: 60 });
     clearInterval(this.timer);
     this.timer = setInterval(() => {
@@ -159,6 +163,7 @@ class AuthDialog extends React.Component {
       if (this.state.count <= 1) {
         clearInterval(this.timer);
         dispatch(setEmailCount(false));
+        this.isCounting = false;
       }
     }, 1000);
   }
@@ -169,7 +174,6 @@ class AuthDialog extends React.Component {
     // 验证输入是否合法
     if (this.validateAuth()) {
       dispatch(auth(this.input.auth.email, this.input.auth.password));
-      this.startCounter();
     }
   }
 
@@ -190,6 +194,12 @@ class AuthDialog extends React.Component {
     const { dispatch } = this.props;
 
     dispatch(setDialogContent(DIALOG.AUTH, type));
+  }
+
+  componentWillReceiveProps(props) {
+    if (!this.isCounting && props.sendEmailCounting) {
+      startCounter();
+    }
   }
 
   renderAuth() {
