@@ -1,5 +1,5 @@
 import Api from '../api';
-import { AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_COUNTING } from '../constants/actionTypes';
+import { AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE } from '../constants/actionTypes';
 
 import { setDialogLoading, setDialogError } from './dialog';
 import { showSnackbar } from './index';
@@ -48,9 +48,10 @@ export function logout() {
   }
 }
 
-export function setEmailCount(counting = true) {
+export function setSendEmail(canSend = true, counting = false) {
   return {
-    type: SENDEMAIL_COUNTING,
+    type: SENDEMAIL_CHANGE,
+    canSend: canSend,
     counting: counting
   };
 }
@@ -61,7 +62,7 @@ export function getCodeByEmail(email) {
       .then(response => {
         if (response.ok) {
           dispatch(showSnackbar(`Email has been sent to ${email}.`));
-          dispatch(setEmailCount());
+          dispatch(setSendEmail(false, true));
         } else {
           dispatch(setDialogError(DIALOG.auth, 'bad request'));
         }

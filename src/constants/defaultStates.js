@@ -75,8 +75,13 @@ const DEFAULT_SNACKBAR = {
   message: 'Something goes wrong!!'
 };
 
+const DEFAULT_SENDEMAIL = {
+  canSendEmail: true,
+  sendEmailCounting: false
+}
+
 export { 
   defaultUser, defaultRepo, defaultLink, defaultTag, 
   DEFAULT_AUTHDIALOG, DEFAULT_LINKDIALOG, DEFAULT_AUTH,
-  DEFAULT_SNACKBAR
+  DEFAULT_SNACKBAR, DEFAULT_SENDEMAIL
 };

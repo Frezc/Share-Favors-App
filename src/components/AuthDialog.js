@@ -7,7 +7,7 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 
 // actions
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
-import { auth, getCodeByEmail, setEmailCount } from '../actions/authActions';
+import { auth, getCodeByEmail, setSendEmail } from '../actions/authActions';
 
 // constants
 import { DIALOG } from '../constants';
@@ -92,7 +92,7 @@ class AuthDialog extends React.Component {
     const { type } = this.props;
 
     if (type === types[1]) {
-      return 'Create a new User';
+      return 'Create User';
     } else {
       return 'Login';
     }
@@ -162,7 +162,7 @@ class AuthDialog extends React.Component {
       this.setState({ count: this.state.count - 1 })
       if (this.state.count <= 1) {
         clearInterval(this.timer);
-        dispatch(setEmailCount(false));
+        dispatch(setSendEmail());
         this.isCounting = false;
       }
     }, 1000);
@@ -181,6 +181,7 @@ class AuthDialog extends React.Component {
     if (this.validate('email', this.input.register.email)) {
       const { dispatch } = this.props;
       dispatch(getCodeByEmail(this.input.register.email));
+      dispatch(setSendEmail(false));
     }
   }
 
@@ -197,8 +198,8 @@ class AuthDialog extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!this.isCounting && props.sendEmailCounting) {
-      startCounter();
+    if (!this.isCounting && props.sendEmail.sendEmailCounting) {
+      this.startCounter();
     }
   }
 
@@ -270,9 +271,9 @@ class AuthDialog extends React.Component {
           value={this.input.register.code}
         />
         <RaisedButton 
-          label={this.props.sendEmailCounting ? this.state.count : "Get Code"}
+          label={!this.props.sendEmail.sendEmailCounting ? "Get Code" : this.state.count}
           primary={true}
-          disabled={this.props.sendEmailCounting}
+          disabled={!this.props.sendEmail.canSendEmail}
           style={Object.assign({}, styles.getcodeButton, {
             top: this.state.emailError == '' ? 170 : 190
           })}
@@ -368,7 +369,10 @@ AuthDialog.propTypes = {
   visible: PropTypes.bool,
   error: PropTypes.string,
   dispatch: PropTypes.func,
-  sendEmailCounting: PropTypes.bool.isRequired
+  sendEmail: PropTypes.shape({
+    canSendEmail: PropTypes.bool.isRequired,
+    sendEmailCounting: PropTypes.bool.isRequired
+  }).isRequired
 };
 
 AuthDialog.defaultProps = {

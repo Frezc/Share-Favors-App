@@ -22,7 +22,7 @@ import { hideSnackbar } from '../actions';
 class App extends React.Component {
 
   render() {
-    const { dispatch, authDialog, snackbar, sendEmailCounting } = this.props;
+    const { dispatch, authDialog, snackbar, sendEmail } = this.props;
 
     return (
     	<div className="page">
@@ -39,7 +39,7 @@ class App extends React.Component {
           loading={authDialog.loading}
           error={authDialog.error}
           dispatch={dispatch}
-          sendEmailCounting={sendEmailCounting}
+          sendEmail={sendEmail}
         />
         <Snackbar
           message={snackbar.message}
@@ -69,14 +69,14 @@ App.propTypes = {
     visible: PropTypes.bool.isRequired,
     message: PropTypes.string.isRequired
   }).isRequired,
-  sendEmailCounting: PropTypes.bool.isRequired
+  sendEmail: PropTypes.object.isRequired
 }
 
 function select (state) {
   return {
     authDialog: state.view.dialogs.authDialog,
     snackbar: state.view.snackbar,
-    sendEmailCounting: state.view.sendEmailCounting
+    sendEmail: state.view.sendEmail
   }
 }
 

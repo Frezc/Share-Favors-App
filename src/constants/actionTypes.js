@@ -15,4 +15,4 @@ export const LOGOUT = 'LOGOUT';
 // snackbar
 export const SNACKBAR_SHOWMSG = 'SNACKBAR_SHOWMSG';
 
-export const SENDEMAIL_COUNTING = 'SENDEMAIL_COUNTING';
+export const SENDEMAIL_CHANGE = 'SENDEMAIL_CHANGE';

@@ -23,7 +23,14 @@
 				token: string,
 				expired_at: timestamp
 			},
-			sendEmailCounting: bool, // 发送邮件的功能是否在倒计时中
+			snackbar: {
+				visible: bool,  
+				message: string  //显示的消息
+			},
+			sendEmail: {
+				canSendEmail: bool, // 是否能发送邮件
+				sendEmailCounting: bool //是否正在发送冷却中
+			}
 		},
 		data: {
 			users: {

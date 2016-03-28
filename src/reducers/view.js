@@ -4,14 +4,15 @@ import {
 from 'redux';
 import {
   NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SNACKBAR_SHOWMSG,
-  SENDEMAIL_COUNTING
+  SENDEMAIL_CHANGE, DIALOG_ERROR_CHANGE
 }
 from '../constants/actionTypes';
 import dialogs from './dialogs';
 import {
-  DEFAULT_AUTH, DEFAULT_SNACKBAR
+  DEFAULT_AUTH, DEFAULT_SNACKBAR, DEFAULT_SENDEMAIL
 }
 from '../constants/defaultStates';
+import { DIALOG } from '../constants';
 
 function navOpen(state = false, action) {
   switch (action.type) {
@@ -56,10 +57,13 @@ function snackbar(state = DEFAULT_SNACKBAR, action) {
   return state;
 }
 
-function sendEmailCounting(state = false, action) {
+function sendEmail(state = DEFAULT_SENDEMAIL, action) {
   switch (action.type) {
-    case SENDEMAIL_COUNTING:
-      return action.counting;
+    case SENDEMAIL_CHANGE:
+      return {
+        canSendEmail: action.canSend,
+        sendEmailCounting: action.counting
+      };
   }
 
   return state;
@@ -71,7 +75,7 @@ const view = combineReducers({
   showUser,
   auth,
   snackbar,
-  sendEmailCounting
+  sendEmail
 });
 
 export default view;
