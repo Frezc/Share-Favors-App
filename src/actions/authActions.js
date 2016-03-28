@@ -1,9 +1,21 @@
 import Api from '../api';
-import { AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE } from '../constants/actionTypes';
+import {
+  AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE
+}
+from '../constants/actionTypes';
 
-import { setDialogLoading, setDialogError } from './dialog';
-import { showSnackbar } from './index';
-import { DIALOG } from '../constants';
+import {
+  setDialogLoading, setDialogError
+}
+from './dialog';
+import {
+  showSnackbar
+}
+from './index';
+import {
+  DIALOG
+}
+from '../constants';
 
 import fetch from 'isomorphic-fetch';
 
@@ -33,11 +45,28 @@ export function auth(email, password) {
         if (response.ok) {
           response.json().then(json => dispatch(successAuth(json)));
         } else {
-          json => dispatch(setDialogError(DIALOG.auth, 'Email or password invalid.'));
+          dispatch(setDialogError(DIALOG.AUTH, 'Email or password invalid.'));
         }
       })
       .catch(error => {
-        dispatch(setDialogError(DIALOG.auth, error.message));
+        dispatch(setDialogError(DIALOG.AUTH, error.message));
+      });
+  }
+}
+
+export function register(email, password, nickname, code) {
+  return dispatch => {
+    dispatch(setDialogLoading(DIALOG.AUTH, true));
+    return Api.register(email, password, nickname, code)
+      .then(response => {
+        if (response.ok) {
+          response.json().then(json => dispatch(successAuth(json)))
+        } else {
+          dispatch(setDialogError(DIALOG.AUTH, 'register failed.'));
+        }
+      })
+      .catch(error => {
+        dispatch(setDialogError(DIALOG.AUTH, error.message));
       });
   }
 }

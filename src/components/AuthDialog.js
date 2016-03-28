@@ -7,7 +7,7 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 
 // actions
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
-import { auth, getCodeByEmail, setSendEmail } from '../actions/authActions';
+import { auth, getCodeByEmail, setSendEmail, register } from '../actions/authActions';
 
 // constants
 import { DIALOG } from '../constants';
@@ -79,9 +79,20 @@ class AuthDialog extends React.Component {
   }
 
   validateAuth() {
-    console.log(this.input)
     if (this.validate('email', this.input.auth.email) 
       && this.validate('password', this.input.auth.password)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  validateRegister() {
+    if (this.validate('email', this.input.register.email) 
+      && this.validate('password', this.input.register.password)
+      && this.validate('nickname', this.input.register.nickname)
+      && this.validate('comfirmPassword', this.input.register.comfirmPassword)
+      && this.validate('code', this.input.register.code)) {
       return true;
     }
 
@@ -131,7 +142,7 @@ class AuthDialog extends React.Component {
           <FlatButton
             label="Ok"
             primary={true}
-            onTouchTap={() => {}}
+            onTouchTap={() => this.onRegisterPress()}
           />,
           <FlatButton
             label="To Login"
@@ -174,6 +185,18 @@ class AuthDialog extends React.Component {
     // 验证输入是否合法
     if (this.validateAuth()) {
       dispatch(auth(this.input.auth.email, this.input.auth.password));
+    }
+  }
+
+  onRegisterPress() {
+    const { dispatch } = this.props;
+
+    if (this.validateRegister()) {
+      dispatch(register(
+        this.input.register.email, 
+        this.input.register.password,
+        this.input.register.nickname,
+        this.input.register.code));
     }
   }
 
