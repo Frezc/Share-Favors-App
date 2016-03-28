@@ -1,4 +1,4 @@
-const defaultUser = {
+export const defaultUser = {
   id: -1,
   email: 'youremail@email.com',
   nickname: 'not login',
@@ -7,7 +7,7 @@ const defaultUser = {
   repositories: [-1]
 };
 
-const defaultRepo = {
+export const defaultRepo = {
   id: -1,
   name: 'katsura_doujinshi',
   creatorId: -1,
@@ -20,21 +20,25 @@ const defaultRepo = {
   description: 'My katsura\'s doujinshi',
   items: [{
     type: 'repo',
-    id: -1
+    id: -1,
+    created_at: '2010-10-11 21:21:21'
   }, {
     type: 'link',
-    id: -1
+    id: -1,
+    created_at: '2010-10-11 21:21:21'
   }],
   recentItems: [{
     type: 'repo',
-    id: -1
+    id: -1,
+    created_at: '2010-10-11 21:21:21'
   }, {
     type: 'link',
-    id: -1
+    id: -1,
+    created_at: '2010-10-11 21:21:21'
   }]
 };
 
-const defaultLink = {
+export const defaultLink = {
   id: -1,
   title: 'katsura',
   url: 'https://www.google.co.jp/search?q=%E6%A1%82%E8%A8%80%E5%8F%B6&espv=2&rlz=1C1CHWL_zh-CNJP681JP682&biw=1157&bih=587&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwiXgJKIq9vLAhXDGJQKHbvnA88QsAQIJw',
@@ -42,21 +46,21 @@ const defaultLink = {
   tags: [-1]
 };
 
-const defaultTag = {
+export const defaultTag = {
   id: -1,
   text: 'katsura',
   used: 12
 };
 
 
-const DEFAULT_AUTHDIALOG = {
+export const DEFAULT_AUTHDIALOG = {
   type: 'auth',
   loading: false,
   visible: false,
   error: ''
 };
 
-const DEFAULT_LINKDIALOG = {
+export const DEFAULT_LINKDIALOG = {
   type: 'watch',
   visible: false,
   loading: false,
@@ -64,24 +68,22 @@ const DEFAULT_LINKDIALOG = {
   error: ''
 };
 
-const DEFAULT_AUTH = {
+export const DEFAULT_AUTH = {
   user: -1,
   token: '',
   expired_at: null
 };
 
-const DEFAULT_SNACKBAR = {
+export const DEFAULT_SNACKBAR = {
   visible: false,
   message: 'Something goes wrong!!'
 };
 
-const DEFAULT_SENDEMAIL = {
+export const DEFAULT_SENDEMAIL = {
   canSendEmail: true,
   sendEmailCounting: false
 }
 
-export { 
-  defaultUser, defaultRepo, defaultLink, defaultTag, 
-  DEFAULT_AUTHDIALOG, DEFAULT_LINKDIALOG, DEFAULT_AUTH,
-  DEFAULT_SNACKBAR, DEFAULT_SENDEMAIL
-};
+export const DEFAULT_CONTENT = {
+  loading: false
+}

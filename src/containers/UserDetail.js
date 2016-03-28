@@ -22,31 +22,30 @@ function UserDetail(props) {
       <Divider style={{ width: '100%' }} />
       <Subheader>[Repositories] (<a href='#'>view all</a>)</Subheader>
       <div className="repoList">
-        <RepositoryAbstract
-          style={{ marginTop: '8px' }}
-          repoId={-1}
-          repositories={repositories}
-          links={links}
-          tags={tags}
-        />
-        <RepositoryAbstract
-          style={{ marginTop: '8px' }}
-          repoId={-1}
-          repositories={repositories}
-          links={links}
-          tags={tags}
-        />
+        {user.repositories.map(repoId => 
+          <RepositoryAbstract
+            key={repoId}
+            style={{ marginTop: '8px' }}
+            repoId={repoId}
+            repositories={repositories}
+            links={links}
+            tags={tags}
+          />
+        )}
       </div>
       <Divider style={{ width: '100%' }}/>
       <Subheader>[Star Repositories] (<a href='#'>view all</a>)</Subheader>
       <div className="repoList">
-        <RepositoryAbstract
-          style={{ marginTop: '8px' }}
-          repoId={-1}
-          repositories={repositories}
-          links={links}
-          tags={tags}
-        />
+        {user.starlist.map(repoId => 
+          <RepositoryAbstract
+            key={repoId}
+            style={{ marginTop: '8px' }}
+            repoId={repoId}
+            repositories={repositories}
+            links={links}
+            tags={tags}
+          />
+        )}
       </div>
     </div>
   );

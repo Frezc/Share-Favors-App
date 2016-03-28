@@ -30,6 +30,9 @@
 			sendEmail: {
 				canSendEmail: bool, // 是否能发送邮件
 				sendEmailCounting: bool //是否正在发送冷却中
+			},
+			content: {
+				loading: bool, 主内容区域是否在加载
 			}
 		},
 		data: {
@@ -58,7 +61,8 @@
 					description,
 					items: [{
 						type: 'repo' or 'link',
-						id: ...repoId or linkId
+						id: ...repoId or linkId,
+						created_at: 创建时间
 					}, ...],
 					recentItems: [same]
 				},

@@ -11,6 +11,7 @@ import UserDetail from './UserDetail';
 import Dialog from 'material-ui/lib/dialog';
 import Snackbar from 'material-ui/lib/snackbar';
 import { connect } from 'react-redux';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 // custom components
 import AuthDialog from '../components/AuthDialog';
@@ -22,7 +23,7 @@ import { hideSnackbar } from '../actions';
 class App extends React.Component {
 
   render() {
-    const { dispatch, authDialog, snackbar, sendEmail } = this.props;
+    const { dispatch, authDialog, snackbar, sendEmail, content } = this.props;
 
     return (
     	<div className="page">
@@ -30,6 +31,14 @@ class App extends React.Component {
         <div className="content">
           <MaterialAppBar />
           <div className="mainContainer">
+            <div
+              className="loadingMask"
+              style={{ visibility: content.loading ? 'visible' : 'hidden' }}
+            >
+              <CircularProgress
+                size={5}
+              />
+            </div>
             <UserDetail />
           </div>
         </div>
@@ -69,14 +78,18 @@ App.propTypes = {
     visible: PropTypes.bool.isRequired,
     message: PropTypes.string.isRequired
   }).isRequired,
-  sendEmail: PropTypes.object.isRequired
+  sendEmail: PropTypes.object.isRequired,
+  content: PropTypes.shape({
+    loading: PropTypes.bool.isRequired
+  }).isRequired
 }
 
 function select (state) {
   return {
     authDialog: state.view.dialogs.authDialog,
     snackbar: state.view.snackbar,
-    sendEmail: state.view.sendEmail
+    sendEmail: state.view.sendEmail,
+    content: state.view.content
   }
 }
 

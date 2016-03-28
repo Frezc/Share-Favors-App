@@ -139,57 +139,40 @@ function RepositoryAbstract (props) {
             <TableBody
               displayRowCheckbox={false}
               selectable={false}>
-              <TableRow>
-                <TableRowColumn
-                  style={{ width: 8 }}>
-                  <ContentLink
-                    style={styles.columnIcon}
-                    color={Colors.grey900}
-                  />
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnName">
-                  <a href="#">这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnDate">
-                  2016-03-19
-                </TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn
-                  style={{ width: 8 }}>
-                  <FileFolderShared
-                    style={styles.columnIcon}
-                    color={Colors.grey900}
-                  />
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnName">
-                  <a href="#">其他库</a>
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnDate">
-                  2016-03-19
-                </TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn
-                  style={{ width: 8 }}>
-                  <ContentLink
-                    style={styles.columnIcon}
-                    color={Colors.grey900}
-                  />
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnName">
-                  <a href="#">这是很黄很暴力的链接字数补丁字数补丁字数补丁</a>
-                </TableRowColumn>
-                <TableRowColumn
-                  className="columnDate">
-                  2016-03-19
-                </TableRowColumn>
-              </TableRow>
+              {repository.items.map(item => 
+                <TableRow
+                  key={item.type+item.id}
+                >
+                  <TableRowColumn
+                    style={{ width: 8 }}>
+                    {item.type == 'repo' ?
+                      <FileFolderShared
+                        style={styles.columnIcon}
+                        color={Colors.grey900}
+                      />
+                      :
+                      <ContentLink
+                        style={styles.columnIcon}
+                        color={Colors.grey900}
+                      />
+                    }
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnName">
+                    <a href="#">
+                      {item.type == 'repo' ?
+                        repositories[item.id].name
+                        :
+                        links[item.id].title
+                      }
+                    </a>
+                  </TableRowColumn>
+                  <TableRowColumn
+                    className="columnDate">
+                    {item.created_at.slice(0, 10)}
+                  </TableRowColumn>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardText>
