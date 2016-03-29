@@ -65,7 +65,7 @@ class RepositoryDetail extends React.Component {
 
   render () {
 
-    const { linkDialog, repositories, tags, links } = this.props;
+    const { linkDialog, repositories } = this.props;
 
     const actions = [{
       label: 'Star'
@@ -112,8 +112,7 @@ class RepositoryDetail extends React.Component {
           loading={linkDialog.loading}
           visible={linkDialog.visible}
           error={linkDialog.error}
-          link={links[linkDialog.link]}
-          tags={tags}
+          link={linkDialog.link}
         />
       </div>
     );
@@ -122,13 +121,11 @@ class RepositoryDetail extends React.Component {
 
 RepositoryDetail.propTypes = {
   repositories: PropTypes.object.isRequired,
-  links: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired,
   linkDialog: PropTypes.shape({
     type: PropTypes.oneOf(['watch', 'edit']).isRequired,
     visible: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    link: PropTypes.number.isRequired,
+    link: PropTypes.object.isRequired,
     error: PropTypes.string.isRequired
   }).isRequired
 };
@@ -150,8 +147,6 @@ const styles = {
 function select (state) {
   return {
     repositories: state.data.repositories,
-    links: state.data.links,
-    tags: state.data.tags,
     linkDialog: state.view.dialogs.linkDialog
   };
 }

@@ -24,7 +24,7 @@ function getRootClassName (className) {
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style, repoId, repositories, links, tags } = props;
+  const { actions, className, style, repoId, repositories } = props;
 
   const repository = repositories[repoId];
   let linkNum = 0;
@@ -118,17 +118,17 @@ function RepositoryAbstract (props) {
           <Divider />
           <Subheader>Tags</Subheader>
           <div className="tagList">
-            {repository.tags.map(tagId => 
+            {repository.tags.map(tag =>
               <div 
                 className="tagContainer"
-                key={tagId}
+                key={tag.id}
               >
                 <MapsLocalOffer
                   style={{ width: 16, height: 16 }}
                   color={Colors.teal500}
                 />
                 <span className="tagText">
-                  {tags[tagId].text}
+                  {tag.text}
                 </span>
               </div>
             )}
@@ -141,7 +141,7 @@ function RepositoryAbstract (props) {
               selectable={false}>
               {repository.items.map(item => 
                 <TableRow
-                  key={item.type+item.id}
+                  key={item.id}
                 >
                   <TableRowColumn
                     style={{ width: 8 }}>
@@ -161,9 +161,9 @@ function RepositoryAbstract (props) {
                     className="columnName">
                     <a href="#">
                       {item.type == 'repo' ?
-                        repositories[item.id].name
+                        repositories[item.id].title
                         :
-                        links[item.id].title
+                        item.title
                       }
                     </a>
                   </TableRowColumn>
@@ -202,9 +202,7 @@ RepositoryAbstract.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   repoId: PropTypes.number.isRequired,
-  repositories: PropTypes.object.isRequired,
-  links: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired
+  repositories: PropTypes.object.isRequired
 };
 
 RepositoryAbstract.defaultProps = {

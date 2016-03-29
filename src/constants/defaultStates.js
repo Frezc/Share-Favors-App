@@ -16,42 +16,51 @@ export const defaultRepo = {
   stars: 12450,
   created_at: '2010-10-11 21:21:21',
   updated_at: '2010-10-11 21:21:21',
-  tags: [-1],
+  tags: [{
+    id: -1,
+    text: 'katsura',
+    used: 12
+  }],
   description: 'My katsura\'s doujinshi',
   items: [{
     type: 'repo',
     id: -1,
-    created_at: '2010-10-11 21:21:21'
+    created_at: '2010-10-11 21:21:21',
+    updated_at: '2010-10-11 21:21:21'
   }, {
     type: 'link',
     id: -1,
-    created_at: '2010-10-11 21:21:21'
+    title: 'katsura',
+    url: 'https://www.google.co.jp/search?q=%E6%A1%82%E8%A8%80%E5%8F%B6&espv=2&rlz=1C1CHWL_zh-CNJP681JP682&biw=1157&bih=587&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwiXgJKIq9vLAhXDGJQKHbvnA88QsAQIJw',
+    description: 'Goodjob Google',
+    tags:[{
+      id: -1,
+      text: 'katsura',
+      used: 12
+    }],
+    created_at: '2010-10-11 21:21:21',
+    updated_at: '2010-10-11 21:21:21'
   }],
   recentItems: [{
     type: 'repo',
     id: -1,
-    created_at: '2010-10-11 21:21:21'
+    created_at: '2010-10-11 21:21:21',
+    updated_at: '2010-10-11 21:21:21'
   }, {
     type: 'link',
     id: -1,
-    created_at: '2010-10-11 21:21:21'
+    title: 'katsura',
+    url: 'https://www.google.co.jp/search?q=%E6%A1%82%E8%A8%80%E5%8F%B6&espv=2&rlz=1C1CHWL_zh-CNJP681JP682&biw=1157&bih=587&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwiXgJKIq9vLAhXDGJQKHbvnA88QsAQIJw',
+    description: 'Goodjob Google',
+    tags:[{
+      id: -1,
+      text: 'katsura',
+      used: 12
+    }],
+    created_at: '2010-10-11 21:21:21',
+    updated_at: '2010-10-11 21:21:21'
   }]
 };
-
-export const defaultLink = {
-  id: -1,
-  title: 'katsura',
-  url: 'https://www.google.co.jp/search?q=%E6%A1%82%E8%A8%80%E5%8F%B6&espv=2&rlz=1C1CHWL_zh-CNJP681JP682&biw=1157&bih=587&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwiXgJKIq9vLAhXDGJQKHbvnA88QsAQIJw',
-  description: 'Goodjob Google',
-  tags: [-1]
-};
-
-export const defaultTag = {
-  id: -1,
-  text: 'katsura',
-  used: 12
-};
-
 
 export const DEFAULT_AUTHDIALOG = {
   type: 'auth',

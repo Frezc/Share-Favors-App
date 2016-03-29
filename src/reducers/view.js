@@ -4,7 +4,7 @@ import {
 from 'redux';
 import {
   NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SNACKBAR_SHOWMSG,
-  SENDEMAIL_CHANGE, DIALOG_ERROR_CHANGE, CONTENT_LOADING
+  SENDEMAIL_CHANGE, DIALOG_ERROR_CHANGE, CONTENT_STATUS
 }
 from '../constants/actionTypes';
 import dialogs from './dialogs';
@@ -12,7 +12,7 @@ import {
   DEFAULT_AUTH, DEFAULT_SNACKBAR, DEFAULT_SENDEMAIL, DEFAULT_CONTENT
 }
 from '../constants/defaultStates';
-import { DIALOG } from '../constants';
+import { SHOW_USER_SET } from '../constants/actionTypes';
 
 function navOpen(state = false, action) {
   switch (action.type) {
@@ -25,9 +25,11 @@ function navOpen(state = false, action) {
 
 function showUser(state = -1, action) {
   switch (action.type) {
-
-    default: return state;
+    case SHOW_USER_SET:
+      return action.user.id;
   }
+  
+  return state;
 }
 
 function auth(state = DEFAULT_AUTH, action) {
@@ -71,10 +73,10 @@ function sendEmail(state = DEFAULT_SENDEMAIL, action) {
 
 function content(state = DEFAULT_CONTENT, action) {
   switch (action.type) {
-    case CONTENT_LOADING:
+    case CONTENT_STATUS:
       return {
         loading: action.loading,
-        error: ''
+        error: action.error
       }
   }
 

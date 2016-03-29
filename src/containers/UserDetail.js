@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { generateAvatarUrl } from '../helpers';
 
 function UserDetail(props) {
-  const { user, repositories, links, tags } = props;
+  const { user, repositories } = props;
 
   return (
     <div className="userDetail">
@@ -28,8 +28,6 @@ function UserDetail(props) {
             style={{ marginTop: '8px' }}
             repoId={repoId}
             repositories={repositories}
-            links={links}
-            tags={tags}
           />
         )}
       </div>
@@ -42,8 +40,6 @@ function UserDetail(props) {
             style={{ marginTop: '8px' }}
             repoId={repoId}
             repositories={repositories}
-            links={links}
-            tags={tags}
           />
         )}
       </div>
@@ -59,17 +55,13 @@ UserDetail.propTypes = {
     starlist: PropTypes.array.isRequired,
     repositories: PropTypes.array.isRequired
   }).isRequired,
-  repositories: PropTypes.object.isRequired,
-  links: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired
+  repositories: PropTypes.object.isRequired
 };
 
 function select(state) {
   return {
     user: state.data.users[state.view.showUser],
-    repositories: state.data.repositories,
-    links: state.data.links,
-    tags: state.data.tags
+    repositories: state.data.repositories
   }
 }
 

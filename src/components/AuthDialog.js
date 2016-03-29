@@ -64,7 +64,7 @@ class AuthDialog extends React.Component {
         }
         break;
       case 'comfirmPassword':
-        if (value === this.input.password) {
+        if (value === this.input.register.password) {
           return true;
         }
         break;
@@ -95,7 +95,7 @@ class AuthDialog extends React.Component {
       && this.validate('code', this.input.register.code)) {
       return true;
     }
-
+    console.log('validateRegister fail')
     return false;
   }
 

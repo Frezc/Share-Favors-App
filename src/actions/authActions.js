@@ -17,8 +17,6 @@ import {
 }
 from '../constants';
 
-import fetch from 'isomorphic-fetch';
-
 
 function successAuth(auth) {
   return dispatch => {
@@ -94,10 +92,12 @@ export function getCodeByEmail(email) {
           dispatch(setSendEmail(false, true));
         } else {
           dispatch(setDialogError(DIALOG.auth, 'bad request'));
+          dispatch(setSendEmail());
         }
       })
       .catch(error => {
         dispatch(setDialogError(DIALOG.auth, error.message));
+        dispatch(setSendEmail());
       })
   }
 }

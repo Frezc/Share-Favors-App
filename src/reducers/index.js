@@ -13,7 +13,19 @@
 					type: 'watch' or 'edit',
 					visible: bool,
 					loading: bool,
-					link: linkId,
+					link: {
+						id: number,
+						title: string,
+						url: string,
+						description: string,
+						tags: [{
+							id: number,
+							text: string,
+							used: number
+						}],
+						created_at: 创建时间,
+						updated_at: 更新时间
+					},
 					error: string
 				}
 			},
@@ -58,32 +70,29 @@
 					stars,
 					created_at,
 					updated_at,
-					tags: [...tagId],
+					tags: [{
+						id: number,
+						text: string,
+						used: number
+					}],
 					description,
 					items: [{
 						type: 'repo' or 'link',
 						id: ...repoId or linkId,
-						created_at: 创建时间
+						// if type == 'link'
+						title: string,
+						url: string,
+						description: string,
+						tags: [{
+							id: number,
+							text: string,
+							used: number
+						}],
+						//
+						created_at: 创建时间,
+						updated_at: 更新时间
 					}, ...],
 					recentItems: [same]
-				},
-				...
-			},
-			links: {
-				[id]: {
-					id: number,
-					title: string,
-					url: string,
-					description: string,
-					tags: [...tagId]
-				},
-				...
-			},
-			tags: {
-				[id]: {
-					id: number,
-					text: string,
-					used: number
 				},
 				...
 			}

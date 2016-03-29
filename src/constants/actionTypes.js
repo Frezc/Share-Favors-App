@@ -18,4 +18,5 @@ export const SNACKBAR_SHOWMSG = 'SNACKBAR_SHOWMSG';
 export const SENDEMAIL_CHANGE = 'SENDEMAIL_CHANGE';
 
 // content
-export const CONTENT_LOADING = 'CONTENT_LOADING';
+export const CONTENT_STATUS = 'CONTENT_STATUS';
+export const SHOW_USER_SET = 'SHOW_USER_SET';

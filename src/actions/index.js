@@ -1,4 +1,4 @@
-import { NAV_OPEN, SNACKBAR_SHOWMSG, CONTENT_LOADING } from '../constants/actionTypes';
+import { NAV_OPEN, SNACKBAR_SHOWMSG, CONTENT_STATUS } from '../constants/actionTypes';
 
 /** action creator **/
 export function setNavOpen (open) {
@@ -24,9 +24,10 @@ export function hideSnackbar () {
   }
 }
 
-export function setContentLoading (loading = true) {
+export function setContentStatus (loading = true, error = '') {
   return {
-    type: CONTENT_LOADING,
-    loading: loading
+    type: CONTENT_STATUS,
+    loading: loading,
+    error: error
   }
 }

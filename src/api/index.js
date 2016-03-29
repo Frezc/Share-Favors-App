@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { 
   AUTH_URL, SENDEMAIL_URL, sendEmailUrl,
-  userInfoUrl
+  userInfoUrl, REGISTER_URL
 } from './urls';
 
 export default {
@@ -31,7 +31,6 @@ export default {
       method: 'POST',
       mode: 'cors',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
       },
       body: data
     });

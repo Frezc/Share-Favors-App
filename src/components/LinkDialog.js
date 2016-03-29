@@ -165,6 +165,7 @@ function renderContent (props) {
   }
 }
 
+// todo:
 function LinkDialog (props) {
   const { visible, loading, error } = props;
 
