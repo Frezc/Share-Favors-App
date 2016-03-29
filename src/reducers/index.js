@@ -33,6 +33,7 @@
 			},
 			content: {
 				loading: bool, 主内容区域是否在加载
+				error: string, 主内容区域显示的错误
 			}
 		},
 		data: {

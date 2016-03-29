@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-//import your components
+//import your containers
 import MaterialDrawer from './MaterialDrawer';
 import MaterialAppBar from './MaterialAppBar';
 import RepositoriesExplorer from './RepositoriesExplorer';
@@ -11,16 +11,23 @@ import UserDetail from './UserDetail';
 import Dialog from 'material-ui/lib/dialog';
 import Snackbar from 'material-ui/lib/snackbar';
 import { connect } from 'react-redux';
-import CircularProgress from 'material-ui/lib/circular-progress';
 
 // custom components
 import AuthDialog from '../components/AuthDialog';
+import ContentMask from '../components/ContentMask';
 
 // actions
 import { hideSnackbar } from '../actions';
+import { fetchUser } from '../actions/fetchAction';
 
 //App Entry
 class App extends React.Component {
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+
+    dispatch(fetchUser(1));
+  }
 
   render() {
     const { dispatch, authDialog, snackbar, sendEmail, content } = this.props;
@@ -31,14 +38,9 @@ class App extends React.Component {
         <div className="content">
           <MaterialAppBar />
           <div className="mainContainer">
-            <div
-              className="loadingMask"
-              style={{ visibility: content.loading ? 'visible' : 'hidden' }}
-            >
-              <CircularProgress
-                size={5}
-              />
-            </div>
+            <ContentMask
+              content={content}
+            />
             <UserDetail />
           </div>
         </div>
@@ -79,9 +81,7 @@ App.propTypes = {
     message: PropTypes.string.isRequired
   }).isRequired,
   sendEmail: PropTypes.object.isRequired,
-  content: PropTypes.shape({
-    loading: PropTypes.bool.isRequired
-  }).isRequired
+  content: PropTypes.object.isRequired
 }
 
 function select (state) {

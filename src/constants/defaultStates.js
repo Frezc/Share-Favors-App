@@ -85,5 +85,6 @@ export const DEFAULT_SENDEMAIL = {
 }
 
 export const DEFAULT_CONTENT = {
-  loading: false
+  loading: false,
+  error: ''
 }
