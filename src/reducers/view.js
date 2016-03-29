@@ -73,7 +73,8 @@ function content(state = DEFAULT_CONTENT, action) {
   switch (action.type) {
     case CONTENT_LOADING:
       return {
-        loading: action.loading
+        loading: action.loading,
+        error: ''
       }
   }
 
