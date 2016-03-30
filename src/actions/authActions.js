@@ -5,7 +5,7 @@ import {
 from '../constants/actionTypes';
 
 import {
-  setDialogLoading, setDialogError
+  setDialogLoading, setDialogError, setDialogVisible
 }
 from './dialog';
 import {
@@ -16,7 +16,6 @@ import {
   DIALOG
 }
 from '../constants';
-
 
 function successAuth(auth) {
   return dispatch => {
@@ -41,7 +40,10 @@ export function auth(email, password) {
     return Api.auth(email, password)
       .then(response => {
         if (response.ok) {
-          response.json().then(json => dispatch(successAuth(json)));
+          response.json().then(json => {
+            dispatch(successAuth(json));
+            dispatch(setDialogVisible(DIALOG.AUTH, false));
+          });
         } else {
           dispatch(setDialogError(DIALOG.AUTH, 'Email or password invalid.'));
         }

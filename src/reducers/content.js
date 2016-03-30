@@ -35,6 +35,6 @@ const content = combineReducers({
   loading,
   error,
   showUser
-})
+});
 
 export default content;

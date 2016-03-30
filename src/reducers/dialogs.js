@@ -25,7 +25,6 @@ function authDialog(state = DEFAULT_AUTHDIALOG, action) {
         });
       case AUTH_SUCCESS:
         return Object.assign({}, state, {
-          visible: false,
           loading: false,
           error: ''
         });

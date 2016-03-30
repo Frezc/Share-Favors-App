@@ -12,6 +12,29 @@ class ListControlBar extends React.Component {
       showTransition: false,
       percent: 0
     };
+
+    // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
+    this.activeScrollListener = true;
+
+    this.scrollListener = () => {
+      // console.log('scroll', window.scrollY)
+      if (this.activeScrollListener) {
+        // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
+        let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
+        percent = Math.min(Math.max(0, percent), 1);
+        if (percent != this.state.percent) {
+          this.setState({ percent });
+        }
+      }
+    }
+  }
+
+  componentDidMount () {
+    window.addEventListener('scroll', this.scrollListener);
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.scrollListener);
   }
 
   validNumber (index, sum) {
@@ -85,14 +108,16 @@ class ListControlBar extends React.Component {
 
   // props.percent -> offsetTop(percent) of handler
   getPercentTopFromPercent () {
-    const { sum, percent } = this.props;
+    const { sum } = this.props;
+    const { percent } = this.state;
     return (1 - Math.max(1.0 / sum, 0.15)) * percent;
   }
 
   // props.percent -> index
   // [1, sum]
   getIndexFromPercent () {
-    const { sum, percent } = this.props;
+    const { sum } = this.props;
+    const { percent } = this.state;
     if (sum == 1) {
       return 1;
     } else {
@@ -144,12 +169,31 @@ class ListControlBar extends React.Component {
     }
   }
 
+  onDoneChange(percent) {
+    const { onDoneChange } = this.props;
+
+    // 测试数据 同上
+    let scrollOffset = 156 + 64 + 72 + 49 * this.props.sum * percent - window.innerHeight;
+    const scrollStep = (scrollOffset - window.scrollY) / 10;
+    let step = 0;
+
+    window.clearInterval(this.timer);
+    this.activeScrollListener = false;
+    this.timer = window.setInterval(() => {
+      step++;
+      if (step > 10) {
+        window.clearInterval(this.timer);
+        this.activeScrollListener = true;
+      } else {
+        window.scrollBy(0, scrollStep);
+      }
+    }, 17);
+
+    onDoneChange && onDoneChange(percent);
+  }
+
   render () {
     let { description, onDragChange, onDoneChange, className, sum } = this.props;
-    let { percent } = this.props;
-    percent = Math.max(Math.min(percent, 1), 0);
-
-    //todo: 鼠标拖动时刷新效率太低
 
     return (
       <div>
@@ -163,20 +207,21 @@ class ListControlBar extends React.Component {
           }}
           onMouseMove={e => {
             if (this.state.isDragging) {
-              console.log('onMouseMove')
+              // console.log('onMouseMove')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               // let newIndex = this.getItemIndex(offsetTop);
-              onDragChange && onDragChange(this.getPercentFromOffsetTop(offsetTop));
-              // this.setState({ percent: this.getPercentFromOffsetTop(offsetTop) })
+              // onDragChange && onDragChange(this.getPercentFromOffsetTop(offsetTop));
+              // 改用内部state来更新，使用props传递太慢
+              this.setState({ percent: this.getPercentFromOffsetTop(offsetTop) });
               this.lastLocation = e.clientY;
             }
           }}
           onMouseUp={e => {
             if (this.state.isDragging) {
-              console.log('onMouseUp')
+              // console.log('onMouseUp')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               // this.pinToLocation(index, false);
-              onDoneChange && onDoneChange(this.getPercentFromOffsetTop(offsetTop));
+              this.onDoneChange(this.getPercentFromOffsetTop(offsetTop));
               this.setState({ isDragging: false })
             }
           }}
@@ -265,9 +310,9 @@ class ListControlBar extends React.Component {
 ListControlBar.propTypes = {
   className: PropTypes.string,
   sum: PropTypes.number.isRequired,
-  percent: PropTypes.number.isRequired, // [0, 1]
+  // percent: PropTypes.number.isRequired, // [0, 1]
   description: PropTypes.string,
-  onDragChange: PropTypes.func,
+  // onDragChange: PropTypes.func,
   onDoneChange: PropTypes.func
 };
 

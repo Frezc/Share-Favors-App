@@ -23,20 +23,58 @@ function getRootClassName (className) {
   return 'repoAbstract ' + className;
 }
 
+function renderRecentItems (repository, repositories) {
+  return (
+    <div>
+      <Subheader>Recent Updated Items</Subheader>
+      <Table className="abstractTable">
+        <TableBody
+          displayRowCheckbox={false}
+          selectable={false}>
+          {repository.items.map(item =>
+            <TableRow
+              key={item.id}
+            >
+              <TableRowColumn
+                style={{ width: 8 }}>
+                {item.type == 'repo' ?
+                  <FileFolderShared
+                    style={styles.columnIcon}
+                    color={Colors.grey900}
+                  />
+                  :
+                  <ContentLink
+                    style={styles.columnIcon}
+                    color={Colors.grey900}
+                  />
+                }
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnName">
+                <a href="#">
+                  {item.type == 'repo' ?
+                    repositories[item.id].title
+                    :
+                    item.title
+                  }
+                </a>
+              </TableRowColumn>
+              <TableRowColumn
+                className="columnDate">
+                {item.created_at.slice(0, 10)}
+              </TableRowColumn>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 function RepositoryAbstract (props) {
-  const { actions, className, style, repoId, repositories } = props;
+  const { actions, className, style, repoId, repositories, showRecentItems } = props;
 
   const repository = repositories[repoId];
-  let linkNum = 0;
-  let repoNum = 0;
-
-  repository.items.map(item => {
-    if (item.type == 'repo') {
-      repoNum++;
-    } else {
-      linkNum++;
-    }
-  })
 
   return (
     <div 
@@ -96,7 +134,7 @@ function RepositoryAbstract (props) {
             />
             <span
               className="linkText">
-              {linkNum}
+              {repository.repoNum}
             </span>
             <FileFolderShared
               className="folderIcon"
@@ -105,7 +143,7 @@ function RepositoryAbstract (props) {
             />
             <span
               className="folderText">
-              {repoNum}
+              {repository.linkNum}
             </span>
           </div>
         </CardHeader>
@@ -134,47 +172,9 @@ function RepositoryAbstract (props) {
             )}
           </div>
           <Divider />
-          <Subheader>Recent Updated Items</Subheader>
-          <Table className="abstractTable">
-            <TableBody
-              displayRowCheckbox={false}
-              selectable={false}>
-              {repository.items.map(item => 
-                <TableRow
-                  key={item.id}
-                >
-                  <TableRowColumn
-                    style={{ width: 8 }}>
-                    {item.type == 'repo' ?
-                      <FileFolderShared
-                        style={styles.columnIcon}
-                        color={Colors.grey900}
-                      />
-                      :
-                      <ContentLink
-                        style={styles.columnIcon}
-                        color={Colors.grey900}
-                      />
-                    }
-                  </TableRowColumn>
-                  <TableRowColumn
-                    className="columnName">
-                    <a href="#">
-                      {item.type == 'repo' ?
-                        repositories[item.id].title
-                        :
-                        item.title
-                      }
-                    </a>
-                  </TableRowColumn>
-                  <TableRowColumn
-                    className="columnDate">
-                    {item.created_at.slice(0, 10)}
-                  </TableRowColumn>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          {showRecentItems &&
+            renderRecentItems(repository, repositories)
+          }
         </CardText>
         { actions.length > 0 &&
           <CardActions expandable={false}>
@@ -202,13 +202,15 @@ RepositoryAbstract.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   repoId: PropTypes.number.isRequired,
-  repositories: PropTypes.object.isRequired
+  repositories: PropTypes.object.isRequired,
+  showRecentItems: PropTypes.bool
 };
 
 RepositoryAbstract.defaultProps = {
   actions: [],
   className: '',
-  style: {}
+  style: {},
+  showRecentItems: false
 }
 
 const styles = {

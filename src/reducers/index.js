@@ -77,6 +77,8 @@
 						used: number
 					}],
 					description,
+					repoNum: number, // 仓库中的仓库数量
+					linkNum: number, // 仓库中的链接数量
 					items: [{
 						type: 'repo' or 'link',
 						id: ...repoId or linkId,

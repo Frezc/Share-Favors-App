@@ -22,7 +22,7 @@ function getActions (props) {
   }
 
   switch(type) {
-    case 'watch':
+    case types[0]:
       return [
         <IconButton
           style={{ top: 6 }}
@@ -41,7 +41,7 @@ function getActions (props) {
           onTouchTap={() => {}}
         />
       ];
-    case 'edit':
+    case types[1]:
       return [
         <FlatButton
           label="Ok"
@@ -70,7 +70,7 @@ function getTitle (props) {
 
   if (loading) {
     return 'Loading...';
-  } else if (type === 'edit') {
+  } else if (type === types[1]) {
     return '';
   } else {
     return link.title;
@@ -158,7 +158,7 @@ function renderContent (props) {
     return (
       <CircularProgress />
     );
-  } else if (type === 'edit') {
+  } else if (type === types[1]) {
     return renderLinkEditor(props);
   } else {
     return renderLinkDetail(props);
@@ -188,19 +188,24 @@ function LinkDialog (props) {
   );
 }
 
+const types = ['watch', 'edit'];
+
 LinkDialog.propTypes = {
-  type: PropTypes.oneOf(['watch', 'edit']),
+  type: PropTypes.oneOf(types),
   loading: PropTypes.bool,
   visible: PropTypes.bool,
   error: PropTypes.string,
-  link: PropTypes.shape({  // 
+  link: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.number).isRequired  // tag的id
-  }).isRequired,
-  tags: PropTypes.object.isRequired  // 所有tag对象
+    tags: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      text: PropTypes.string.isRequired,
+      used: PropTypes.number.isRequired
+    })).isRequired
+  }).isRequired
 };
 
 LinkDialog.defaultProps = {

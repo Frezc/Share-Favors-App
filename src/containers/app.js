@@ -8,7 +8,6 @@ import RepositoryDetail from './RepositoryDetail';
 import UserDetail from './UserDetail';
 
 // from libs
-import Dialog from 'material-ui/lib/dialog';
 import Snackbar from 'material-ui/lib/snackbar';
 import { connect } from 'react-redux';
 
@@ -18,7 +17,6 @@ import ContentMask from '../components/ContentMask';
 
 // actions
 import { hideSnackbar } from '../actions';
-import { fetchUser } from '../actions/fetchAction';
 
 //App Entry
 class App extends React.Component {
@@ -41,7 +39,7 @@ class App extends React.Component {
             <ContentMask
               content={content}
             />
-            <UserDetail />
+            <RepositoryDetail />
           </div>
         </div>
         <AuthDialog

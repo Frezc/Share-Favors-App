@@ -7,11 +7,10 @@ import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
-import Subheader from 'material-ui/lib/Subheader';
 
 // actions
 import { setNavOpen } from '../actions';
-import { setDialogVisible } from '../actions/dialog';
+import { setDialogVisible, setDialogContent } from '../actions/dialog';
 import { logout } from '../actions/authActions';
 
 // constants
@@ -39,6 +38,7 @@ function MaterialDrawer(props) {
         onTouchTap={e => {
           if (user.id == -1) {
             dispatch(setDialogVisible(DIALOG.AUTH, true));
+            dispatch(setDialogContent(DIALOG.AUTH, 'auth'));
           }
         }}
       />
