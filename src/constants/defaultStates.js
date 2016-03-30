@@ -9,7 +9,7 @@ export const defaultUser = {
 
 export const defaultRepo = {
   id: -1,
-  name: 'katsura_doujinshi',
+  title: 'katsura_doujinshi',
   creatorId: -1,
   creatorName: 'itou_makoto',
   status: 1,

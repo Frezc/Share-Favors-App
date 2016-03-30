@@ -54,7 +54,7 @@ function RepositoryAbstract (props) {
             </a>
             /
             <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              {repository.name}
+              {repository.title}
             </a>
           </div>
           <div className="repoSubTitle">

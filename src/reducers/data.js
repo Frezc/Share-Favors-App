@@ -3,31 +3,50 @@ import { AUTH_SUCCESS } from '../constants/actionTypes';
 import { defaultUser, defaultRepo } from '../constants/defaultStates';
 import { SHOW_USER_SET } from '../constants/actionTypes';
 
-
-// todo: 构建正确的reducer
-
 function generateUser(user) {
   let newUser = Object.assign({}, user);
-  newUser.repositories = user.repositories.map(repo => {
-    return repo.id;
+  newUser.repositories = user.repositories.map(repoWithRecent => {
+    return repoWithRecent.repository.id;
   });
-  newUser.starlist = user.starlist.map(repo => {
-    return repo.id;
+  newUser.starlist = user.starlist.map(repoWithRecent => {
+    return repoWithRecent.repository.id;
   });
   return newUser;
 }
 
 function generateReposFromUser(user) {
-  let newRepos = {};
-  user.repositories.map(repo => {
-    let newRepo = Object.assign({}, repo);
-    newRepo.tags = repo.tags.map(tag => {
-      return tag.id;
+  let starRepos = decodeRepoWithRecent(user.starlist);
+  let repos = decodeRepoWithRecent(user.repositories);
+  return Object.assign({}, starRepos, repos);
+}
+
+// [{ repository: {}, recentItems: [] }] => { [repoId]: {} }
+function decodeRepoWithRecent(repoWithRecentList) {
+  let repoList = {};
+  repoWithRecentList.map(repoWithRecent => {
+    let newRepo = Object.assign({}, repoWithRecent.repository);
+    
+    newRepo.recentItems = repoWithRecent.recentItems.map(recentItem => {
+      if (recentItem.type == 1) {
+        return Object.assign({
+          type: 'link',
+          created_at: recentItem.created_at,
+          updated_at: recentItem.updated_at
+        }, recentItem.link);
+      } else {
+        repoList[recentItem.repository.id] = recentItem.repository;
+        return {
+          type: 'repo',
+          created_at: recentItem.created_at,
+          updated_at: recentItem.updated_at,
+          id: recentItem.repository.id
+        }
+      }
     });
-    newRepo.recentItems = repo.recentItems.map(recentItem => {
-      
-    });
+
+    repoList[newRepo.id] = newRepo;
   });
+  return repoList;
 }
 
 function users(state = { '-1': defaultUser }, action) {
@@ -46,10 +65,12 @@ function users(state = { '-1': defaultUser }, action) {
 
 function repositories(state = { '-1': defaultRepo }, action) {
   switch (action.type) {
-
-    default:
-      return state;
+    case AUTH_SUCCESS:
+      return Object.assign({}, state, generateReposFromUser(action.auth.user));
+    case SHOW_USER_SET:
+      return Object.assign({}, state, generateReposFromUser(action.user));
   }
+  return state;
 }
 
 const data = combineReducers({

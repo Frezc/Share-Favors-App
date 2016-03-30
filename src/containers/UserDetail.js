@@ -36,7 +36,7 @@ function UserDetail(props) {
       <div className="repoList">
         {user.starlist.map(repoId => 
           <RepositoryAbstract
-            key={repoId}
+            key={'star' + repoId}
             style={{ marginTop: '8px' }}
             repoId={repoId}
             repositories={repositories}
@@ -60,7 +60,7 @@ UserDetail.propTypes = {
 
 function select(state) {
   return {
-    user: state.data.users[state.view.showUser],
+    user: state.data.users[state.view.content.showUser],
     repositories: state.data.repositories
   }
 }

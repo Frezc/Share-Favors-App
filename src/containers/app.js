@@ -26,7 +26,7 @@ class App extends React.Component {
   componentWillMount() {
     const { dispatch } = this.props;
 
-    dispatch(fetchUser(3));
+    // dispatch(fetchUser(3));
   }
 
   render() {

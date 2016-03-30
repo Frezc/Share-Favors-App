@@ -29,7 +29,6 @@
 					error: string
 				}
 			},
-			showUser: userId,  // none with -1
 			auth: {
 				user: userId,
 				token: string,
@@ -46,6 +45,8 @@
 			content: {
 				loading: bool, 主内容区域是否在加载
 				error: string, 主内容区域显示的错误
+				
+				showUser: userId,  // none with -1
 			}
 		},
 		data: {
@@ -63,7 +64,7 @@
 			repositories: {
 				[id]: {
 					id: number,
-					name,
+					title,
 					creatorId,
 					creatorName,
 					status,
@@ -79,7 +80,7 @@
 					items: [{
 						type: 'repo' or 'link',
 						id: ...repoId or linkId,
-						// if type == 'link'
+						/// if type == 'link'
 						title: string,
 						url: string,
 						description: string,
@@ -88,7 +89,7 @@
 							text: string,
 							used: number
 						}],
-						//
+						///
 						created_at: 创建时间,
 						updated_at: 更新时间
 					}, ...],
