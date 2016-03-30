@@ -7,6 +7,7 @@ import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
+import Subheader from 'material-ui/lib/Subheader';
 
 // actions
 import { setNavOpen } from '../actions';
@@ -50,7 +51,23 @@ function MaterialDrawer(props) {
           primaryText="Repositories"
         />
         <ListItem
-          value={1}>Menu Item 2</ListItem>
+          value={1}>Stars</ListItem>
+        <Divider />
+        <ListItem
+          value={2}
+        >
+          Search
+        </ListItem>
+        <ListItem
+          value={3}
+        >
+          Explorer
+        </ListItem>
+        <ListItem
+          value={3}
+        >
+          Users
+        </ListItem>
       </SelectableList>
 
       <Divider />

@@ -1,7 +1,7 @@
 export const defaultUser = {
   id: -1,
   email: 'youremail@email.com',
-  nickname: 'not login',
+  nickname: 'click to login',
   sign: '',
   starlist: [-1],
   repositories: [-1]
