@@ -8,6 +8,8 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 
+import { Link } from 'react-router';
+
 // actions
 import { setNavOpen } from '../actions';
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
@@ -20,6 +22,22 @@ import { DIALOG } from '../constants';
 import { generateAvatarUrl } from '../helpers';
 
 let SelectableList = SelectableContainerEnhance(List);
+
+function LinkListItem(props) {
+  const { href, value } = props;
+
+  return (
+    <Link
+      to={href}
+    >
+      <ListItem
+        value={value}
+      >
+        {props.children}
+      </ListItem>
+    </Link>
+  );
+}
 
 function MaterialDrawer(props) {
   const { navOpen, user, dispatch } = props;
@@ -44,14 +62,16 @@ function MaterialDrawer(props) {
       />
       <Divider />
       <SelectableList
-        valueLink={{ value: 0, requestChange: (e, index) => {console.log(index)} }}
+        valueLink={{ value: 0, requestChange: (e, index) => {} }}
       >
         <ListItem
           value={0}
           primaryText="Repositories"
         />
         <ListItem
-          value={1}>Stars</ListItem>
+          value={1}>
+          Stars
+        </ListItem>
         <Divider />
         <ListItem
           value={2}
@@ -63,11 +83,12 @@ function MaterialDrawer(props) {
         >
           Explorer
         </ListItem>
-        <ListItem
+        <LinkListItem
+          href="/user/3"
           value={3}
         >
           Users
-        </ListItem>
+        </LinkListItem>
       </SelectableList>
 
       <Divider />

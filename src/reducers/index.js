@@ -104,12 +104,14 @@
 **/
 
 import { combineReducers } from 'redux';
+import { routerReducer as router } from 'react-router-redux';
 import view from './view';
 import data from './data';
 
 const rootRuducer = combineReducers({
 	view,
-	data
+	data,
+	router
 });
 
 export default rootRuducer;

@@ -3,9 +3,6 @@ import React, { PropTypes } from 'react';
 //import your containers
 import MaterialDrawer from './MaterialDrawer';
 import MaterialAppBar from './MaterialAppBar';
-import RepositoriesExplorer from './RepositoriesExplorer';
-import RepositoryDetail from './RepositoryDetail';
-import UserDetail from './UserDetail';
 
 // from libs
 import Snackbar from 'material-ui/lib/snackbar';
@@ -39,7 +36,7 @@ class App extends React.Component {
             <ContentMask
               content={content}
             />
-            <RepositoryDetail />
+            { this.props.children }
           </div>
         </div>
         <AuthDialog

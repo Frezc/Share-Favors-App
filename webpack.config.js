@@ -5,7 +5,8 @@ var autoprefixer = require('autoprefixer');
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR = path.resolve(__dirname, 'src');
 
-module.exports = {
+var webpackConfig = {
+	// devtool: 'cheap-module-source-map',
 	entry: [
 		'webpack-dev-server/client?http://0.0.0.0:8080',
 		APP_DIR + '/index.js'
@@ -50,3 +51,5 @@ module.exports = {
 		*/
 	]
 }
+
+module.exports = webpackConfig;

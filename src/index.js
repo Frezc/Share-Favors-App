@@ -3,23 +3,29 @@ import {
   render
 }
 from 'react-dom';
-import App from './containers/app';
 import {
   Provider
 }
 from 'react-redux';
+import { Router, Route, browserHistory } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
 import './assets';
 import configureStore from './store/configureStore';
+import routes from './routes';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
 
 const store = configureStore();
+// Create an enhanced history that syncs navigation events with the store
+const history = syncHistoryWithStore(browserHistory, store, {
+  selectLocationState: state => state.router
+});
 
 render(
   <Provider store={store}>
-    <App />
+    <Router history={history} routes={routes} />
   </Provider>,
   document.getElementById('app')
 );
