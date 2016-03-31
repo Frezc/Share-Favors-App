@@ -10,8 +10,8 @@ export default function configureStore(initialState) {
     applyMiddleware(
       thunkMiddleware,
       loggerMiddleware
-    ),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
+    )
+    // window && (window.devToolsExtension ? window.devToolsExtension() : f => f)
   ));
 
   return store;

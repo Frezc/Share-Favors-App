@@ -1,4 +1,4 @@
-import Api from '../api';
+import * as Api from '../api';
 import {
   AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE
 }

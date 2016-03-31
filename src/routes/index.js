@@ -17,6 +17,8 @@ const routes = {
     path: 'user/:id/repositories', component: RepositoriesExplorer
   }, {
     path: 'user/:id/starlist'
+  }, {
+    path: '*'   // 404
   }]
 }
 

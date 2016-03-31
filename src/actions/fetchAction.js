@@ -1,4 +1,4 @@
-import Api from '../api';
+import * as Api from '../api';
 import { setContentStatus } from './index';
 import { SHOW_USER_SET } from '../constants/actionTypes';
 

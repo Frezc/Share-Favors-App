@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server",
-    "debug": "webpack -d --watch",
-    "build": "webpack -p"
+    "dev": "webpack-dev-server --config=./config/webpack.config.js --port=8080 --hot --inline",
+    "debug": "webpack --config=./config/webpack.config.js -d --watch",
+    "build": "webpack --config=./config/webpack.config.js -p",
+    "start": "node src/server/index.js"
   },
   "author": "frezc",
   "license": "MIT",
   "dependencies": {
     "es6-promise": "^3.1.2",
+    "express": "^4.13.4",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "^0.15.0-alpha.1",
     "react": "^0.14.7",
@@ -33,10 +35,13 @@
     "file-loader": "^0.8.5",
     "node-sass": "^3.4.2",
     "postcss-loader": "^0.8.2",
+    "react-hot-loader": "^1.3.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+    "webpack-hot-middleware": "^2.10.0",
+    "webpack-dev-middleware": "latest"
   }
 }

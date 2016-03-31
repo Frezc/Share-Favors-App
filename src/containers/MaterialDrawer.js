@@ -29,6 +29,7 @@ function LinkListItem(props) {
   return (
     <Link
       to={href}
+      style={styles.linkDeco}
     >
       <ListItem
         value={value}
@@ -107,6 +108,12 @@ function MaterialDrawer(props) {
 MaterialDrawer.propTypes = {
   navOpen: PropTypes.bool.isRequired
 };
+
+const styles = {
+  linkDeco: {
+    textDecoration: 'none'
+  }
+}
 
 function select (state) {
   return {
