@@ -6,6 +6,9 @@ import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
 import LinkDialog from '../components/LinkDialog';
 
+import { isBrowser, isNode } from '../helpers';
+
+
 // libs
 import { connect } from 'react-redux';
 
@@ -19,6 +22,10 @@ class RepositoryDetail extends React.Component {
       sum: 100,
       showDialog: false
     }
+  }
+  
+  componentDidMount() {
+    // console.log(`[RepoDetail] isBrowser: ${isBrowser()}, isNode: ${isNode()}`)
   }
 
   render () {

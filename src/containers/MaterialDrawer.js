@@ -85,7 +85,7 @@ function MaterialDrawer(props) {
           Explorer
         </ListItem>
         <LinkListItem
-          href="/user/3"
+          href="/user/1"
           value={3}
         >
           Users

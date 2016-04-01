@@ -1,6 +1,6 @@
 
-const HOST = '//192.168.2.236';
-// const HOST = '//sharefavors.com'
+// const HOST = '//192.168.2.236';
+const HOST = 'http://sharefavors.com'
 
 export const AUTH_URL = HOST + '/auth';
 export const REGISTER_URL = HOST + '/register';

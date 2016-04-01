@@ -9,35 +9,49 @@ function fetchUserSuccess(user) {
   }
 }
 
-export function fetchUser(id) {
-  return (dispatch, getState) => {
-    dispatch(setContentStatus(true));
-
-    const { data } = getState();
-
-    if (data.users[id]) {
-      dispatch(setContentStatus(false));
-      dispatch(fetchUserSuccess(id));
-    } else {
-      return Api.userInfo(id)
-        .then(response => {
-          console.log(response)
-          if (response.ok) {
-            response.json().then(json => {
+export function fetchUserNetwork(id) {
+  return (dispatch) => {
+    return Api.userInfo(id)
+      .then(response => {
+        // console.log(response)
+        if (response.ok) {
+          // return new promise
+          return response.json().then(json => {
+            // setTimeout(() => {
               dispatch(setContentStatus(false));
               dispatch(fetchUserSuccess(json));
-            });
-          } else if (response.status == 404) {
+            // }, 4000)
+
+          });
+        } else {
+          if (response.status == 404) {
             dispatch(setContentStatus(false, 'User not found.'));
           } else if (response.status == 400) {
             dispatch(setContentStatus(false, 'Bad request.'));
           } else {
             dispatch(setContentStatus(false, 'Unknown error'));
           }
-        })
-        .catch(error => {
-          dispatch(setContentStatus(false, error.message));
-        });
+        }
+
+      })
+      .catch(error => {
+        dispatch(setContentStatus(false, error.message));
+      });
+  }
+}
+
+export function fetchUser(id) {
+  return (dispatch, getState) => {
+
+    const { data } = getState();
+
+    // server need not check state tree
+    if (data.users[id]) {
+      console.log('fetch local')
+      dispatch(fetchUserSuccess(data.users[id]));
+    } else {
+      dispatch(setContentStatus(true));
+      return fetchUserNetwork(id)(dispatch);
     }
   }
 }

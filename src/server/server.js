@@ -14,6 +14,9 @@ import config from '../../config/webpack.config';
 import configureStore from '../store/configureStore';
 import routes from '../routes';
 
+import { isBrowser, isNode } from '../helpers';
+import { fetchUser } from '../actions/fetchAction';
+
 // fix Material-UI: userAgent should be supplied
 global.navigator = { userAgent: 'all' };
 
@@ -36,7 +39,7 @@ app.use((req, res, next) => {
 
   match({routes, location: req.url}, ( error, redirectLocation, renderProps ) => {
     if (error) {
-      return res.status(500).send(error.massage);
+      return res.redirect('/error500');
     }
 
     if (redirectLocation) {
@@ -44,23 +47,55 @@ app.use((req, res, next) => {
     }
 
     if (renderProps == null) {
-      return res.status(404).send('Not found');
+      return res.redirect('/error404');
     }
 
+    // return res.redirect('/user/4');
     // console.log('renderProps', renderProps);
 
-    const initView = renderToString(
-      <Provider store={store}>
-        <RouterContext {...renderProps} />
-      </Provider>
-    );
+    // console.log(renderProps)
+    // console.log(`[server] isBrowser: ${isBrowser()}, isNode: ${isNode()}`)
 
-    let initState = JSON.stringify(store.getState());
-    let page = renderFullPage(initView, initState);
+    // console.log(renderProps.params)
 
-    res.status(200).send(page)
+    // not necessary
+    // if (req.url == '/error404') {
+    //   return res.status(404).send(page);
+    // } else if (req.url == '/error500') {
+    //   return res.status(500).send(page);
+    // }
+    fetchComponentsData(store.dispatch, renderProps.components, renderProps.params)
+      .then(() => {
+        const initView = renderToString(
+          <Provider store={store}>
+            <RouterContext {...renderProps} />
+          </Provider>
+        );
+        // console.log('store: ', store.getState())
+
+        let initState = JSON.stringify(store.getState());
+        let page = renderFullPage(initView, initState);
+        
+        return page;
+      })
+      .then(page => {
+        res.status(200).send(page)
+      })
+      .catch(error => {
+        res.end(error.message);
+      })
   })
 })
+
+function fetchComponentsData(dispatch, components, params) {
+  let fetchData = components.reduce((pre, cur) => {
+    return Object.keys(cur).reduce((acc, key) => {
+      return cur[key].hasOwnProperty('fetchData') ? acc.concat(cur[key].fetchData) : acc;
+    }, pre)
+  }, []);
+  const promises = fetchData.map(fetch => dispatch(fetch(params)));
+  return Promise.all(promises);
+}
 
 function renderFullPage(initView, initState) {
   return  `
@@ -80,9 +115,5 @@ function renderFullPage(initView, initState) {
     </html>
   `
 }
-
-app.get('*', (req, res) => {
-  return res.send('Hello world')
-})
 
 app.listen(port);

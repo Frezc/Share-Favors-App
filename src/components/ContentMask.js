@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import AlertError from 'material-ui/lib/svg-icons/alert/error';
 import * as Colors from 'material-ui/lib/styles/colors';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 class ContentMask extends React.Component {
 
@@ -25,6 +26,7 @@ class ContentMask extends React.Component {
 
   render() {
     const { content } = this.props;
+    const refreshStatus = content.loading ? 'loading' : 'ready';
 
     return (
       <div
@@ -35,12 +37,18 @@ class ContentMask extends React.Component {
           onTouchTap={e => this.onRefreshPress()}
           style={styles.refreshWrapper}
         >
-          <RefreshIndicator
-            percentage={100}
-            size={64}
-            left={0}
-            top={0}
-            status={content.loading ? 'loading' : 'ready'}
+          {
+            // <RefreshIndicator
+            //   percentage={100}
+            //   size={64}
+            //   left={0}
+            //   top={0}
+            //   status={refreshStatus}
+            //   style={styles.refresh}
+            // />
+          }
+          <CircularProgress
+            size={5}
             style={styles.refresh}
           />
         </span>
