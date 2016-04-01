@@ -12,13 +12,12 @@ const routes = {
   }, {
     path: 'repository/editor'
   }, {
-    path: 'user/:id', component: UserDetail
+    path: 'user/:id', component: UserDetail,
+    onEnter: () => console.log(global)
   }, {
     path: 'user/:id/repositories', component: RepositoriesExplorer
   }, {
     path: 'user/:id/starlist'
-  }, {
-    path: '*'   // 404
   }]
 }
 

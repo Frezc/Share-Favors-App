@@ -4,14 +4,18 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import React from 'react'
 import { Router, RouterContext, match } from 'react-router';
-import { renderToString } from 'react-dom/server'
+import { renderToString } from 'react-dom/server';
 
 import { Provider } from 'react-redux';
-
+import favicon from 'serve-favicon'
+import path from 'path';
 
 import config from '../../config/webpack.config';
 import configureStore from '../store/configureStore';
 import routes from '../routes';
+
+// fix Material-UI: userAgent should be supplied
+global.navigator = { userAgent: 'all' };
 
 const app = Express();
 const port = 8081;
@@ -24,6 +28,8 @@ app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath
 }));
 app.use(webpackHotMiddleware(compiler));
+
+app.use(favicon(__dirname + '/../assets/favicon.ico'));
 
 app.use((req, res, next) => {
   const store = configureStore()
@@ -41,7 +47,7 @@ app.use((req, res, next) => {
       return res.status(404).send('Not found');
     }
 
-    console.log('renderProps', renderProps);
+    // console.log('renderProps', renderProps);
 
     const initView = renderToString(
       <Provider store={store}>
@@ -67,9 +73,9 @@ function renderFullPage(initView, initState) {
       <link href='http://fonts.useso.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
     </head>
     <body>
-      <div id="app">${initView}</div>
+      <div id="app"><div>${initView}</div></div>
       <script>window.__INITIAL_STATE__ = ${initState}</script>
-      <script src="build/bundle.js"></script>
+      <script src="/build/bundle.js"></script>
     </body>
     </html>
   `

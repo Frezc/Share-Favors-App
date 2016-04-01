@@ -22,6 +22,7 @@ class App extends React.Component {
     const { dispatch } = this.props;
 
     // dispatch(fetchUser(3));
+    console.log('app will mount')
   }
 
   render() {
