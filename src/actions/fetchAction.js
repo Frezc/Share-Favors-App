@@ -1,6 +1,7 @@
 import * as Api from '../api';
 import { setContentStatus } from './index';
 import { SHOW_USER_SET } from '../constants/actionTypes';
+import { replace } from 'react-router-redux';
 
 function fetchUserSuccess(user) {
   return {
@@ -17,25 +18,38 @@ export function fetchUserNetwork(id) {
         if (response.ok) {
           // return new promise
           return response.json().then(json => {
-            // setTimeout(() => {
-              dispatch(setContentStatus(false));
-              dispatch(fetchUserSuccess(json));
-            // }, 4000)
-
+            dispatch(setContentStatus(false));
+            dispatch(fetchUserSuccess(json));
           });
         } else {
           if (response.status == 404) {
             dispatch(setContentStatus(false, 'User not found.'));
+            dispatch(replace({
+              pathname: '/error404',
+              state: { type: 'user' }
+            }));
           } else if (response.status == 400) {
             dispatch(setContentStatus(false, 'Bad request.'));
+            dispatch(replace({
+              pathname: '/error400',
+              state: { type: 'user' }
+            }))
           } else {
             dispatch(setContentStatus(false, 'Unknown error'));
+            dispatch(replace({
+              pathname: '/error500',
+              state: { type: 'user' }
+            }))
           }
         }
 
       })
       .catch(error => {
         dispatch(setContentStatus(false, error.message));
+        dispatch(replace({
+          pathname: '/error500',
+          state: { type: 'user' }
+        }))
       });
   }
 }

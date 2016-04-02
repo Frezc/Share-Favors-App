@@ -10,15 +10,20 @@ import { isBrowser } from '../helpers';
 
 class UserDetail extends React.Component {
 
-  componentDidMount() {
-    // first fetch
-    // only fetch at browser
+  componentWillMount() {
     console.log(isBrowser())
-    if (isBrowser()) {
-      console.log('first')
-      const { dispatch, userId } = this.props;
-      dispatch(fetchUser(userId));
-    }
+  }
+
+  componentDidMount() {
+    // const { userId } = this.props;
+    // // first fetch
+    // // only fetch at browser
+    // console.log(isBrowser())
+    // if (isBrowser() && userId != -1) {
+    //   console.log('first')
+    //   const { dispatch, userId } = this.props;
+    //   dispatch(fetchUser(userId));
+    // }
   }
 
   componentWillReceiveProps(props) {
