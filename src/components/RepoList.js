@@ -16,10 +16,14 @@ import Popover from 'material-ui/lib/popover/popover';
 
 class RepoList extends React.Component {
 
-  constructor (props) {
-    super(props);
-    
-  }
+  static propTypes = {
+    rootRef: PropTypes.func,
+    type: PropTypes.object
+  };
+
+  static defaultProps = {
+    type: {}
+  };
 
   renderRows () {
     let arr = [];
@@ -163,16 +167,6 @@ class RepoList extends React.Component {
     );
   }
 }
-
-RepoList.propTypes = {
-  rootRef: PropTypes.func,
-  type: PropTypes.object
-};
-
-RepoList.defaultProps = {
-  type: {}
-};
-
 const styles = {
   subtitleIcon: {
     width: 18, 

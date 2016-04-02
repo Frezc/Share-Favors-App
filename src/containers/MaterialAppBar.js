@@ -11,12 +11,13 @@ import TextField from 'material-ui/lib/text-field';
 
 class MaterialAppBar extends React.Component {
 
-  constructor (props) {
-    super(props);
-    this.state = {
-      showSearch: false
-    };
-  }
+  static propTypes = {
+    navOpen: PropTypes.bool.isRequired
+  };
+
+  state = {
+    showSearch: false
+  };
 
   getSearchClassName (showSearch) {
     if (showSearch) {
@@ -67,10 +68,6 @@ class MaterialAppBar extends React.Component {
     );
   }
 }
-
-MaterialAppBar.propTypes = {
-  navOpen: PropTypes.bool.isRequired
-};
 
 function select (state) {
   return {

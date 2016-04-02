@@ -14,15 +14,22 @@ import { connect } from 'react-redux';
 
 
 class RepositoryDetail extends React.Component {
+  
+  static propTypes = {
+    repositories: PropTypes.object.isRequired,
+    linkDialog: PropTypes.shape({
+      type: PropTypes.oneOf(['watch', 'edit']).isRequired,
+      visible: PropTypes.bool.isRequired,
+      loading: PropTypes.bool.isRequired,
+      link: PropTypes.object.isRequired,
+      error: PropTypes.string.isRequired
+    }).isRequired
+  };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      sum: 100,
-      showDialog: false
-    }
-  }
+  state = {
+    sum: 100,
+    showDialog: false
+  };
   
   componentDidMount() {
     // console.log(`[RepoDetail] isBrowser: ${isBrowser()}, isNode: ${isNode()}`)
@@ -75,17 +82,6 @@ class RepositoryDetail extends React.Component {
     );
   }
 }
-
-RepositoryDetail.propTypes = {
-  repositories: PropTypes.object.isRequired,
-  linkDialog: PropTypes.shape({
-    type: PropTypes.oneOf(['watch', 'edit']).isRequired,
-    visible: PropTypes.bool.isRequired,
-    loading: PropTypes.bool.isRequired,
-    link: PropTypes.object.isRequired,
-    error: PropTypes.string.isRequired
-  }).isRequired
-};
 
 const styles = {
   subtitleIcon: {

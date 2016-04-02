@@ -64,10 +64,10 @@ app.use((req, res, next) => {
     // }
     fetchComponentsData(store.dispatch, renderProps.components, renderProps.params)
       .then(status => {
+        console.log('status', status)
         if (status[0] && status[0] != 200) {
           return res.redirect(`/error${status[0]}`);
         }
-        // console.log('status', status)
         const initView = renderToString(
           <Provider store={store}>
             <RouterContext {...renderProps} />

@@ -13,39 +13,54 @@ import { auth, getCodeByEmail, setSendEmail, register } from '../actions/authAct
 import { DIALOG } from '../constants';
 
 class AuthDialog extends React.Component {
+  
+  static propTypes = {
+    type: PropTypes.oneOf(types),
+    loading: PropTypes.bool,
+    visible: PropTypes.bool,
+    error: PropTypes.string,
+    dispatch: PropTypes.func,
+    sendEmail: PropTypes.shape({
+      canSendEmail: PropTypes.bool.isRequired,
+      sendEmailCounting: PropTypes.bool.isRequired
+    }).isRequired
+  };
+  
+  static defaultProps = {
+    type: 'auth',
+    loading: false,
+    visible: false,
+    error: ''
+  };
 
-  constructor(props) {
-    super(props);
+  state = {
 
-    this.state = {
+    authEmailError: '',
+    authPasswordError: '',
+    emailError: '',
+    nicknameError: '',
+    passwordError: '',
+    comfirmPasswordError: '',
+    codeError: '',
 
-      authEmailError: '',
-      authPasswordError: '',
-      emailError: '',
-      nicknameError: '',
-      passwordError: '',
-      comfirmPasswordError: '',
-      codeError: '',
+    count: 1
+  };
 
-      count: 1
-    };
+  isCounting = false;
 
-    this.isCounting = false;
-
-    this.input = {
-      auth: {
-        email: '',
-        password: ''
-      },
-      register: {
-        email: '',
-        nickname: '',
-        password: '',
-        comfirmPassword: '',
-        code: ''
-      }
-    };
-  }
+  input = {
+    auth: {
+      email: '',
+      password: ''
+    },
+    register: {
+      email: '',
+      nickname: '',
+      password: '',
+      comfirmPassword: '',
+      code: ''
+    }
+  };
 
   // 
   validate(type, value) {
@@ -385,25 +400,6 @@ class AuthDialog extends React.Component {
 }
 
 const types = ['auth', 'register'];
-
-AuthDialog.propTypes = {
-  type: PropTypes.oneOf(types),
-  loading: PropTypes.bool,
-  visible: PropTypes.bool,
-  error: PropTypes.string,
-  dispatch: PropTypes.func,
-  sendEmail: PropTypes.shape({
-    canSendEmail: PropTypes.bool.isRequired,
-    sendEmailCounting: PropTypes.bool.isRequired
-  }).isRequired
-};
-
-AuthDialog.defaultProps = {
-  type: 'auth',
-  loading: false,
-  visible: false,
-  error: ''
-};
 
 const styles = {
   authDialog: {

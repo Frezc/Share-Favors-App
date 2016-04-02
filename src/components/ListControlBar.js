@@ -2,32 +2,44 @@ import React, { PropTypes } from 'react';
 
 class ListControlBar extends React.Component {
 
-  constructor (props) {
-    super(props);
 
-    this.state = {
-      showIndex: 1,
-      offsetTop: 0,
-      isDragging: false,
-      showTransition: false,
-      percent: 0
-    };
+  static propTypes = {
+    className: PropTypes.string,
+    sum: PropTypes.number.isRequired,
+    // percent: PropTypes.number.isRequired, // [0, 1]
+    description: PropTypes.string,
+    // onDragChange: PropTypes.func,
+    onDoneChange: PropTypes.func
+  };
+  
+  static defaultProps = {
+    className: '',
+    description: '0%'
+  };
 
-    // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
-    this.activeScrollListener = true;
 
-    this.scrollListener = () => {
-      // console.log('scroll', window.scrollY)
-      if (this.activeScrollListener) {
-        // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
-        let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
-        percent = Math.min(Math.max(0, percent), 1);
-        if (percent != this.state.percent) {
-          this.setState({ percent });
-        }
+  state = {
+    showIndex: 1,
+    offsetTop: 0,
+    isDragging: false,
+    showTransition: false,
+    percent: 0
+  };
+
+  // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
+  activeScrollListener = true;
+
+  scrollListener = () => {
+    // console.log('scroll', window.scrollY)
+    if (this.activeScrollListener) {
+      // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
+      let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
+      percent = Math.min(Math.max(0, percent), 1);
+      if (percent != this.state.percent) {
+        this.setState({ percent });
       }
     }
-  }
+  };
 
   componentDidMount () {
     window.addEventListener('scroll', this.scrollListener);
@@ -306,20 +318,6 @@ class ListControlBar extends React.Component {
     );
   }
 }
-
-ListControlBar.propTypes = {
-  className: PropTypes.string,
-  sum: PropTypes.number.isRequired,
-  // percent: PropTypes.number.isRequired, // [0, 1]
-  description: PropTypes.string,
-  // onDragChange: PropTypes.func,
-  onDoneChange: PropTypes.func
-};
-
-ListControlBar.defaultProps = {
-  className: '',
-  description: '0%'
-};
 
 const styles = {
   controlBar: {

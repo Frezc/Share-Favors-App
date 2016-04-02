@@ -26,10 +26,6 @@ class UserDetail extends React.Component {
     return fetchUserNetwork(params.id)
   };
 
-  componentWillMount() {
-    // console.log(isBrowser())
-  }
-
   componentDidMount() {
     const { userId } = this.props;
     // first fetch

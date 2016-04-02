@@ -3,10 +3,13 @@ import React, { PropTypes } from 'react';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 class ContentMask extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
+  
+  static propTypes = {
+    content: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      error: PropTypes.string.isRequired
+    }).isRequired
+  };
 
   shouldShow(content) {
     const { loading, error } = content;
@@ -46,13 +49,6 @@ class ContentMask extends React.Component {
       </div>
     );
   }
-}
-
-ContentMask.propTypes = {
-  content: PropTypes.shape({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string.isRequired
-  }).isRequired
 }
 
 const styles = {

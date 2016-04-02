@@ -17,6 +17,21 @@ import { hideSnackbar } from '../actions';
 
 //App Entry
 class App extends React.Component {
+  
+  static propTypes = {
+    authDialog: PropTypes.shape({
+      type: PropTypes.oneOf(authDialogType).isRequired,
+      visible: PropTypes.bool.isRequired,
+      loading: PropTypes.bool.isRequired,
+      error: PropTypes.string.isRequired
+    }).isRequired,
+    snackbar: PropTypes.shape({
+      visible: PropTypes.bool.isRequired,
+      message: PropTypes.string.isRequired
+    }).isRequired,
+    sendEmail: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired
+  };
 
   componentWillMount() {
     const { dispatch } = this.props;
@@ -65,20 +80,7 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  authDialog: PropTypes.shape({
-    type: PropTypes.oneOf(['auth', 'register']).isRequired,
-    visible: PropTypes.bool.isRequired,
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string.isRequired
-  }).isRequired,
-  snackbar: PropTypes.shape({
-    visible: PropTypes.bool.isRequired,
-    message: PropTypes.string.isRequired
-  }).isRequired,
-  sendEmail: PropTypes.object.isRequired,
-  content: PropTypes.object.isRequired
-}
+const authDialogType = ['auth', 'register'];
 
 function select (state) {
   return {
