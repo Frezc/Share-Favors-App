@@ -10,6 +10,22 @@ import { isBrowser } from '../helpers';
 
 class UserDetail extends React.Component {
 
+  static propTypes = {
+    user: PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      nickname: PropTypes.string.isRequired,
+      sign: PropTypes.string,
+      starlist: PropTypes.array.isRequired,
+      repositories: PropTypes.array.isRequired
+    }).isRequired,
+    repositories: PropTypes.object.isRequired
+  };
+
+  // server fetch
+  static fetchData = (params) => {
+    return fetchUserNetwork(params.id)
+  };
+
   componentWillMount() {
     // console.log(isBrowser())
   }
@@ -77,22 +93,6 @@ class UserDetail extends React.Component {
     );
   }
 }
-
-UserDetail.propTypes = {
-  user: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    nickname: PropTypes.string.isRequired,
-    sign: PropTypes.string,
-    starlist: PropTypes.array.isRequired,
-    repositories: PropTypes.array.isRequired
-  }).isRequired,
-  repositories: PropTypes.object.isRequired
-};
-
-// server fetch
-UserDetail.fetchData = (params) => {
-  return fetchUserNetwork(params.id)
-};
 
 function select(state, ownProps) {
   return {
