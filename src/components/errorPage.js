@@ -8,7 +8,7 @@ function getNotFoundDescription(type = 'page') {
 
 function getErrorMessage(pathname, type) {
   let title, description;
-  console.log(pathname)
+  // console.log(pathname)
   switch (pathname) {
     case '/error404':
       title = 'Not Found!';

@@ -20,6 +20,9 @@ export function fetchUserNetwork(id) {
           return response.json().then(json => {
             dispatch(setContentStatus(false));
             dispatch(fetchUserSuccess(json));
+
+            // 让服务端能判断是否请求成功
+            return response.status;
           });
         } else {
           if (response.status == 404) {
@@ -41,6 +44,8 @@ export function fetchUserNetwork(id) {
               state: { type: 'user' }
             }))
           }
+          
+          return response.status;
         }
 
       })
@@ -50,6 +55,7 @@ export function fetchUserNetwork(id) {
           pathname: '/error500',
           state: { type: 'user' }
         }))
+        return 500;
       });
   }
 }
