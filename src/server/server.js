@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';

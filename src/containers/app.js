@@ -15,6 +15,9 @@ import ContentMask from '../components/ContentMask';
 // actions
 import { hideSnackbar } from '../actions';
 
+
+const authDialogType = ['auth', 'register'];
+
 //App Entry
 class App extends React.Component {
   
@@ -42,7 +45,6 @@ class App extends React.Component {
 
   render() {
     const { dispatch, authDialog, snackbar, sendEmail, content } = this.props;
-
     return (
     	<div className="page">
         <MaterialDrawer />
@@ -56,7 +58,7 @@ class App extends React.Component {
           </div>
         </div>
         <AuthDialog
-          type={authDialog.type}
+          type={'auth'}
           visible={authDialog.visible}
           loading={authDialog.loading}
           error={authDialog.error}
@@ -79,8 +81,6 @@ class App extends React.Component {
     );
   }
 }
-
-const authDialogType = ['auth', 'register'];
 
 function select (state) {
   return {

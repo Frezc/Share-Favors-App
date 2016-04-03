@@ -8,8 +8,20 @@ var APP_DIR = path.resolve(__dirname, '../src');
 
 var globals = require('./globals');
 
+const AUTOPREFIXER_BROWSERS = [
+	'Android 2.3',
+	'Android >= 4',
+	'Chrome >= 35',
+	'Firefox >= 31',
+	'Explorer >= 9',
+	'iOS >= 7',
+	'Opera >= 12',
+	'Safari >= 7.1'
+];
+
 var webpackConfig = {
 	// devtool: 'cheap-module-source-map',
+	// devtool: 'source-map',
 	entry: [
 		'webpack-hot-middleware/client',
 		APP_DIR + '/client/index.js'
@@ -49,7 +61,7 @@ var webpackConfig = {
 			loader: 'url?limit=8192'
     }]
 	},
-	postcss: [ autoprefixer({ browsers: [] }) ],
+	postcss: [ autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }) ],
 
 	plugins: [
 		new webpack.DefinePlugin(globals),

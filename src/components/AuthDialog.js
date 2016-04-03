@@ -12,6 +12,8 @@ import { auth, getCodeByEmail, setSendEmail, register } from '../actions/authAct
 // constants
 import { DIALOG } from '../constants';
 
+const types = ['auth', 'register'];
+
 class AuthDialog extends React.Component {
   
   static propTypes = {
@@ -398,8 +400,6 @@ class AuthDialog extends React.Component {
     );
   }
 }
-
-const types = ['auth', 'register'];
 
 const styles = {
   authDialog: {
