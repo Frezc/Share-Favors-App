@@ -14,6 +14,19 @@ import NavigationMoreVert from 'material-ui/lib/svg-icons/navigation/more-vert';
 import * as Colors from 'material-ui/lib/styles/colors';
 import Popover from 'material-ui/lib/popover/popover';
 
+
+const styles = {
+  subtitleIcon: {
+    width: 18,
+    height: 18
+  },
+  columnIcon: {
+    width: 24,
+    height: 24,
+    cursor: 'pointer'
+  }
+}
+
 class RepoList extends React.Component {
 
   static propTypes = {
@@ -165,17 +178,6 @@ class RepoList extends React.Component {
         </Card>
       </div>
     );
-  }
-}
-const styles = {
-  subtitleIcon: {
-    width: 18, 
-    height: 18
-  },
-  columnIcon: {
-    width: 24,
-    height: 24,
-    cursor: 'pointer'
   }
 }
 

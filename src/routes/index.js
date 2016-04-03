@@ -2,7 +2,9 @@ import App from '../containers/app';
 import RepositoryDetail from '../containers/RepositoryDetail';
 import UserDetail from '../containers/UserDetail';
 import RepositoriesExplorer from '../containers/RepositoriesExplorer';
+import SearchPage from '../containers/SearchPage';
 import ErrorPage from '../components/ErrorPage';
+import RepoAbList from '../containers/RepoAbList';
 
 const routes = {
   path: '/',
@@ -18,6 +20,17 @@ const routes = {
     path: 'user/:id/repositories', component: RepositoriesExplorer
   }, {
     path: 'user/:id/starlist'
+  }, {
+    path: 'search', component: SearchPage,
+    childRoutes: [{
+      path: 'repo', component: RepoAbList
+    }, {
+      path: 'link', component: RepoAbList
+    }, {
+      path: 'tag', component: RepoAbList
+    }, {
+      path: 'user', component: RepoAbList
+    }]
   }, {
     path: 'error500', component: ErrorPage
   }, {

@@ -1,0 +1,35 @@
+@import "Colors";
+
+.listFilter {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-bottom: 16px;
+
+  .filterButton {
+    width: 81px;
+    height: 20px;
+    margin: 4px;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+
+    &:hover {
+      border-bottom: 2px solid $grey;
+    }
+
+    &.active {
+      border-bottom: 2px solid $linkColor;
+    }
+  }
+
+  .filterTitle {
+    position: absolute;
+    font-size: 20px;
+    right: 8px;
+    bottom: 0;
+    color: $grey500;
+  }
+}

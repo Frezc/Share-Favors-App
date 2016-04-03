@@ -201,6 +201,7 @@ class ListControlBar extends React.Component {
       }
     }, 17);
 
+    this.setState({ percent: percent });
     onDoneChange && onDoneChange(percent);
   }
 
@@ -249,8 +250,8 @@ class ListControlBar extends React.Component {
                 className="slider-top"
                 onClick={e => {
                   // this.pinToLocation(1);
-                  onDoneChange && onDoneChange(0);
                   this.setState({ showTransition: true });
+                  this.onDoneChange(0);
                 }}
               >Top</div>
               <div 
@@ -263,9 +264,9 @@ class ListControlBar extends React.Component {
                   let offsetY = e.clientY - offsetTop - 24;
                   offsetY = Math.min(Math.max(offsetY, 0), offsetHeight - this.getHandlerLength());
                   // let newIndex = this.getItemIndex(offsetY);
-                  let newIndex = this.getPercentFromOffsetTop(offsetY);
-                  onDoneChange && onDoneChange(newIndex);
+                  let newPercent = this.getPercentFromOffsetTop(offsetY);
                   this.setState({ showTransition: true });
+                  this.onDoneChange(newPercent);
                 }}
               >
                 <div 
@@ -307,8 +308,8 @@ class ListControlBar extends React.Component {
                 className="slider-bottom"
                 onClick={e => {
                   // this.pinToLocation(sum);
-                  onDoneChange && onDoneChange(1);
                   this.setState({ showTransition: true });
+                  this.onDoneChange(1);
                 }}
               >Last</div>
             </div>

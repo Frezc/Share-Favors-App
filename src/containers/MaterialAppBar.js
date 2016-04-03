@@ -19,6 +19,15 @@ class MaterialAppBar extends React.Component {
     showSearch: false
   };
 
+  onSearchIconPress = () => {
+    this.setState({ showSearch: true });
+
+    // 在searchField未显示时focus函数是无效的，所以这里设置了一个延时等待其出现
+    setTimeout(() => {
+      this.searchField.focus();
+    }, 350);
+  };
+
   getSearchClassName (showSearch) {
     if (showSearch) {
       return 'searchContainer card show';
@@ -36,10 +45,9 @@ class MaterialAppBar extends React.Component {
       <AppBar
         style={{ position: 'fixed', top: 0 }}
         title="Title"
+        className="appBar"
         iconElementRight={
-          <IconButton onClick={() => { 
-            this.setState({ showSearch: true });
-          }}>
+          <IconButton onClick={this.onSearchIconPress}>
             <ActionSearch />
           </IconButton>
         }
@@ -49,13 +57,16 @@ class MaterialAppBar extends React.Component {
       >
         <div 
           className={this.getSearchClassName(this.state.showSearch)}
-          onBlur={() => { this.setState({ showSearch: false }) }}
         >
           <ActionSearch
-            className="searchIcon" />
+            className="searchIcon"
+          />
           <TextField
             hintText="Search"
             className="searchInput"
+            onBlur={() => { this.setState({ showSearch: false }) }}
+            ref={r => this.searchField = r}
+            value="123"
           />
           <ContentClear
             className="clearIcon"

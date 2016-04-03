@@ -1,6 +1,18 @@
 import React, { PropTypes } from 'react';
 // import RefreshIndicator from 'material-ui/lib/refresh-indicator';
 import CircularProgress from 'material-ui/lib/circular-progress';
+import { pink500 } from 'material-ui/lib/styles/colors';
+import AlertError from 'material-ui/lib/svg-icons/alert/error';
+
+const styles = {
+  refresh: {
+    position: 'relative'
+  },
+  refreshWrapper: {
+    borderRadius: '50%',
+    cursor: 'pointer'
+  }
+}
 
 class ContentMask extends React.Component {
   
@@ -26,7 +38,7 @@ class ContentMask extends React.Component {
         className="loadingMask"
         style={{ visibility: this.shouldShow(content) ? 'visible' : 'hidden' }}
       >
-        {content.loading &&
+        {content.loading ?
           <span
             style={styles.refreshWrapper}
           >
@@ -45,19 +57,28 @@ class ContentMask extends React.Component {
               style={styles.refresh}
             />
           </span>
+          :
+          <div
+            className="containerError"
+          >
+            <div
+              className="errorTitle"
+            >
+              <AlertError
+                style={styles.errorIcon}
+                color={pink500}
+              />
+              <span>A problem arose!</span>
+            </div>
+            <div
+              className="errorDescription"
+            >
+              {content.error}
+            </div>
+          </div>
         }
       </div>
     );
-  }
-}
-
-const styles = {
-  refresh: {
-    position: 'relative'
-  },
-  refreshWrapper: {
-    borderRadius: '50%',
-    cursor: 'pointer'
   }
 }
 

@@ -1,47 +1,50 @@
-.touchIcon {
-  height: 48px;
-  width: 48px;
-  padding: 12px;
-  cursor: pointer;
-}
 
-.searchContainer {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  height: 48px;
-  background-color: white;
-  overflow: hidden;
-
-  transition: width .2s, opacity .15s .2s, visibility .15s .2s;
-
-  &.hidden {
+.appBar {
+  .touchIcon {
+    height: 48px;
     width: 48px;
-    opacity: 0;
-    visibility: hidden;
+    padding: 12px;
+    cursor: pointer;
   }
 
-  &.show {
-    width: 308px;
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .searchInput {
-    margin-left: 48px;
-    width: 300px;
-  }
-
-  .searchIcon {
-    @extend .touchIcon;
+  .searchContainer {
     position: absolute;
-    left: 0;
-  }
+    right: 8px;
+    top: 8px;
+    height: 48px;
+    background-color: white;
+    overflow: hidden;
 
-  .clearIcon {
-    @extend .touchIcon;
-    position: absolute;
-    padding-right: 8px;
-    right: 0;
+    transition: width .2s, opacity .15s .2s, visibility .15s .2s;
+
+    &.hidden {
+      width: 48px;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &.show {
+      width: 308px;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .searchInput {
+      margin-left: 48px;
+      width: 300px;
+    }
+
+    .searchIcon {
+      @extend .touchIcon;
+      position: absolute;
+      left: 0;
+    }
+
+    .clearIcon {
+      @extend .touchIcon;
+      position: absolute;
+      padding-right: 8px;
+      right: 0;
+    }
   }
 }

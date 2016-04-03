@@ -1,0 +1,13 @@
+
+.loadingMask {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  height: 100%;
+  z-index: 1000;
+  padding-top: 64px;
+  background: white;
+}

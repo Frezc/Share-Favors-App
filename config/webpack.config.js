@@ -51,8 +51,8 @@ var webpackConfig = {
 		},{
 			test: /\.(scss|css)$/,
 			exclude: /node_modules/,
-			loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass']),
-			// loaders: ['style', 'css', 'postcss', 'sass']
+			// loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass']),
+			loaders: ['style', 'css', 'postcss', 'sass']
 		},{
 			test: /\.(svg|woff([\?]?.*)|ttf([\?]?.*)|eot([\?]?.*)|svg([\?]?.*))$/i,
 			loader: 'url-loader?limit=10000'

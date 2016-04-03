@@ -1,0 +1,64 @@
+@import "Colors";
+
+.searchPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .searchField {
+    font-size: 24px;
+
+    &.center {
+      transform: scale(1.5) translateY(150px);
+    }
+
+    .searchInput {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+  }
+
+  .resultContainer {
+    width: 100%;
+    margin-top: 16px;
+
+    .resultType {
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 16px;
+      width: 100%;
+      border-bottom: 1px solid $borderGrey;
+
+      div {
+        width: 25%;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+          color: $linkColor;
+        }
+      }
+
+      .typeIndicator {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 25%;
+
+        height: 2px;
+        background-color: $lightBlue500;
+
+        transition: left .2s;
+      }
+    }
+
+    .resultContent {
+      margin-top: 16px;
+    }
+  }
+
+}
