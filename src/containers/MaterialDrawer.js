@@ -12,6 +12,7 @@ import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhan
 import { setNavOpen } from '../actions';
 import { setDialogVisible, setDialogContent } from '../actions/dialog';
 import { logout } from '../actions/authActions';
+import { push } from 'react-router-redux';
 
 // constants
 import { DIALOG } from '../constants';
@@ -46,6 +47,7 @@ class MaterialDrawer extends React.Component {
   };
 
   getValueByPathname(pathname) {
+    console.log(pathname)
     const reg = /(\/\w*)?(\/\S*)*/i;
     const re = reg.exec(pathname);
     
@@ -60,6 +62,9 @@ class MaterialDrawer extends React.Component {
 
   onValueChange = (e, index) => {
     console.log(index)
+    const { dispatch } = this.props;
+    dispatch(push(navRouter[index]));
+
   };
 
   render() {

@@ -5,6 +5,7 @@ import RepositoriesExplorer from '../containers/RepositoriesExplorer';
 import SearchPage from '../containers/SearchPage';
 import ErrorPage from '../components/ErrorPage';
 import RepoAbList from '../containers/RepoAbList';
+import NotImplementPage from '../components/NotImplementPage';
 
 const routes = {
   path: '/',
@@ -15,26 +16,28 @@ const routes = {
   }, {
     path: 'repository/:id/editor'
   }, {
-    path: 'repositories', component: RepositoriesExplorer
+    path: 'repositories', component: NotImplementPage
   }, {
-    path: 'stars', component: RepositoriesExplorer
+    path: 'stars', component: NotImplementPage
   }, {
     path: 'user/:id', component: UserDetail
   }, {
-    path: 'user/:id/repositories', component: RepositoriesExplorer
+    path: 'user/:id/repositories', component: NotImplementPage
   }, {
-    path: 'user/:id/stars', component: RepositoriesExplorer
+    path: 'user/:id/stars', component: NotImplementPage
   }, {
     path: 'search', component: SearchPage,
     childRoutes: [{
-      path: 'repo', component: RepoAbList
+      path: 'repo', component: NotImplementPage
     }, {
-      path: 'link', component: RepoAbList
+      path: 'link', component: NotImplementPage
     }, {
-      path: 'tag', component: RepoAbList
+      path: 'tag', component: NotImplementPage
     }, {
-      path: 'user', component: RepoAbList
+      path: 'user', component: NotImplementPage
     }]
+  }, {
+    path: 'explorer', component: NotImplementPage
   }, {
     path: 'error500', component: ErrorPage
   }, {

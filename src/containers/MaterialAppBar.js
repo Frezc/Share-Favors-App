@@ -10,6 +10,19 @@ import ContentClear from 'material-ui/lib/svg-icons/content/clear';
 import NavigationMenu from 'material-ui/lib/svg-icons/navigation/menu';
 import TextField from 'material-ui/lib/text-field';
 
+const styles = {
+  appBarNormal: { 
+    position: 'fixed', 
+    top: 0,
+    width: '100%'
+  },
+  appBarWide: {
+    position: 'fixed', 
+    top: 0,
+    width: 'calc(100% - 280px)'
+  }
+};
+
 class MaterialAppBar extends React.Component {
 
   static propTypes = {
@@ -60,22 +73,17 @@ class MaterialAppBar extends React.Component {
 
   render () {
     const { navOpen, dispatch, windowMode } = this.props;
-
-
     return (
       <AppBar
-        style={{ position: 'fixed', top: 0 }}
+        style={windowMode == 'widescreen' ? styles.appBarWide : styles.appBarNormal}
         title="Title"
         className="appBar"
         iconElementRight={
-          <IconButton onClick={this.onSearchIconPress}>
+          <IconButton onTouchTap={this.onSearchIconPress}>
             <ActionSearch />
           </IconButton>
         }
         iconElementLeft={this.getLeftIcon(windowMode)}
-        onLeftIconButtonTouchTap={() => {
-          dispatch(setNavOpen(!navOpen))
-        }}
       >
         <div 
           className={this.getSearchClassName(this.state.showSearch)}
