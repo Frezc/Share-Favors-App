@@ -2,6 +2,7 @@
 	{
 		view: {
 			navOpen: bool, //侧边栏是否打开
+			windowMode: 'normal' or 'widescreen', // 根据浏览器宽度的显示模式
 			dialogs: {      //对话框
 				authDialog: {
 					type: 'auth' or 'register',

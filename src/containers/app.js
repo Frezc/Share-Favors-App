@@ -13,9 +13,12 @@ import AuthDialog from '../components/AuthDialog';
 import ContentMask from '../components/ContentMask';
 
 // actions
-import { hideSnackbar } from '../actions';
+import { hideSnackbar, changeWindowMode } from '../actions';
+
+import { WINDOW_BOUNDARY } from '../constants';
 
 const authDialogType = ['auth', 'register'];
+const windowModes = ['normal', 'widescreen'];
 
 //App Entry
 class App extends React.Component {
@@ -35,11 +38,38 @@ class App extends React.Component {
     content: PropTypes.object.isRequired
   };
 
+  // 自适应浏览器宽度
+  onResize = () => {
+    const { windowMode, dispatch } = this.props;
+    
+    let width = document.documentElement.clientWidth;
+    let mode;
+    if (width < WINDOW_BOUNDARY) {
+      mode = windowModes[0];
+    } else {
+      mode = windowModes[1];
+    }
+
+    if (mode != windowMode) {
+      dispatch(changeWindowMode(mode));
+    }
+  };
+
   componentWillMount() {
     const { dispatch } = this.props;
 
     // dispatch(fetchUser(3));
     // console.log('app will mount')
+  }
+
+  componentDidMount() {
+    // first resize. to fit server render
+    this.onResize();
+    window && window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount() {
+    window && window.addEventListener('resize', this.onResize);
   }
 
   render() {
@@ -87,7 +117,8 @@ function select (state) {
     authDialog: state.view.dialogs.authDialog,
     snackbar: state.view.snackbar,
     sendEmail: state.view.sendEmail,
-    content: state.view.content
+    content: state.view.content,
+    windowMode: state.view.windowMode
   }
 }
 

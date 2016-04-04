@@ -7,6 +7,7 @@ import AppBar from 'material-ui/lib/app-bar';
 import IconButton from 'material-ui/lib/icon-button';
 import ActionSearch from 'material-ui/lib/svg-icons/action/search';
 import ContentClear from 'material-ui/lib/svg-icons/content/clear';
+import NavigationMenu from 'material-ui/lib/svg-icons/navigation/menu';
 import TextField from 'material-ui/lib/text-field';
 
 class MaterialAppBar extends React.Component {
@@ -36,9 +37,29 @@ class MaterialAppBar extends React.Component {
     }
   }
 
+  getLeftIcon (windowMode) {
+    const { dispatch, navOpen } = this.props;
+
+    if (windowMode == 'widescreen') {
+      // return a empty el.
+      return (
+        <div></div>
+      );
+    } else {
+      return (
+        <IconButton
+          onTouchTap={e => {
+            dispatch(setNavOpen(!navOpen));
+          }}
+        >
+          <NavigationMenu />
+        </IconButton>
+      );
+    }
+  }
 
   render () {
-    const { navOpen, dispatch } = this.props;
+    const { navOpen, dispatch, windowMode } = this.props;
 
 
     return (
@@ -51,6 +72,7 @@ class MaterialAppBar extends React.Component {
             <ActionSearch />
           </IconButton>
         }
+        iconElementLeft={this.getLeftIcon(windowMode)}
         onLeftIconButtonTouchTap={() => {
           dispatch(setNavOpen(!navOpen))
         }}
@@ -82,7 +104,8 @@ class MaterialAppBar extends React.Component {
 
 function select (state) {
   return {
-    navOpen: state.view.navOpen
+    navOpen: state.view.navOpen,
+    windowMode: state.view.windowMode
   };
 }
 

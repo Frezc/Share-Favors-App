@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 function ListFilter(props) {
-  const { filters, activeIndex } = this.props;
+  const { filters, activeIndex } = props;
 
   return (
     <div

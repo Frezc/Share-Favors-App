@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import RepoAbstract from './../components/RepositoryAbstract';
 import ListFilter from '../components/ListFilter';
 
+const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
+
 class RepoAbList extends React.Component {
 
   render() {
@@ -12,7 +14,10 @@ class RepoAbList extends React.Component {
       <div
         className="repoAbstract"
       >
-        <ListFilter />
+        <ListFilter
+          filters={filters}
+          activeIndex={0}
+        />
 
         <RepoAbstract
           className="item"

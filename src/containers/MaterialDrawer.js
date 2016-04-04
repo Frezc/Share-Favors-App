@@ -41,15 +41,18 @@ function LinkListItem(props) {
 }
 
 function MaterialDrawer(props) {
-  const { navOpen, user, dispatch } = props;
+  const { navOpen, user, dispatch, windowMode } = props;
+
+  const docked = windowMode == 'widescreen';
+  const zDepth = docked ? 1 : 2;
 
   return (
     <LeftNav
-      docked={false}
+      docked={docked}
       width={280}
-      open={navOpen}
+      open={docked || navOpen}
       onRequestChange={open => dispatch(setNavOpen(open))}
-      docked={false}
+      zDepth={zDepth}
     >
       <NavHeader
         img={generateAvatarUrl(user.email, 40)}
@@ -118,7 +121,8 @@ const styles = {
 function select (state) {
   return {
     navOpen: state.view.navOpen,
-    user: state.data.users[state.view.auth.user]
+    user: state.data.users[state.view.auth.user],
+    windowMode: state.view.windowMode
   };
 }
 

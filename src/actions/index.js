@@ -1,4 +1,4 @@
-import { NAV_OPEN, SNACKBAR_SHOWMSG, CONTENT_STATUS } from '../constants/actionTypes';
+import { NAV_OPEN, SNACKBAR_SHOWMSG, CONTENT_STATUS, WINDOW_MODE_CHANGE } from '../constants/actionTypes';
 
 /** action creator **/
 export function setNavOpen (open) {
@@ -29,5 +29,12 @@ export function setContentStatus (loading = true, error = '') {
     type: CONTENT_STATUS,
     loading: loading,
     error: error
+  }
+}
+
+export function changeWindowMode(mode = 'normal') {
+  return {
+    type: WINDOW_MODE_CHANGE,
+    mode: mode
   }
 }
