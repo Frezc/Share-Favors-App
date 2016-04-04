@@ -13,13 +13,17 @@ const routes = {
   childRoutes: [{
     path: 'repository/:id', component: RepositoryDetail
   }, {
-    path: 'repository/editor'
+    path: 'repository/:id/editor'
+  }, {
+    path: 'repositories', component: RepositoriesExplorer
+  }, {
+    path: 'stars', component: RepositoriesExplorer
   }, {
     path: 'user/:id', component: UserDetail
   }, {
     path: 'user/:id/repositories', component: RepositoriesExplorer
   }, {
-    path: 'user/:id/starlist'
+    path: 'user/:id/stars', component: RepositoriesExplorer
   }, {
     path: 'search', component: SearchPage,
     childRoutes: [{
