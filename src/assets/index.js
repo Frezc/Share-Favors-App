@@ -11,3 +11,4 @@ import './scss/LoadMask.scss';
 import './scss/SearchPage.scss';
 import './scss/RepoAbList.scss';
 import './scss/ListFilter.scss';
+import './scss/TagPool.scss';

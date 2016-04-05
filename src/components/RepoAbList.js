@@ -1,66 +1,66 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import RepoAbstract from './../components/RepositoryAbstract';
 import ListFilter from '../components/ListFilter';
 
 const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
 
-class RepoAbList extends React.Component {
+function RepoAbList(props) {
 
-  state = {
-    filterIndex: 0
-  };
+  const { repositories, pathname, query, onFilterChange, dispatch } = props;
+  return (
+    <div
+      className="repoAbstract"
+    >
+      <ListFilter
+        filters={filters}
+        activeFilter={query.filter}
+        onFilterChange={(index, filter) => {
+          dispatch(push({
+            pathname: pathname,
+            query: Object.assign({}, query, {
+              filter: filter.toLowerCase()
+            })
+          }));
 
-  render() {
-    const { repositories } = this.props;
+          onFilterChange && onFilterChange(index, filter)
+        }}
+      />
 
-    return (
-      <div
-        className="repoAbstract"
-      >
-        <ListFilter
-          filters={filters}
-          activeIndex={this.state.filterIndex}
-          className="filter"
-          onFilterChange={index => this.setState({ filterIndex: index })}
-        />
-
-        <RepoAbstract
-          className="item"
-          repoId={-1}
-          repositories={repositories}
-        />
-        <RepoAbstract
-          className="item"
-          repoId={-1}
-          repositories={repositories}
-        />
-        <RepoAbstract
-          className="item"
-          repoId={-1}
-          repositories={repositories}
-        />
-        <RepoAbstract
-          className="item"
-          repoId={-1}
-          repositories={repositories}
-        />
-        <RepoAbstract
-          className="item"
-          repoId={-1}
-          repositories={repositories}
-        />
-
-
-      </div>
-    );
-  }
+      <RepoAbstract
+        className="item"
+        repoId={-1}
+        repositories={repositories}
+      />
+      <RepoAbstract
+        className="item"
+        repoId={-1}
+        repositories={repositories}
+      />
+      <RepoAbstract
+        className="item"
+        repoId={-1}
+        repositories={repositories}
+      />
+      <RepoAbstract
+        className="item"
+        repoId={-1}
+        repositories={repositories}
+      />
+      <RepoAbstract
+        className="item"
+        repoId={-1}
+        repositories={repositories}
+      />
+    </div>
+  );
 }
 
-function select(state) {
-  return {
-    repositories: state.data.repositories
-  }
-}
+RepoAbList.propTypes = {
+  repositories: PropTypes.object.isRequired,
+  pathname: PropTypes.string.isRequired,
+  query: PropTypes.object.isRequired,
+  onFilterChange: PropTypes.func
+};
 
-export default connect(select)(RepoAbList);
+export default RepoAbList;

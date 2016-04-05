@@ -1,0 +1,34 @@
+@import "Colors";
+
+.tagPool {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .tagContainer {
+    display: flex;
+    align-items: flex-end;
+    margin: 4px 10px;
+
+    .tagText {
+      display: inline;
+      color: $linkColor;
+      font-weight: 500;
+      font-size: 18px;
+
+      cursor: pointer;
+
+      &:hover {
+        color: lighten($linkColor, 20%);
+      }
+    }
+
+    .tagUsed {
+      display: inline;
+      font-size: 12px;
+      margin-left: 2px;
+      color: $grey500;
+      margin-bottom: 2px;
+    }
+  }
+}

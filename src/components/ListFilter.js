@@ -1,5 +1,21 @@
 import React, { PropTypes } from 'react';
 
+// read filter from filter
+function getIndexByFilter(props) {
+  const { filters, activeFilter } = props;
+  let index = 0;
+  if (activeFilter) {
+    filters.map((f, i) => {
+      console.log(f+' '+i)
+      if (f.toLowerCase() == activeFilter.toLowerCase()) {
+        index = i;
+      }
+    });
+  }
+
+  return index;
+}
+
 function getRootClassName (className) {
   if (className) {
     return "listFilter " + className;
@@ -9,8 +25,9 @@ function getRootClassName (className) {
 }
 
 function ListFilter(props) {
-  const { filters, activeIndex, className, style, onFilterChange } = props;
+  const { filters, className, style, onFilterChange } = props;
 
+  const activeIndex = getIndexByFilter(props);
   return (
     <div
       className={getRootClassName(className)}
@@ -35,7 +52,7 @@ function ListFilter(props) {
 
 ListFilter.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
-  activeIndex: PropTypes.number.isRequired,
+  activeFilter: PropTypes.string,
   className: PropTypes.string,
   style: PropTypes.object,
   onFilterChange: PropTypes.func
@@ -43,7 +60,8 @@ ListFilter.propTypes = {
 
 ListFilter.defaultProps = {
   className: '',
-  style: {}
+  style: {},
+  activeFilter: ''
 };
 
 export default ListFilter;

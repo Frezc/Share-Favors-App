@@ -3,6 +3,7 @@ import RepositoryDetail from '../containers/RepositoryDetail';
 import UserDetail from '../containers/UserDetail';
 import SearchPage from '../containers/SearchPage';
 import SearchRepoResult from '../containers/SearchRepoResult';
+import SearchTagResult from '../containers/SearchTagResult';
 import ErrorPage from '../components/ErrorPage';
 import NotImplementPage from '../components/NotImplementPage';
 
@@ -31,7 +32,7 @@ const routes = {
     }, {
       path: 'link', component: NotImplementPage
     }, {
-      path: 'tag', component: NotImplementPage
+      path: 'tag', component: SearchTagResult
     }, {
       path: 'user', component: NotImplementPage
     }]

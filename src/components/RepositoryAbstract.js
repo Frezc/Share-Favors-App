@@ -15,7 +15,7 @@ import Subheader from 'material-ui/lib/Subheader';
 import Divider from 'material-ui/lib/divider';
 import FileFolderShared from 'material-ui/lib/svg-icons/file/folder-shared';
 import ContentLink from 'material-ui/lib/svg-icons/content/link';
-import * as Colors from 'material-ui/lib/styles/colors';
+import { grey900, grey500, teal500 } from 'material-ui/lib/styles/colors';
 import CardActions from 'material-ui/lib/card/card-actions';
 import FlatButton from 'material-ui/lib/flat-button';
 
@@ -40,12 +40,12 @@ function renderRecentItems (repository, repositories) {
                 {item.type == 'repo' ?
                   <FileFolderShared
                     style={styles.columnIcon}
-                    color={Colors.grey900}
+                    color={grey900}
                   />
                   :
                   <ContentLink
                     style={styles.columnIcon}
-                    color={Colors.grey900}
+                    color={grey900}
                   />
                 }
               </TableRowColumn>
@@ -99,7 +99,7 @@ function RepositoryAbstract (props) {
             <ToggleStar
               className="starIcon"
               style={styles.subtitleIcon}
-              color={Colors.grey500}
+              color={grey500}
             />
             <span>
               {repository.stars}
@@ -109,19 +109,19 @@ function RepositoryAbstract (props) {
                 <ActionVisibilityOff
                   className="visibilityIcon"
                   style={styles.subtitleIcon}
-                  color={Colors.grey500}
+                  color={grey500}
                 />
                 :
                 <ActionVisibility
                   className="visibilityIcon"
                   style={styles.subtitleIcon}
-                  color={Colors.grey500}
+                  color={grey500}
                 />
             }
             <ActionDateRange
               className="dateIcon"
               style={styles.subtitleIcon}
-              color={Colors.grey500}
+              color={grey500}
             />
             <span
               className="dateText">
@@ -130,7 +130,7 @@ function RepositoryAbstract (props) {
             <ContentLink
               className="linkIcon"
               style={styles.subtitleIcon}
-              color={Colors.grey500}
+              color={grey500}
             />
             <span
               className="linkText">
@@ -139,7 +139,7 @@ function RepositoryAbstract (props) {
             <FileFolderShared
               className="folderIcon"
               style={styles.subtitleIcon}
-              color={Colors.grey500}
+              color={grey500}
             />
             <span
               className="folderText">
@@ -163,7 +163,7 @@ function RepositoryAbstract (props) {
               >
                 <MapsLocalOffer
                   style={{ width: 16, height: 16 }}
-                  color={Colors.teal500}
+                  color={teal500}
                 />
                 <span className="tagText">
                   {tag.text}

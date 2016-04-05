@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import ContentMask from '../components/ContentMask';
 import TextField from 'material-ui/lib/text-field';
-import { replace } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
 const styles = {
@@ -47,7 +47,7 @@ class SearchPage extends React.Component {
     const { dispatch } = this.props;
 
     if (this.checkPath(this.props.location.pathname) != index) {
-      dispatch(replace({
+      dispatch(push({
         pathname: `/search/${types[index]}`
       }));
     }
