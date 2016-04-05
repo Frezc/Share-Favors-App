@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import TagPool from '../components/TagPool';
 import ListFilter from '../components/ListFilter';
 
-const filters = ['Similarity', 'Most Used', 'Newest', 'Oldest'];
+const filters = ['Similarity', 'Most Repo', 'Oldest'];
 
-class SearchTagResult extends React.Component {
+class SearchUserResult extends React.Component {
 
   onFilterChange = (index, filter) => {
     const { dispatch, pathname, query } = this.props;
@@ -18,20 +17,8 @@ class SearchTagResult extends React.Component {
       })
     }));
   };
-
-  getTestTags () {
-    let tags = [];
-    for (var i = 0; i < 1000; i++) {
-      tags.push({
-        id: i,
-        text: 'katsura',
-        used: Math.floor(Math.random() * 10000)
-      });
-    }
-    return tags;
-  }
   
-  render () {
+  render() {
     const { query } = this.props;
 
     return (
@@ -40,10 +27,6 @@ class SearchTagResult extends React.Component {
           filters={filters}
           activeFilter={query.filter}
           onFilterChange={this.onFilterChange}
-        />
-        <TagPool
-          tags={this.getTestTags()}
-          onTagPress={tag => console.log(tag)}
         />
       </div>
     );
@@ -57,4 +40,4 @@ function select(state, ownProps) {
   };
 }
 
-export default connect(select)(SearchTagResult);
+export default connect(select)(SearchUserResult);

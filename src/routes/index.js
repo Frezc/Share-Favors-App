@@ -6,6 +6,8 @@ import SearchRepoResult from '../containers/SearchRepoResult';
 import SearchTagResult from '../containers/SearchTagResult';
 import ErrorPage from '../components/ErrorPage';
 import NotImplementPage from '../components/NotImplementPage';
+import SearchLinkResult from "../containers/SearchLinkResult";
+import SearchUserResult from "../containers/SearchUserResult";
 
 const routes = {
   path: '/',
@@ -30,11 +32,11 @@ const routes = {
     childRoutes: [{
       path: 'repo', component: SearchRepoResult
     }, {
-      path: 'link', component: NotImplementPage
+      path: 'link', component: SearchLinkResult
     }, {
       path: 'tag', component: SearchTagResult
     }, {
-      path: 'user', component: NotImplementPage
+      path: 'user', component: SearchUserResult
     }]
   }, {
     path: 'explorer', component: NotImplementPage
