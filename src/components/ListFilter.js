@@ -1,63 +1,31 @@
 import React, { PropTypes } from 'react';
 
+function getRootClassName (className) {
+  if (className) {
+    return "listFilter " + className;
+  }
+  
+  return "listFilter";
+}
+
 function ListFilter(props) {
-  const { filters, activeIndex } = props;
+  const { filters, activeIndex, className, style, onFilterChange } = props;
 
   return (
     <div
-      className="listFilter"
+      className={getRootClassName(className)}
+      style={style}
     >
-      <div
-        className="filterButton active"
-      >Similarity</div>
-      <div
-        className="filterButton"
-      >Most Star</div>
-      <div
-        className="filterButton"
-      >Newest</div>
-      <div
-        className="filterButton"
-      >Oldest</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
-      <div
-        className="filterButton"
-      >Most Items</div>
+      {filters.map((filter, index) =>
+        <div
+          key={filter}
+          className={activeIndex == index ? "filterButton active" : "filterButton" }
+          onTouchTap={() => onFilterChange && onFilterChange(index, filter)}
+        >
+          {filter}
+        </div>
+      )}
+
       <div
         className="filterTitle"
       >Filter</div>
@@ -67,7 +35,15 @@ function ListFilter(props) {
 
 ListFilter.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
-  activeIndex: PropTypes.number.isRequired
+  activeIndex: PropTypes.number.isRequired,
+  className: PropTypes.string,
+  style: PropTypes.object,
+  onFilterChange: PropTypes.func
+};
+
+ListFilter.defaultProps = {
+  className: '',
+  style: {}
 };
 
 export default ListFilter;

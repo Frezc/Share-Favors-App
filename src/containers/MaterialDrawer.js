@@ -47,7 +47,7 @@ class MaterialDrawer extends React.Component {
   };
 
   getValueByPathname(pathname) {
-    console.log(pathname)
+    // console.log(pathname)
     const reg = /(\/\w*)?(\/\S*)*/i;
     const re = reg.exec(pathname);
     

@@ -1,5 +1,11 @@
 
 .repoAbstract {
+  display: flex;
+  flex-direction: column;
+
+  .filter {
+    margin-bottom: 16px;
+  }
 
   .item {
     margin-top: 16px;

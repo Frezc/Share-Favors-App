@@ -1,10 +1,9 @@
 import App from '../containers/app';
 import RepositoryDetail from '../containers/RepositoryDetail';
 import UserDetail from '../containers/UserDetail';
-import RepositoriesExplorer from '../containers/RepositoriesExplorer';
 import SearchPage from '../containers/SearchPage';
+import SearchRepoResult from '../containers/SearchRepoResult';
 import ErrorPage from '../components/ErrorPage';
-import RepoAbList from '../containers/RepoAbList';
 import NotImplementPage from '../components/NotImplementPage';
 
 const routes = {
@@ -28,7 +27,7 @@ const routes = {
   }, {
     path: 'search', component: SearchPage,
     childRoutes: [{
-      path: 'repo', component: NotImplementPage
+      path: 'repo', component: SearchRepoResult
     }, {
       path: 'link', component: NotImplementPage
     }, {

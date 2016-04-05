@@ -7,6 +7,10 @@ const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
 
 class RepoAbList extends React.Component {
 
+  state = {
+    filterIndex: 0
+  };
+
   render() {
     const { repositories } = this.props;
 
@@ -16,7 +20,9 @@ class RepoAbList extends React.Component {
       >
         <ListFilter
           filters={filters}
-          activeIndex={0}
+          activeIndex={this.state.filterIndex}
+          className="filter"
+          onFilterChange={index => this.setState({ filterIndex: index })}
         />
 
         <RepoAbstract
