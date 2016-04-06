@@ -1,5 +1,11 @@
 @import "Colors";
 
+.textSingleLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .linkList {
   margin-top: 24px;
 
@@ -11,6 +17,9 @@
       display: inline-block;
       font-size: 18px;
       color: $linkColor;
+      width: 100%;
+      @extend .textSingleLine;
+
 
       a {
         text-decoration: none;
@@ -26,6 +35,7 @@
       color: $grey500;
       font-size: 14px;
       margin-top: 4px;
+      @extend .textSingleLine;
     }
 
     .description {
