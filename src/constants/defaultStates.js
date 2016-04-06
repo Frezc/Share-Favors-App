@@ -2,7 +2,7 @@ export const defaultUser = {
   id: -1,
   email: 'youremail@email.com',
   nickname: 'click to login',
-  sign: 'This is English Test text.This is English Test text.This is English Test text.This is English Test text.This is English Test text.这是非常长的文字这是非常长的文字&2这是非常长的文字&3这是非常长的文字&4这是非常长的文字&5这是非常长的文字',
+  sign: '这是非常长的文字这是非常长的文字&2这是非常长的文字&3这是非常长的文字&4这是非常长的文字&5这是非常长的文字',
   starlist: [-1],
   repositories: [-1]
 };
