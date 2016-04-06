@@ -96,7 +96,7 @@ class MaterialAppBar extends React.Component {
             className="searchInput"
             onBlur={() => { this.setState({ showSearch: false }) }}
             ref={r => this.searchField = r}
-            value="123"
+            value=""
           />
           <ContentClear
             className="clearIcon"

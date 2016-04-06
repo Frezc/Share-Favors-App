@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import ListFilter from '../components/ListFilter';
+import UserList from '../components/UserList';
 
 const filters = ['Similarity', 'Most Repo', 'Oldest'];
 
@@ -28,6 +29,7 @@ class SearchUserResult extends React.Component {
           activeFilter={query.filter}
           onFilterChange={this.onFilterChange}
         />
+        <UserList />
       </div>
     );
   }

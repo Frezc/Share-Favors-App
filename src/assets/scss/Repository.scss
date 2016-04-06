@@ -5,7 +5,7 @@
 
   .repoTitle {
     display: inline-block;
-    font-size: 20px;
+    font-size: 18px;
     color: $linkColor;
 
     a {
@@ -21,7 +21,7 @@
   .repoSubTitle {
     margin-top: 2px;
     position: relative;
-    font-size: 16px;
+    font-size: 14px;
     color: $grey500;
 
     @mixin subtitleIcon ($count) {
