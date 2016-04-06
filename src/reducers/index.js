@@ -66,8 +66,8 @@
 				[id]: {
 					id: number,
 					title,
-					creatorId,
-					creatorName,
+					creator_id,
+					creator_name,
 					status,
 					stars,
 					created_at,

@@ -1,0 +1,36 @@
+@import "Colors";
+
+.linkList {
+  margin-top: 24px;
+
+  .linkLine {
+    padding: 16px;
+    margin-bottom: 16px;
+
+    .title {
+      display: inline-block;
+      font-size: 18px;
+      color: $linkColor;
+
+      a {
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          color: lighten($linkColor, 10%);
+        }
+      }
+    }
+
+    .url {
+      color: $grey500;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .description {
+      margin-top: 8px;
+      color: $grey600;
+    }
+  }
+}

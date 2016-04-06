@@ -75,6 +75,7 @@ function RepositoryAbstract (props) {
   const { actions, className, style, repoId, repositories, showRecentItems } = props;
 
   const repository = repositories[repoId];
+  // console.log(repository)
 
   return (
     <div 
@@ -88,7 +89,7 @@ function RepositoryAbstract (props) {
         >
           <div className="repoTitle">
             <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              {repository.creatorName}
+              {repository.creator_name}
             </a>
             /
             <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
