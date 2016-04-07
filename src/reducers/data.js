@@ -5,6 +5,7 @@ import { SHOW_USER_SET } from '../constants/actionTypes';
 
 function generateUser(user) {
   let newUser = Object.assign({}, user);
+  console.log(user)
   newUser.repositories = user.repositories.map(repoWithRecent => {
     return repoWithRecent.repository.id;
   });

@@ -31,7 +31,7 @@ const styles = {
 
 const windowModes = ['normal', 'widescreen'];
 // 需要与侧边栏按钮配对的项
-const navRouter = ['/repositories', '/stars', '/search', '/explorer'];
+const navRouter = ['/repositories', '/stars', '/search', '/explorer', '/tag'];
 
 class MaterialDrawer extends React.Component {
 
@@ -50,10 +50,12 @@ class MaterialDrawer extends React.Component {
     // console.log(pathname)
     const reg = /(\/\w*)?(\/\S*)*/i;
     const re = reg.exec(pathname);
-    
-    for (var i = 0; i < navRouter.length; i++) {
-      if (navRouter[i] == re[1]) {
-        return i;
+
+    if (re[1]) {
+      for (var i = 0; i < navRouter.length; i++) {
+        if (navRouter[i] == re[1].toLowerCase()) {
+          return i;
+        }
       }
     }
 
@@ -124,7 +126,7 @@ class MaterialDrawer extends React.Component {
           <ListItem
             value={4}
           >
-            Users
+            Tags
           </ListItem>
         </SelectableList>
 

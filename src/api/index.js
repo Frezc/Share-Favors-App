@@ -1,18 +1,18 @@
 import fetch from 'isomorphic-fetch';
 import { 
 AUTH_URL, SENDEMAIL_URL, sendEmailUrl,
-userInfoUrl, REGISTER_URL
+userInfoUrl, REGISTER_URL, refreshTokenUrl
 } from './urls';
 
 export function auth(email, password) {
-return fetch(AUTH_URL, {
-  method: 'POST',
-  mode: 'cors',
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
-  },
-  body: `email=${email}&password=${password}`
-});
+  return fetch(AUTH_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: `email=${email}&password=${password}`
+  });
 }
 
 export function sendEmail(email) {
@@ -41,4 +41,8 @@ export function userInfo(id) {
 
 export function userRepository(id) {
   
+}
+
+export function refreshToken(token) {
+  return fetch(refreshTokenUrl(token));
 }

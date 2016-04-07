@@ -5,6 +5,11 @@ const HOST = 'http://sharefavors.com'
 export const AUTH_URL = HOST + '/auth';
 export const REGISTER_URL = HOST + '/register';
 
+export const REFRESHTOKEN_URL = HOST + '/refreshToken';
+export function refreshTokenUrl(token) {
+  return `${REFRESHTOKEN_URL}?token=${token}`;
+}
+
 export const SENDEMAIL_URL = HOST + '/sendVerifiedEmail';
 export function sendEmailUrl(email) {
   return `${SENDEMAIL_URL}?email=${email}`

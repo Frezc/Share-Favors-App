@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 function NotImplementPage(props) {
   return (
     <div>
-      This page hasn't implemented.
+      You request {props.location.pathname}, but This page hasn't implemented.
     </div>
   );
 }

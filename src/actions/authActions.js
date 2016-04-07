@@ -1,21 +1,8 @@
 import * as Api from '../api';
-import {
-  AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE
-}
-from '../constants/actionTypes';
-
-import {
-  setDialogLoading, setDialogError, setDialogVisible
-}
-from './dialog';
-import {
-  showSnackbar
-}
-from './index';
-import {
-  DIALOG
-}
-from '../constants';
+import { AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SENDEMAIL_CHANGE } from '../constants/actionTypes';
+import { setDialogLoading, setDialogError, setDialogVisible } from './dialog';
+import { showSnackbar } from './index';
+import { DIALOG } from '../constants';
 
 function successAuth(auth) {
   return dispatch => {
@@ -51,6 +38,35 @@ export function auth(email, password) {
       .catch(error => {
         dispatch(setDialogError(DIALOG.AUTH, error.message));
       });
+  }
+}
+
+let refreshRetry = 0;
+export function refreshToken(token) {
+  return dispatch => {
+    return Api.refreshToken(token)
+      .then(response => {
+        if (response.ok) {
+          response.json().then(json => {
+            dispatch(successAuth(json));
+          });
+        } else {
+          dispatch(showSnackbar('Token expired. Please re-auth.'));
+        }
+        refreshRetry = 0;
+      })
+      .catch(error => {
+        refreshRetry = 0;
+        if (refreshRetry >= 3) {
+          dispatch(showSnackbar('Failed after 3 retries. Please re-auth or Refresh.'));
+        } else {
+          dispatch(showSnackbar('Network error. Retry after 3 seconds.'));
+          setTimeout(() => {
+            refreshRetry++;
+            dispatch(refreshToken(token));
+          }, 3000);
+        }
+      })
   }
 }
 

@@ -96,11 +96,13 @@ class RepoList extends React.Component {
                 adjustForCheckbox={false}
                 style={{ 
                   borderBottom: 0 //fix table header border-bottom bug
-              }}>
+                }}
+              >
                 <TableRow
                   style={{ 
                     borderBottom: 0 //same
-                }}>
+                  }}
+                >
                   <TableHeaderColumn
                     style={{ width: 8 }}>
                     Type

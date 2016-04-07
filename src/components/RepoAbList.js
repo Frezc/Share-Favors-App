@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import RepoAbstract from './../components/RepositoryAbstract';
 import ListFilter from '../components/ListFilter';
+import NoResult from './NoResult';
+import ContentMask from './ContentMask';
 
 const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
 
@@ -26,6 +28,12 @@ function RepoAbList(props) {
           onFilterChange && onFilterChange(index, filter)
         }}
       />
+
+      <ContentMask 
+        loading={false}
+        error=""
+      />
+      <NoResult />
 
       <RepoAbstract
         className="item"

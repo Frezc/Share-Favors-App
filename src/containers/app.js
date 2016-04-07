@@ -35,7 +35,10 @@ class App extends React.Component {
       message: PropTypes.string.isRequired
     }).isRequired,
     sendEmail: PropTypes.object.isRequired,
-    content: PropTypes.object.isRequired
+    content: PropTypes.shape({
+      loading: PropTypes.bool.isRequired,
+      error: PropTypes.string.isRequired
+    }).isRequired
   };
 
   // 自适应浏览器宽度
@@ -82,7 +85,8 @@ class App extends React.Component {
           <MaterialAppBar />
           <div className="mainContainer">
             <ContentMask
-              content={content}
+              loading={content.loading}
+              error={content.error}
             />
             { this.props.children }
           </div>

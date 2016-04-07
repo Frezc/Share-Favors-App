@@ -41,6 +41,10 @@ const routes = {
   }, {
     path: 'explorer', component: NotImplementPage
   }, {
+    path: 'tag', component: NotImplementPage
+  }, {
+    path: 'tag/:text', component: NotImplementPage
+  }, {
     path: 'error500', component: ErrorPage
   }, {
     path: 'error404', component: ErrorPage

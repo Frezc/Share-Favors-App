@@ -1,13 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
-import {
-  render
-}
-from 'react-dom';
-import {
-  Provider
-}
-from 'react-redux';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import '../assets';
@@ -25,6 +19,9 @@ const store = configureStore(initState);
 const history = syncHistoryWithStore(browserHistory, store, {
   selectLocationState: state => state.router
 });
+
+
+store.dispatch()
 
 render(
   <Provider store={store}>

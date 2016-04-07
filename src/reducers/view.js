@@ -13,6 +13,7 @@ import {
 from '../constants/defaultStates';
 import dialogs from './dialogs';
 import content from './content';
+import auth from './auth';
 
 function navOpen(state = false, action) {
   switch (action.type) {
@@ -28,21 +29,6 @@ function windowMode(state = 'normal', action) {
       return action.mode;
   }
 
-  return state;
-}
-
-function auth(state = DEFAULT_AUTH, action) {
-  switch (action.type) {
-    case AUTH_SUCCESS:
-      return {
-        user: action.auth.user.id,
-        token: action.auth.token,
-        expired_at: action.auth.expired_at
-      };
-    case AUTH_DENIED:
-    case LOGOUT:
-      return DEFAULT_AUTH;
-  }
   return state;
 }
 

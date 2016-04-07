@@ -8,6 +8,32 @@ export function generateAvatarUrl(email, size) {
 export const isBrowser = new Function("try { return this === window; } catch(e) { return false; }");
 export const isNode = new Function("try { return this === global; } catch(e) { return false; }");
 
+export function saveItem(key, value) {
+  if (isBrowser()) {
+    localStorage && localStorage.setItem(key, value);
+    return true;
+  }
+
+  return false;
+}
+
+export function getItem(key) {
+  let item;
+  if (isBrowser()) {
+    item = localStorage && localStorage.getItem(key);
+  }
+  return item;
+}
+
+export function removeItem(key) {
+  if (isBrowser()) {
+    localStorage && localStorage.removeItem(key);
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * cut string with max length
  *
@@ -37,4 +63,28 @@ export function generateCutString(string = '', len = 1, ellipse = '...') {
   }
 
   return newString;
+}
+
+// map to memory times
+const timesMap = new WeakMap();
+/**
+ * retry code with delay and limit.
+ * @param code Be sure code at same variable.
+ * @param retryDelay milliseconds. [0, ]
+ * @param retryLimit retry times [0, ]
+ * @return the times code has retried. return 0 when retry end.
+ */
+export function retry(code, retryDelay = 1000, retryLimit = 3) {
+  let times = timesMap.get(code);
+  if (!times) {
+    times = 0;
+  }
+
+  if (times >= retryLimit) {
+    return 0;
+  }
+
+  setTimeout(code, retryDelay);
+  times++;
+  return times;
 }

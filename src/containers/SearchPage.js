@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import ContentMask from '../components/ContentMask';
 import TextField from 'material-ui/lib/text-field';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
@@ -17,11 +16,6 @@ const types = ['repo', 'link', 'tag', 'user'];
 
 
 class SearchPage extends React.Component {
-
-  state = {
-    loading: false,
-    error: ''
-  };
 
   checkPath(pathname) {
     const reg = /\/search\/(\w+)/i;
@@ -84,12 +78,6 @@ class SearchPage extends React.Component {
         <div
           className="resultContent"
         >
-          <ContentMask
-            content={{
-              loading: this.state.loading,
-              error: this.state.error
-            }}
-          />
           {this.props.children}
         </div>
       </div>

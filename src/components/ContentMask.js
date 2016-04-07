@@ -17,28 +17,26 @@ const styles = {
 class ContentMask extends React.Component {
   
   static propTypes = {
-    content: PropTypes.shape({
-      loading: PropTypes.bool.isRequired,
-      error: PropTypes.string.isRequired
-    }).isRequired
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string.isRequired
   };
 
   shouldShow(content) {
-    const { loading, error } = content;
+    const { loading, error } = this.props;
 
     return loading;
   }
 
   render() {
-    const { content } = this.props;
+    const { loading, error } = this.props;
     // const refreshStatus = content.loading ? 'loading' : 'ready';
     // console.log(this.props)
     return (
       <div
         className="loadingMask"
-        style={{ visibility: this.shouldShow(content) ? 'visible' : 'hidden' }}
+        style={{ visibility: this.shouldShow() ? 'visible' : 'hidden' }}
       >
-        {content.loading ?
+        {loading ?
           <span
             style={styles.refreshWrapper}
           >
@@ -73,7 +71,7 @@ class ContentMask extends React.Component {
             <div
               className="errorDescription"
             >
-              {content.error}
+              {error}
             </div>
           </div>
         }
