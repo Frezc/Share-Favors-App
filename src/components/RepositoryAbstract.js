@@ -26,6 +26,7 @@ function getRootClassName (className) {
 function renderRecentItems (repository, repositories) {
   return (
     <div>
+      <Divider />
       <Subheader>Recent Updated Items</Subheader>
       <Table className="abstractTable">
         <TableBody
@@ -172,7 +173,6 @@ function RepositoryAbstract (props) {
               </div>
             )}
           </div>
-          <Divider />
           {showRecentItems &&
             renderRecentItems(repository, repositories)
           }

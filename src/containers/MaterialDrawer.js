@@ -95,6 +95,9 @@ class MaterialDrawer extends React.Component {
             if (user.id == -1) {
               dispatch(setDialogVisible(DIALOG.AUTH, true));
               dispatch(setDialogContent(DIALOG.AUTH, 'auth'));
+            } else {
+              dispatch(push(`/user/${user.id}`));
+              dispatch(setNavOpen(false));
             }
           }}
         />

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RepoAbList from '../components/RepoAbList';
 
+const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
+
 class SearchRepoResult extends React.Component {
 
   static propTypes = {
@@ -24,6 +26,7 @@ class SearchRepoResult extends React.Component {
 
     return (
       <RepoAbList
+        filters={filters}
         repositories={repositories}
         pathname={pathname}
         query={query}

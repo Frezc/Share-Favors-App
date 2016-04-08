@@ -1,6 +1,6 @@
 import * as Api from '../api';
 import { setContentStatus } from './index';
-import { SHOW_USER_SET } from '../constants/actionTypes';
+import { SHOW_USER_SET, SHOW_USER_ID_SET } from '../constants/actionTypes';
 import { replace } from 'react-router-redux';
 
 function fetchUserSuccess(user) {
@@ -8,6 +8,13 @@ function fetchUserSuccess(user) {
     type: SHOW_USER_SET,
     user: user
   }
+}
+
+function fetchUserLocal(id) {
+  return {
+    type: SHOW_USER_ID_SET,
+    id: id
+  };
 }
 
 export function fetchUserNetwork(id) {
@@ -54,7 +61,7 @@ export function fetchUserNetwork(id) {
         dispatch(replace({
           pathname: '/error500',
           state: { type: 'user' }
-        }))
+        }));
         return 500;
       });
   }
@@ -67,8 +74,8 @@ export function fetchUser(id) {
 
     // server need not check state tree
     if (data.users[id]) {
-      console.log('fetch local')
-      dispatch(fetchUserSuccess(data.users[id]));
+      console.log('fetch local');
+      dispatch(fetchUserLocal(id));
     } else {
       dispatch(setContentStatus(true));
       return fetchUserNetwork(id)(dispatch);

@@ -52,6 +52,7 @@ export function refreshToken(token) {
           });
         } else {
           dispatch(showSnackbar('Token expired. Please re-auth.'));
+          dispatch(failAuth())
         }
         refreshRetry = 0;
       })
@@ -76,7 +77,10 @@ export function register(email, password, nickname, code) {
     return Api.register(email, password, nickname, code)
       .then(response => {
         if (response.ok) {
-          response.json().then(json => dispatch(successAuth(json)))
+          response.json().then(json => {
+            dispatch(successAuth(json));
+            dispatch(setDialogVisible(DIALOG.AUTH, false));
+          })
         } else {
           dispatch(setDialogError(DIALOG.AUTH, 'register failed.'));
         }

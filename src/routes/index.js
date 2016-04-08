@@ -8,6 +8,7 @@ import ErrorPage from '../components/ErrorPage';
 import NotImplementPage from '../components/NotImplementPage';
 import SearchLinkResult from "../containers/SearchLinkResult";
 import SearchUserResult from "../containers/SearchUserResult";
+import UserRepositories from '../containers/UserRepositories';
 
 const routes = {
   path: '/',
@@ -18,9 +19,9 @@ const routes = {
   }, {
     path: 'repository/:id/editor'
   }, {
-    path: 'repositories', component: NotImplementPage
+    path: 'repositories', component: UserRepositories
   }, {
-    path: 'stars', component: NotImplementPage
+    path: 'stars', component: UserRepositories
   }, {
     path: 'user/:id', component: UserDetail
   }, {

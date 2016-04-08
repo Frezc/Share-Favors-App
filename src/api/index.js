@@ -4,14 +4,16 @@ AUTH_URL, SENDEMAIL_URL, sendEmailUrl,
 userInfoUrl, REGISTER_URL, refreshTokenUrl
 } from './urls';
 
+// some input need to be encode
 export function auth(email, password) {
+  let data = new FormData();
+  data.append('email', email);
+  data.append('password', password);
+
   return fetch(AUTH_URL, {
     method: 'POST',
     mode: 'cors',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: `email=${email}&password=${password}`
+    body: data
   });
 }
 
@@ -29,8 +31,6 @@ export function register(email, password, nickname, code) {
   return fetch(REGISTER_URL, {
     method: 'POST',
     mode: 'cors',
-    headers: {
-    },
     body: data
   });
 }

@@ -77,7 +77,7 @@ app.use((req, res, next) => {
         // console.log('store: ', store.getState())
 
         let initState = JSON.stringify(store.getState());
-        let page = renderFullPage(initView, initState);
+        let page = renderFullPage(initView, encodeURIComponent(initState));
         
         return res.status(200).send(page);
       })
@@ -110,7 +110,7 @@ function renderFullPage(initView, initState) {
     </head>
     <body>
       <div id="app"><div>${initView}</div></div>
-      <script>window.__INITIAL_STATE__ = ${initState}</script>
+      <script>window.__INITIAL_STATE__ = "${initState}"</script>
       <script src="/build/bundle.js"></script>
     </body>
     </html>

@@ -7,21 +7,20 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import '../assets';
 import configureStore from './../store/configureStore';
 import routes from '../routes';
+import { autoRefresh } from './auth';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
 
 const initState = window.__INITIAL_STATE__;
-
-const store = configureStore(initState);
+const store = configureStore(JSON.parse(decodeURIComponent(initState)));
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store, {
   selectLocationState: state => state.router
 });
 
-
-store.dispatch()
+autoRefresh(store);
 
 render(
   <Provider store={store}>

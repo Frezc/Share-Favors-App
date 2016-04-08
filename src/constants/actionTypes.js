@@ -20,6 +20,7 @@ export const SENDEMAIL_CHANGE = 'SENDEMAIL_CHANGE';
 // content
 export const CONTENT_STATUS = 'CONTENT_STATUS';
 export const SHOW_USER_SET = 'SHOW_USER_SET';
+export const SHOW_USER_ID_SET = 'SHOW_USER_ID_SET';
 
 // window mode
 export const WINDOW_MODE_CHANGE = 'WINDOW_MODE_CHANGE';

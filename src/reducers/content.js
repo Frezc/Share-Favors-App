@@ -2,12 +2,14 @@ import {
   combineReducers
 }
 from 'redux';
-import { SHOW_USER_SET, CONTENT_STATUS } from '../constants/actionTypes';
+import { SHOW_USER_SET, SHOW_USER_ID_SET, CONTENT_STATUS } from '../constants/actionTypes';
 
 function showUser(state = -1, action) {
   switch (action.type) {
     case SHOW_USER_SET:
       return action.user.id;
+    case SHOW_USER_ID_SET:
+      return action.id;
   }
   
   return state;

@@ -1,4 +1,5 @@
 import md5 from './md5';
+import { checkAuthExpired } from '../client/auth'
 
 export function generateAvatarUrl(email, size) {
   let hash = md5(email.toLowerCase());
@@ -87,4 +88,20 @@ export function retry(code, retryDelay = 1000, retryLimit = 3) {
   setTimeout(code, retryDelay);
   times++;
   return times;
+}
+
+/**
+ * Need auth in browser ?
+ * Notice: In Node environment, needn't auth.
+ */
+export function needAuth(token, expired_at) {
+  if (isBrowser()) {
+    token = token ? token : getItem('token');
+    if (!token) {
+      return true;
+    }
+    return checkAuthExpired(expired_at);
+  }
+  
+  return false;
 }
