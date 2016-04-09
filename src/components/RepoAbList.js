@@ -5,24 +5,9 @@ import ListFilter from '../components/ListFilter';
 import NoResult from './NoResult';
 import ContentMask from './ContentMask';
 
-function testData(repositories) {
-  let arr = [];
-  for (var i = 0; i < 50; i++) {
-    arr.push(
-      <RepoAbstract
-        className="item"
-        repoId={-1}
-        repositories={repositories}
-      />
-    );
-  }
-
-  return arr;
-}
-
 function RepoAbList(props) {
 
-  const { filters, repositories, pathname, query, onFilterChange, loading, repos, dispatch } = props;
+  const { filters, pathname, query, onFilterChange, loading, repos, dispatch } = props;
 
   return (
     <div
@@ -51,12 +36,11 @@ function RepoAbList(props) {
       />
 
       {repos.length > 0 ?
-        repos.map(repoId =>
+        repos.map(repo =>
           <RepoAbstract
-            key={repoId}
+            key={repo.id}
             className="item"
-            repoId={repoId}
-            repositories={repositories}
+            repo={repo}
           />
         )
         :
@@ -69,11 +53,12 @@ function RepoAbList(props) {
 
 RepoAbList.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string),
-  repositories: PropTypes.object.isRequired,
   pathname: PropTypes.string.isRequired,
   query: PropTypes.object.isRequired,
   loading: PropTypes.bool,
-  repos: PropTypes.arrayOf(PropTypes.number),
+  repos: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired
+  })),
   onFilterChange: PropTypes.func
 };
 

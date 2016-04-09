@@ -6,6 +6,8 @@ import RepoList from '../components/RepoList';
 import ListControlBar from '../components/ListControlBar';
 import LinkDialog from '../components/LinkDialog';
 
+import { defaultRepoWithItems } from '../constants/defaultStates';
+
 import { isBrowser, isNode } from '../helpers';
 
 
@@ -16,7 +18,8 @@ import { connect } from 'react-redux';
 class RepositoryDetail extends React.Component {
   
   static propTypes = {
-    repositories: PropTypes.object.isRequired,
+    cache: PropTypes.object,
+    repoId: PropTypes.number.isRequired,
     linkDialog: PropTypes.shape({
       type: PropTypes.oneOf(['watch', 'edit']).isRequired,
       visible: PropTypes.bool.isRequired,
@@ -24,6 +27,10 @@ class RepositoryDetail extends React.Component {
       link: PropTypes.object.isRequired,
       error: PropTypes.string.isRequired
     }).isRequired
+  };
+
+  static defaultProps = {
+    cache: defaultRepoWithItems
   };
 
   state = {
@@ -37,7 +44,9 @@ class RepositoryDetail extends React.Component {
 
   render () {
 
-    const { linkDialog, repositories } = this.props;
+    const { linkDialog, cache } = this.props;
+
+    const repo = cache;
 
     const actions = [{
       label: 'Star'
@@ -52,7 +61,7 @@ class RepositoryDetail extends React.Component {
         <RepositoryAbstract
           actions={actions}
           repoId={-1}
-          repositories={repositories}
+          repoWithRecent={repo}
         />
         <RepoList
           style={styles.repoList}
@@ -97,9 +106,10 @@ const styles = {
   }
 }
 
-function select (state) {
+function select (state, ownProps) {
   return {
-    repositories: state.data.repositories,
+    cache: state.cache[ownProps.location.pathname],
+    repoId: ownProps.params.id,
     linkDialog: state.view.dialogs.linkDialog
   };
 }

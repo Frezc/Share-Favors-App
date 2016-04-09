@@ -42,7 +42,7 @@ const routes = {
   }, {
     path: 'explorer', component: NotImplementPage
   }, {
-    path: 'tag', component: NotImplementPage
+    path: 'tags', component: NotImplementPage
   }, {
     path: 'tag/:text', component: NotImplementPage
   }, {

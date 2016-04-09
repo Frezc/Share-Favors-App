@@ -150,7 +150,7 @@ class MaterialDrawer extends React.Component {
 function select (state) {
   let selectState = {
     navOpen: state.view.navOpen,
-    user: state.data.users[state.view.auth.user],
+    user: state.view.auth.user,
     windowMode: state.view.windowMode
   };
   if (state.router.locationBeforeTransitions) {

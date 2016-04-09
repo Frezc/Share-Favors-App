@@ -10,6 +10,10 @@ const routes = ['/repositories', '/stars'];
 
 class UserRepositories extends React.Component {
 
+  /**
+   * if pathname is /stars
+   * @returns {boolean}
+   */
   isStar() {
     const { pathname } = this.props;
 

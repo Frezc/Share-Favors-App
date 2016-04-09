@@ -10,6 +10,7 @@ function fetchUserSuccess(user) {
   }
 }
 
+// desperate
 function fetchUserLocal(id) {
   return {
     type: SHOW_USER_ID_SET,
@@ -19,6 +20,7 @@ function fetchUserLocal(id) {
 
 export function fetchUserNetwork(id) {
   return (dispatch) => {
+    dispatch(setContentStatus(true));
     return Api.userInfo(id)
       .then(response => {
         // console.log(response)
@@ -67,17 +69,17 @@ export function fetchUserNetwork(id) {
   }
 }
 
+// desperate. Cache will be charge in component.
 export function fetchUser(id) {
   return (dispatch, getState) => {
 
-    const { data } = getState();
+    const { cache } = getState();
 
     // server need not check state tree
-    if (data.users[id]) {
+    if (cache[`/user/${id}`]) {
       console.log('fetch local');
-      dispatch(fetchUserLocal(id));
+      // dispatch(fetchUserLocal(id));
     } else {
-      dispatch(setContentStatus(true));
       return fetchUserNetwork(id)(dispatch);
     }
   }

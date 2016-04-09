@@ -23,22 +23,29 @@ function getRootClassName (className) {
   return 'repoAbstract ' + className;
 }
 
-function renderRecentItems (repository, repositories) {
+function renderRecentItems (recentItems) {
+  // console.log('recentItems', recentItems)
   return (
-    <div>
+    <div
+      className="recentItems"
+    >
       <Divider />
       <Subheader>Recent Updated Items</Subheader>
       <Table className="abstractTable">
         <TableBody
           displayRowCheckbox={false}
           selectable={false}>
-          {repository.items.map(item =>
+          {recentItems.map(item =>
             <TableRow
-              key={item.id}
+              key={item.type == 0 ?
+                item.repository.id
+                :
+                item.link.id
+              }
             >
               <TableRowColumn
                 style={{ width: 8 }}>
-                {item.type == 'repo' ?
+                {item.type == 0 ?
                   <FileFolderShared
                     style={styles.columnIcon}
                     color={grey900}
@@ -53,10 +60,10 @@ function renderRecentItems (repository, repositories) {
               <TableRowColumn
                 className="columnName">
                 <a href="#">
-                  {item.type == 'repo' ?
-                    repositories[item.id].title
+                  {item.type == 0 ?
+                    item.repository.title
                     :
-                    item.title
+                    item.link.title
                   }
                 </a>
               </TableRowColumn>
@@ -73,9 +80,9 @@ function renderRecentItems (repository, repositories) {
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style, repoId, repositories, showRecentItems } = props;
+  const { actions, className, style, repoWithRecent, showRecentItems } = props;
 
-  const repository = repositories[repoId];
+  const repository = repoWithRecent.repository;
   // console.log(repository)
 
   return (
@@ -173,8 +180,8 @@ function RepositoryAbstract (props) {
               </div>
             )}
           </div>
-          {showRecentItems &&
-            renderRecentItems(repository, repositories)
+          {showRecentItems && repoWithRecent.recentItems &&
+            renderRecentItems(repoWithRecent.recentItems)
           }
         </CardText>
         { actions.length > 0 &&
@@ -202,8 +209,26 @@ RepositoryAbstract.propTypes = {
   })),
   className: PropTypes.string,
   style: PropTypes.object,
-  repoId: PropTypes.number.isRequired,
-  repositories: PropTypes.object.isRequired,
+  repoWithRecent: PropTypes.shape({
+    repository: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      creator_id: PropTypes.number.isRequired,
+      creator_name: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+      stars: PropTypes.number.isRequired,
+      created_at: PropTypes.string.isRequired,
+      tags: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        text: PropTypes.string.isRequired,
+        used: PropTypes.number.isRequired
+      })).isRequired,
+      description: PropTypes.string.isRequired,
+      repoNum: PropTypes.number.isRequired,
+      linkNum: PropTypes.number.isRequired
+    }).isRequired,
+    recentItems: PropTypes.array
+  }).isRequired,
+
   showRecentItems: PropTypes.bool
 };
 

@@ -18,7 +18,7 @@ export function refreshTokenUrl(token) {
 // 发送验证邮件
 export const SENDEMAIL_URL = HOST + '/sendVerifiedEmail';
 export function sendEmailUrl(email) {
-  return `${SENDEMAIL_URL}?email=${email}`
+  return `${SENDEMAIL_URL}?email=${email}`;
 }
 
 // 重置密码
@@ -36,8 +36,13 @@ export function userInfoUrl(id, starListMax = 3, repositoriesMax = 3) {
 }
 
 // 得到用户的仓库列表
-export function userReposUrl(id, offset = 0, orderby = 'recent updated', token = '', limit = 50) {
-  orderby = encodeURIComponent(orderby);
-  return `${HOST}/user/${id}/repository?offset=${offset}&`
-  // todo
+export function userReposUrl(id, offset = 0, limit = 50, orderby = 'recent updated', token) {
+  const tokenParam = token ? `&token=${token}` : '';
+  return `${HOST}/user/${id}/repository?offset=${offset}&orderby=${orderby}&limit=${limit}${tokenParam}`;
+}
+
+// 得到用户的starList
+export function userStarlistUrl(id, offset = 0, limit = 50, token) {
+  const tokenParam = token ? `&token=${token}` : '';
+  return `${HOST}/user/${id}/starList?offset=${offset}&limit=${limit}${tokenParam}`;
 }

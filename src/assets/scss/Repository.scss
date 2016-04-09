@@ -79,7 +79,7 @@
   }
 
   .tagList {
-    margin: 0 8px 24px 8px;
+    margin: 0 8px 0 8px;
 
     .tagContainer {
       display: inline-block;
@@ -101,6 +101,10 @@
         }
       }
     }
+  }
+
+  .recentItems {
+    margin-top: 24px;
   }
 }
 

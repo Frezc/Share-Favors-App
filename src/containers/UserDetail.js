@@ -7,18 +7,13 @@ import { connect } from 'react-redux';
 import { generateAvatarUrl } from '../helpers';
 import { fetchUserNetwork, fetchUser } from '../actions/fetchAction';
 import { isBrowser } from '../helpers';
+import { defaultUser } from '../constants/defaultStates';
 
 class UserDetail extends React.Component {
 
   static propTypes = {
-    user: PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      nickname: PropTypes.string.isRequired,
-      sign: PropTypes.string,
-      starlist: PropTypes.array.isRequired,
-      repositories: PropTypes.array.isRequired
-    }).isRequired,
-    repositories: PropTypes.object.isRequired
+    cache: PropTypes.object.isRequired,
+    pathname: PropTypes.string.isRequired
   };
 
   // server fetch
@@ -27,30 +22,32 @@ class UserDetail extends React.Component {
   };
 
   componentDidMount() {
-    const { userId } = this.props;
+    const { cache } = this.props;
     // first fetch
     // only fetch at browser
     console.log(isBrowser())
-    if (isBrowser() && userId != -1) {
+    if (isBrowser() && !cache) {
       console.log('first')
-      const {dispatch, userId} = this.props;
-      dispatch(fetchUser(userId));
+      const { dispatch, userId } = this.props;
+      dispatch(fetchUserNetwork(userId));
     }
-
   }
 
   componentWillReceiveProps(props) {
-    const { userId, dispatch } = props;
-    if (this.props.userId !== userId) {
-      console.log(props)
-      dispatch(fetchUser(userId));
+    const { cache } = props;
+    if (!cache) {
+      console.log(props);
+      const { dispatch, userId } = props;
+      dispatch(fetchUserNetwork(userId));
     }
   }
 
 
   render() {
-    const { user, repositories } = this.props;
+    const { cache } = this.props;
 
+    const user = cache ? cache : defaultUser;
+    // console.log(user)
     return (
       <div className="userDetail">
         <Avatar
@@ -64,24 +61,24 @@ class UserDetail extends React.Component {
         <Divider style={{ width: '100%' }} />
         <Subheader>[Repositories] (<a href='#'>view all</a>)</Subheader>
         <div className="repoList">
-          {user.repositories.map(repoId =>
+          {user.repositories.map(repoWithRecent =>
             <RepositoryAbstract
-              key={repoId}
+              key={repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
-              repoId={repoId}
-              repositories={repositories}
+              repoWithRecent={repoWithRecent}
+              showRecentItems
             />
           )}
         </div>
         <Divider style={{ width: '100%' }}/>
         <Subheader>[Star Repositories] (<a href='#'>view all</a>)</Subheader>
         <div className="repoList">
-          {user.starlist.map(repoId =>
+          {user.starlist.map(repoWithRecent =>
             <RepositoryAbstract
-              key={'star' + repoId}
+              key={'star' + repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
-              repoId={repoId}
-              repositories={repositories}
+              repoWithRecent={repoWithRecent}
+              showRecentItems
             />
           )}
         </div>
@@ -92,8 +89,8 @@ class UserDetail extends React.Component {
 
 function select(state, ownProps) {
   return {
-    user: state.data.users[state.view.content.showUser],
-    repositories: state.data.repositories,
+    pathname: ownProps.location.pathname,
+    cache: state.cache[ownProps.location.pathname],
     userId: ownProps.params.id
   }
 }

@@ -2,18 +2,24 @@ import { combineReducers } from 'redux';
 import { AUTH_SUCCESS } from "../constants/actionTypes";
 import { AUTH_DENIED } from "../constants/actionTypes";
 import { LOGOUT } from "../constants/actionTypes";
-import { saveItem, removeItem } from '../helpers'
+import { saveItem, removeItem } from '../helpers';
+import { defaultUser } from '../constants/defaultStates';
 
-function user(state = -1, action) {
+function user(state = defaultUser, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
       const userId = action.auth.user.id;
       saveItem('userId', userId);
-      return userId;
+      const user = {
+        id: userId,
+        email: action.auth.user.email,
+        nickname: action.auth.user.nickname
+      };
+      return user;
     case AUTH_DENIED:
     case LOGOUT:
       removeItem('userId');
-      return -1;
+      return defaultUser;
   }
 
   return state;

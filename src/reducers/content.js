@@ -4,6 +4,7 @@ import {
 from 'redux';
 import { SHOW_USER_SET, SHOW_USER_ID_SET, CONTENT_STATUS } from '../constants/actionTypes';
 
+// desperate.
 function showUser(state = -1, action) {
   switch (action.type) {
     case SHOW_USER_SET:
@@ -35,8 +36,7 @@ function error(state = '', action) {
 
 const content = combineReducers({
   loading,
-  error,
-  showUser
+  error
 });
 
 export default content;

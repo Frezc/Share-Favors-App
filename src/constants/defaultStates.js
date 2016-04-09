@@ -3,8 +3,8 @@ export const defaultUser = {
   email: 'youremail@email.com',
   nickname: 'click to login',
   sign: '这是非常长的文字这是非常长的文字&2这是非常长的文字&3这是非常长的文字&4这是非常长的文字&5这是非常长的文字',
-  starlist: [-1],
-  repositories: [-1]
+  starlist: [],
+  repositories: []
 };
 
 export const defaultLink = {
@@ -21,6 +21,39 @@ export const defaultLink = {
   created_at: '2010-10-11 21:21:21',
   updated_at: '2010-10-11 21:21:21'
 };
+
+export const defaultRepoAb = {
+  id: -1,
+  title: 'katsura_doujinshi',
+  creator_id: -1,
+  creator_name: 'itou_makoto',
+  status: 1,
+  stars: 12450,
+  created_at: '2010-10-11 21:21:21',
+  updated_at: '2010-10-11 21:21:21',
+  tags: [{
+    id: -1,
+    text: 'katsura',
+    used: 12
+  }],
+  description: 'My katsura\'s doujinshi',
+  repoNum: 1,
+  linkNum: 1
+};
+
+export const defaultRepoWithRecent = Object({}, defaultRepoAb, {
+  recentItems: [Object.assign({
+    type: 'repo',
+    created_at: '2010-10-11 21:21:21'
+  }, defaultRepoAb), defaultLink]
+});
+
+export const defaultRepoWithItems = Object({}, defaultRepoAb, {
+  items: [Object.assign({
+    type: 'repo',
+    created_at: '2010-10-11 21:21:21'
+  }, defaultRepoAb), defaultLink]
+});
 
 export const defaultRepo = {
   id: -1,

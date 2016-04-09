@@ -7,11 +7,14 @@ const filters = ['Similarity', 'Most Star', 'Newest', 'Oldest', 'Most Items'];
 class SearchRepoResult extends React.Component {
 
   static propTypes = {
-    repositories: PropTypes.object.isRequired,
     pathname: PropTypes.string.isRequired,
-    query: PropTypes.object.isRequired
+    query: PropTypes.object.isRequired,
+    cache: PropTypes.array
   };
 
+  static defaultProps = {
+    cache: []
+  };
 
   onFilterChange = (index, filter) => {
     const { dispatch, query } = this.props;
@@ -22,27 +25,37 @@ class SearchRepoResult extends React.Component {
   };
 
   render() {
-    const { repositories, pathname, query, dispatch } = this.props;
+    const { pathname, query, dispatch, cache } = this.props;
 
     return (
       <RepoAbList
         filters={filters}
-        repositories={repositories}
         pathname={pathname}
         query={query}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
+        repos={cache}
       />
     );
   }
 }
 
 function select(state, ownProps) {
-  return {
-    repositories: state.data.repositories,
+  let props = {
     pathname: ownProps.location.pathname,
     query: ownProps.location.query
+  };
+
+  const keyword = props.query.keyword;
+  if (keyword) {
+    let filter = props.query.filter;
+    filter = filter ? filter : filters[0];
+    props.cache = state.cache[`/search/repo?keyword=${keyword}&filter=${filter}`]
+  } else {
+    props.cache = [];
   }
+
+  return props;
 }
 
 export default connect(select)(SearchRepoResult);

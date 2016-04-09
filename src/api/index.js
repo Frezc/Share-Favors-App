@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import { 
-AUTH_URL, SENDEMAIL_URL, sendEmailUrl,
-userInfoUrl, REGISTER_URL, refreshTokenUrl
+  AUTH_URL, sendEmailUrl,
+  userInfoUrl, REGISTER_URL, refreshTokenUrl,
+  userReposUrl, userStarlistUrl
 } from './urls';
 
 // some input need to be encode
@@ -35,14 +36,18 @@ export function register(email, password, nickname, code) {
   });
 }
 
+export function refreshToken(token) {
+  return fetch(refreshTokenUrl(token));
+}
+
 export function userInfo(id) {
   return fetch(userInfoUrl(id));
 }
 
-export function userRepository(id) {
-  
+export function userRepository(id, orderby = 'recent updated', offset = 0, limit = 50, token) {
+  return fetch(userReposUrl(id, offset, limit, orderby, token))
 }
 
-export function refreshToken(token) {
-  return fetch(refreshTokenUrl(token));
+export function userStarlist(id, offset = 0, limit = 50, token) {
+  return fetch(userStarlistUrl(id, offset, limit, token));  
 }
