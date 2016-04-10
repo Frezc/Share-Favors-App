@@ -46,7 +46,7 @@ class RepositoryDetail extends React.Component {
 
     const { linkDialog, cache } = this.props;
 
-    const repo = cache;
+    const repo = cache.repository;
 
     const actions = [{
       label: 'Star'
@@ -61,7 +61,7 @@ class RepositoryDetail extends React.Component {
         <RepositoryAbstract
           actions={actions}
           repoId={-1}
-          repoWithRecent={repo}
+          repository={repo}
         />
         <RepoList
           style={styles.repoList}

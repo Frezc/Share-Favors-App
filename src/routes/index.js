@@ -13,7 +13,9 @@ import UserRepositories from '../containers/UserRepositories';
 const routes = {
   path: '/',
   component: App,
-  indexRoute: {component: RepositoryDetail},
+  indexRoute: {
+    component: NotImplementPage
+  },
   childRoutes: [{
     path: 'repository/:id', component: RepositoryDetail
   }, {

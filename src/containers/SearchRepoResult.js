@@ -34,7 +34,7 @@ class SearchRepoResult extends React.Component {
         query={query}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
-        repos={cache}
+        repoWithRecents={cache}
       />
     );
   }

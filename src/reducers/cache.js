@@ -13,10 +13,24 @@ function cache(state = {}, action) {
         [`/user/${action.user.id}`]: action.user
       });
     case FETCH_USER_REPOS_SUCCESS:
+      const key = `/user/${action.attr.userId}/repositories?filter=${action.attr.orderby}`;
+      let cache = state[key];
+      let repoList;
+      if (cache) {
+        repoList = Object.assign({}, cache.repoList, {
+          [action.attr.page]: action.data.repoList
+        });
+      } else {
+        repoList = {
+          [action.attr.page]: action.data.repoList
+        };
+      }
       return Object.assign({}, state, {
-        [`/user/${action.attr.userId}/repositories?filter=${action.attr.orderby}`]: {
-          // todo
-        }
+        [key]: Object.assign({}, cache, {
+          repoNumAll: action.data.repoNumAll,
+          showAll: action.data.showAll,
+          repoList: repoList
+        })
       });
   }
 

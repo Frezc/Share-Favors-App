@@ -36,6 +36,7 @@ class UserDetail extends React.Component {
   componentWillReceiveProps(props) {
     const { cache } = props;
     if (!cache) {
+      // todo: [bug] 
       console.log(props);
       const { dispatch, userId } = props;
       dispatch(fetchUserNetwork(userId));
@@ -65,8 +66,8 @@ class UserDetail extends React.Component {
             <RepositoryAbstract
               key={repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
-              repoWithRecent={repoWithRecent}
-              showRecentItems
+              repository={repoWithRecent.repository}
+              recentItems={repoWithRecent.recentItems}
             />
           )}
         </div>
@@ -77,8 +78,8 @@ class UserDetail extends React.Component {
             <RepositoryAbstract
               key={'star' + repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
-              repoWithRecent={repoWithRecent}
-              showRecentItems
+              repository={repoWithRecent.repository}
+              recentItems={repoWithRecent.recentItems}
             />
           )}
         </div>

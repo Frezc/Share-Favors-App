@@ -80,15 +80,14 @@ function renderRecentItems (recentItems) {
 }
 
 function showRencentBlock (props) {
-  const { showRecentItems, repoWithRecent } = props;
+  const { recentItems } = props;
 
-  return showRecentItems && repoWithRecent.recentItems && repoWithRecent.recentItems.length > 0;
+  return recentItems && recentItems.length > 0;
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style, repoWithRecent } = props;
+  const { actions, className, style, repository, recentItems } = props;
 
-  const repository = repoWithRecent.repository;
   // console.log(repository)
 
   return (
@@ -187,7 +186,7 @@ function RepositoryAbstract (props) {
             )}
           </div>
           {showRencentBlock(props) &&
-            renderRecentItems(repoWithRecent.recentItems)
+            renderRecentItems(recentItems)
           }
         </CardText>
         { actions.length > 0 &&
@@ -215,34 +214,30 @@ RepositoryAbstract.propTypes = {
   })),
   className: PropTypes.string,
   style: PropTypes.object,
-  repoWithRecent: PropTypes.shape({
-    repository: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      creator_id: PropTypes.number.isRequired,
-      creator_name: PropTypes.string.isRequired,
-      status: PropTypes.number.isRequired,
-      stars: PropTypes.number.isRequired,
-      created_at: PropTypes.string.isRequired,
-      tags: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
-        used: PropTypes.number.isRequired
-      })).isRequired,
-      description: PropTypes.string.isRequired,
-      repoNum: PropTypes.number.isRequired,
-      linkNum: PropTypes.number.isRequired
-    }).isRequired,
-    recentItems: PropTypes.array
+  repository: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    creator_id: PropTypes.number.isRequired,
+    creator_name: PropTypes.string.isRequired,
+    status: PropTypes.number.isRequired,
+    stars: PropTypes.number.isRequired,
+    created_at: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      text: PropTypes.string.isRequired,
+      used: PropTypes.number.isRequired
+    })).isRequired,
+    description: PropTypes.string.isRequired,
+    repoNum: PropTypes.number.isRequired,
+    linkNum: PropTypes.number.isRequired
   }).isRequired,
-
-  showRecentItems: PropTypes.bool
+  recentItems: PropTypes.array
 };
 
 RepositoryAbstract.defaultProps = {
   actions: [],
   className: '',
   style: {},
-  showRecentItems: false
+  recentItems: []
 }
 
 const styles = {

@@ -27,7 +27,7 @@ class UserRepositories extends React.Component {
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
         loading={false}
-        repos={cache}
+        repoWithRecents={cache}
       />
     );
   }

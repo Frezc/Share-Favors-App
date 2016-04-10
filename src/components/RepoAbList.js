@@ -7,7 +7,7 @@ import ContentMask from './ContentMask';
 
 function RepoAbList(props) {
 
-  const { filters, pathname, query, onFilterChange, loading, repos, dispatch } = props;
+  const { filters, pathname, query, onFilterChange, loading, repoWithRecents, dispatch } = props;
 
   return (
     <div
@@ -35,12 +35,13 @@ function RepoAbList(props) {
         error=""
       />
 
-      {repos.length > 0 ?
-        repos.map(repo =>
+      {repoWithRecents.length > 0 ?
+        repoWithRecents.map(repoWithRecent =>
           <RepoAbstract
-            key={repo.id}
+            key={repoWithRecent.repository.id}
             className="item"
-            repo={repo}
+            repository={repoWithRecent.repository}
+            recentItems={repoWithRecent.recentItems}
           />
         )
         :
@@ -56,15 +57,18 @@ RepoAbList.propTypes = {
   pathname: PropTypes.string.isRequired,
   query: PropTypes.object.isRequired,
   loading: PropTypes.bool,
-  repos: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired
+  repoWithRecents: PropTypes.arrayOf(PropTypes.shape({
+    repository: PropTypes.shape({
+      id: PropTypes.number.isRequired
+    }).isRequired,
+    recentItems: PropTypes.array
   })),
   onFilterChange: PropTypes.func
 };
 
 RepoAbList.defaultProps = {
   filters: [],
-  repos: [],
+  repoWithRecents: [],
   loading: false
 };
 
