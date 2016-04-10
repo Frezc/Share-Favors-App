@@ -53,15 +53,27 @@
 				
 				// desperate
 				showUser: userId,  // none with -1
+			},
+			componentStatus: {
+			  selfRepos: number, // 'loading': loading, the other: normal
+			  selfStars: number,
+			  userRepos,
+			  userStars
 			}
 		},
 		// 网页的缓存
 		cache: {
 			'/user/:id': user,
-			'/user/:id/repositories?filter={XXX}': [{
-			  repository: repoAb,
-        recentItems: [item, ...] // 默认3
-			 }],
+			'/user/:id/repositories?filter={XXX}': {
+			  repoNumAll: number, // 所有仓库数
+			  showAll: bool,      // 是否显示隐藏项
+			  repoList: {         // 在该应用中都是50项一页
+			    [page]: [{
+            repository: repoAb,
+            recentItems: [item, ...] // 默认3
+          }]
+        }
+			},
 			'/user/:id/stars': [{
 			  repository: repoAb,
         recentItems: [item, ...] // 默认3

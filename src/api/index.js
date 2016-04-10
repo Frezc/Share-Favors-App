@@ -44,7 +44,7 @@ export function userInfo(id) {
   return fetch(userInfoUrl(id));
 }
 
-export function userRepository(id, orderby = 'recent updated', offset = 0, limit = 50, token) {
+export function userRepository(id, orderby = 'recent updated', offset = 0, token, limit = 50) {
   return fetch(userReposUrl(id, offset, limit, orderby, token))
 }
 

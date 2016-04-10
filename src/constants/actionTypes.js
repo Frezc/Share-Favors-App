@@ -24,3 +24,9 @@ export const SHOW_USER_ID_SET = 'SHOW_USER_ID_SET';
 
 // window mode
 export const WINDOW_MODE_CHANGE = 'WINDOW_MODE_CHANGE';
+
+// component status
+export const COMPONENT_STATUS_SET = 'COMPONENT_STATUS_SET';
+
+// fetch
+export const FETCH_USER_REPOS_SUCCESS = 'FETCH_USER_REPOS_SUCCESS';

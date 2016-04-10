@@ -10,35 +10,24 @@ const routes = ['/repositories', '/stars'];
 
 class UserRepositories extends React.Component {
 
-  /**
-   * if pathname is /stars
-   * @returns {boolean}
-   */
-  isStar() {
-    const { pathname } = this.props;
-
-    return pathname.toLowerCase() == routes[1];
-  }
-
   onFilterChange = (index, filter) => {
     console.log('filter change');
   };
 
   renderContent() {
-    const { data, pathname, query, dispatch } = this.props;
+    const { cache, pathname, query, dispatch } = this.props;
 
-    const isStar = this.isStar();
+    const isStar = checkStar(pathname);
     const filters = isStar ? starFilters : repoFilters;
     return (
       <RepoAbList
         filters={filters}
-        repositories={data.repositories}
         pathname={pathname}
         query={query}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
         loading={false}
-        repos={[-1]}
+        repos={cache}
       />
     );
   }
@@ -60,13 +49,30 @@ class UserRepositories extends React.Component {
   }
 }
 
+/**
+ * if pathname is /stars
+ * @returns {boolean}
+ */
+function checkStar(pathname) {
+  return pathname.toLowerCase() == routes[1];
+}
+
 function select(state, ownProps) {
-  return {
+  let newState = {
     auth: state.view.auth,
-    data: state.data,
     pathname: ownProps.location.pathname,
     query: ownProps.location.query
+  };
+
+  if (checkStar(newState.pathname)) {
+    newState.cache = state.cache[`/user/${newState.auth.user.id}/stars`];
+  } else {
+    let filter = newState.query.filter;
+    filter = filter ? filter : repoFilters[0];
+    newState.cache = state.cache[`/user/${newState.auth.user.id}/repositories?filter=${filter}`]
   }
+
+  return newState;
 }
 
 export default connect(select)(UserRepositories);

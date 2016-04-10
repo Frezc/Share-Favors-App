@@ -1,7 +1,4 @@
-import {
-  combineReducers
-}
-from 'redux';
+import { combineReducers } from 'redux';
 import {
   NAV_OPEN, AUTH_SUCCESS, AUTH_DENIED, LOGOUT, SNACKBAR_SHOWMSG,
   SENDEMAIL_CHANGE, WINDOW_MODE_CHANGE
@@ -14,6 +11,7 @@ from '../constants/defaultStates';
 import dialogs from './dialogs';
 import content from './content';
 import auth from './auth';
+import componentStatus from './componentStatus';
 
 function navOpen(state = false, action) {
   switch (action.type) {
@@ -63,7 +61,8 @@ const view = combineReducers({
   auth,
   snackbar,
   sendEmail,
-  content
+  content,
+  componentStatus
 });
 
 export default view;

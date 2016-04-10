@@ -79,8 +79,14 @@ function renderRecentItems (recentItems) {
   );
 }
 
+function showRencentBlock (props) {
+  const { showRecentItems, repoWithRecent } = props;
+
+  return showRecentItems && repoWithRecent.recentItems && repoWithRecent.recentItems.length > 0;
+}
+
 function RepositoryAbstract (props) {
-  const { actions, className, style, repoWithRecent, showRecentItems } = props;
+  const { actions, className, style, repoWithRecent } = props;
 
   const repository = repoWithRecent.repository;
   // console.log(repository)
@@ -180,7 +186,7 @@ function RepositoryAbstract (props) {
               </div>
             )}
           </div>
-          {showRecentItems && repoWithRecent.recentItems &&
+          {showRencentBlock(props) &&
             renderRecentItems(repoWithRecent.recentItems)
           }
         </CardText>

@@ -5,14 +5,23 @@ const styles = {
 }
 
 function NoResult(props) {
-  
+  const { msg } = props;
+
   return (
     <div
       style={styles.root}
     >
-      No Result
+      {msg}
     </div>
   );
 }
+
+NoResult.propTypes = {
+  msg: PropTypes.string
+};
+
+NoResult.defaultProps = {
+  msg: 'No Result'
+};
 
 export default NoResult;

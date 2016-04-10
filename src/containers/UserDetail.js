@@ -12,7 +12,7 @@ import { defaultUser } from '../constants/defaultStates';
 class UserDetail extends React.Component {
 
   static propTypes = {
-    cache: PropTypes.object.isRequired,
+    cache: PropTypes.object,
     pathname: PropTypes.string.isRequired
   };
 

@@ -51,6 +51,8 @@ const routes = {
     path: 'error404', component: ErrorPage
   }, {
     path: 'error400', component: ErrorPage
+  }, {
+    path: 'error', component: ErrorPage
   }]
 }
 
