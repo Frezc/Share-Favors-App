@@ -55,8 +55,8 @@
 				showUser: userId,  // none with -1
 			},
 			componentStatus: {
-			  selfRepos: number, // 'loading': loading, the other: normal
-			  selfStars: number,
+			  selfRepos: string, // 'loading': loading, the other: normal
+			  selfStars,
 			  userRepos,
 			  userStars
 			}
@@ -74,14 +74,26 @@
           }]
         }
 			},
-			'/user/:id/stars': [{
-			  repository: repoAb,
-        recentItems: [item, ...] // 默认3
-			}],
-  		'/search/repo?keyword={kw}&filter={XXX}': [{
-			  repository: repoAb,
-        recentItems: [item, ...] // 默认3
-			}],
+			'/user/:id/stars': {
+			  repoNumAll: number, // 所有仓库数
+			  showAll: bool,      // 是否显示隐藏项
+			  repoList: {         // 在该应用中都是50项一页
+			    [page]: [{
+            repository: repoAb,
+            recentItems: [item, ...] // 默认3
+          }]
+        }
+			},
+  		'/search/repo?keyword={kw}&filter={XXX}': {
+			  repoNumAll: number, // 所有仓库数
+			  showAll: bool,      // 是否显示隐藏项
+			  repoList: {         // 在该应用中都是50项一页
+			    [page]: [{
+            repository: repoAb,
+            recentItems: [item, ...] // 默认3
+          }]
+        }
+			},
 			'/repository/:id'：{
 			  repository: repoAb,  // except recentItems
 			  items: [item, ...]

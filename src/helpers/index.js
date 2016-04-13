@@ -1,5 +1,6 @@
 import md5 from './md5';
-import { checkAuthExpired } from '../client/auth'
+import { checkAuthExpired } from '../client/auth';
+import fetch from 'isomorphic-fetch';
 
 export function generateAvatarUrl(email, size) {
   let hash = md5(email.toLowerCase());
@@ -104,4 +105,13 @@ export function needAuth(token, expired_at) {
   }
   
   return false;
+}
+
+/**
+ * fetch with auto retry
+ * @param url request url
+ * @param params fetch params with { retry(int, default 3), deltaTime(int, default 1000(ms)) }
+ */
+export function fetchR(url, params) {
+  // todo
 }

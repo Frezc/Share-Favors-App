@@ -10,15 +10,39 @@ const routes = ['/repositories', '/stars'];
 
 class UserRepositories extends React.Component {
 
+  static propTypes = {
+    auth: PropTypes.shape({
+      token: PropTypes.string,
+      expired_at: PropTypes.number
+    }).isRequired,
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+    selfReposStatus: PropTypes.string,
+    selfStarsStatus: PropTypes.string,
+    cache: PropTypes.object
+  };
+
+  static defaultProps = {
+    cache: {}
+  };
+
   onFilterChange = (index, filter) => {
     console.log('filter change');
   };
+
+  currentPageLoading() {
+    const isStar = checkStar(this.props.pathname);
+    const loadingStatus = isStar ? this.props.selfStarsStatus : this.props.selfReposStatus;
+
+    return loadingStatus == 'loading';
+  }
 
   renderContent() {
     const { cache, pathname, query, dispatch } = this.props;
 
     const isStar = checkStar(pathname);
     const filters = isStar ? starFilters : repoFilters;
+
     return (
       <RepoAbList
         filters={filters}
@@ -26,8 +50,9 @@ class UserRepositories extends React.Component {
         query={query}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
-        loading={false}
-        repoWithRecents={cache}
+        loading={this.currentPageLoading()}
+        repoWithRecents={cache.repoList}
+        repoNumAll={cache.repoNumAll}
       />
     );
   }
@@ -61,7 +86,9 @@ function select(state, ownProps) {
   let newState = {
     auth: state.view.auth,
     pathname: ownProps.location.pathname,
-    query: ownProps.location.query
+    query: ownProps.location.query,
+    selfReposStatus: state.view.componentStatus.selfRepos,
+    selfStarsStatus: state.view.componentStatus.selfStars
   };
 
   if (checkStar(newState.pathname)) {

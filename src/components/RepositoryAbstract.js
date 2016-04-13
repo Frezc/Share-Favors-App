@@ -86,7 +86,7 @@ function showRencentBlock (props) {
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style, repository, recentItems } = props;
+  const { actions, className, style, repository, recentItems, loading } = props;
 
   // console.log(repository)
 
@@ -98,17 +98,25 @@ function RepositoryAbstract (props) {
       <Card>
         <CardHeader
           actAsExpander={false}
-          showExpandableButton={true}
+          showExpandableButton={!loading}
         >
-          <div className="repoTitle">
-            <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              {repository.creator_name}
-            </a>
-            /
-            <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              {repository.title}
-            </a>
-          </div>
+          {loading ?
+            <div className="repoTitle">
+              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+                Loading...
+              </a>
+            </div>
+            :
+            <div className="repoTitle">
+              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+                {repository.creator_name}
+              </a>
+              /
+              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+                {repository.title}
+              </a>
+            </div>
+          }
           <div className="repoSubTitle">
             <ToggleStar
               className="starIcon"
@@ -229,15 +237,20 @@ RepositoryAbstract.propTypes = {
     description: PropTypes.string.isRequired,
     repoNum: PropTypes.number.isRequired,
     linkNum: PropTypes.number.isRequired
-  }).isRequired,
-  recentItems: PropTypes.array
+  }),
+  recentItems: PropTypes.array,
+  loading: PropTypes.bool
 };
 
 RepositoryAbstract.defaultProps = {
   actions: [],
   className: '',
   style: {},
-  recentItems: []
+  repository: {
+    tags: []
+  },
+  recentItems: [],
+  loading: false
 }
 
 const styles = {

@@ -9,11 +9,7 @@ class SearchRepoResult extends React.Component {
   static propTypes = {
     pathname: PropTypes.string.isRequired,
     query: PropTypes.object.isRequired,
-    cache: PropTypes.array
-  };
-
-  static defaultProps = {
-    cache: []
+    cache: PropTypes.object
   };
 
   onFilterChange = (index, filter) => {
@@ -34,7 +30,9 @@ class SearchRepoResult extends React.Component {
         query={query}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
-        repoWithRecents={cache}
+        loading={true}
+        repoWithRecents={cache.repoList}
+        repoNumAll={cache.repoNumAll}
       />
     );
   }
@@ -51,8 +49,6 @@ function select(state, ownProps) {
     let filter = props.query.filter;
     filter = filter ? filter : filters[0];
     props.cache = state.cache[`/search/repo?keyword=${keyword}&filter=${filter}`]
-  } else {
-    props.cache = [];
   }
 
   return props;
