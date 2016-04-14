@@ -102,7 +102,7 @@ function RepositoryAbstract (props) {
         >
           {loading ?
             <div className="repoTitle">
-              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+              <a>
                 Loading...
               </a>
             </div>
@@ -117,57 +117,59 @@ function RepositoryAbstract (props) {
               </a>
             </div>
           }
-          <div className="repoSubTitle">
-            <ToggleStar
-              className="starIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+          {loading ||
+            <div className="repoSubTitle">
+              <ToggleStar
+                className="starIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span>
               {repository.stars}
             </span>
-            {
-              repository.status == 0 ?
-                <ActionVisibilityOff
-                  className="visibilityIcon"
-                  style={styles.subtitleIcon}
-                  color={grey500}
-                />
-                :
-                <ActionVisibility
-                  className="visibilityIcon"
-                  style={styles.subtitleIcon}
-                  color={grey500}
-                />
-            }
-            <ActionDateRange
-              className="dateIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              {
+                repository.status == 0 ?
+                  <ActionVisibilityOff
+                    className="visibilityIcon"
+                    style={styles.subtitleIcon}
+                    color={grey500}
+                  />
+                  :
+                  <ActionVisibility
+                    className="visibilityIcon"
+                    style={styles.subtitleIcon}
+                    color={grey500}
+                  />
+              }
+              <ActionDateRange
+                className="dateIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="dateText">
               {repository.created_at.slice(0, 10)}
             </span>
-            <ContentLink
-              className="linkIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              <ContentLink
+                className="linkIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="linkText">
               {repository.repoNum}
             </span>
-            <FileFolderShared
-              className="folderIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              <FileFolderShared
+                className="folderIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="folderText">
               {repository.linkNum}
             </span>
-          </div>
+            </div>
+          }
         </CardHeader>
         <CardText expandable={true}>
           <Divider />

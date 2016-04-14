@@ -5,10 +5,11 @@ export const DIALOG = {
 };
 
 export const COMPONENT = {
-  selfRepos: 'selfRepo',
+  selfRepos: 'selfRepos',
   selfStars: 'selfStars',
-  userRepos: 'userRepo',
-  userStars: 'userStars'
+  userRepos: 'userRepos',
+  userStars: 'userStars',
+  userDetail: 'userDetail'
 };
 
 export const WINDOW_BOUNDARY = 1700;

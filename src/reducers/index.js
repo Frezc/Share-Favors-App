@@ -47,6 +47,7 @@
 				canSendEmail: bool, // 是否能发送邮件
 				sendEmailCounting: bool //是否正在发送冷却中
 			},
+			// desperate 现在不在使用所有页面的状态
 			content: {
 				loading: bool, 主内容区域是否在加载
 				error: string, 主内容区域显示的错误
@@ -58,7 +59,8 @@
 			  selfRepos: string, // 'loading': loading, the other: normal
 			  selfStars,
 			  userRepos,
-			  userStars
+			  userStars,
+			  userDetail
 			}
 		},
 		// 网页的缓存

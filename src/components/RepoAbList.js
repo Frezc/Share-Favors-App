@@ -7,7 +7,6 @@ import ContentMask from './ContentMask';
 
 function showRepoAbList(props) {
   const { repoWithRecents, repoNumAll } = props;
-
   return (
     <div>
       {repoNumAll > 0 ?
@@ -19,11 +18,13 @@ function showRepoAbList(props) {
             className="item"
             repository={repoWithRecent.repository}
             recentItems={repoWithRecent.recentItems}
-            loading
+            loading={false}
           />
         )
         :
-        <NoResult />
+        <NoResult
+          msg="No Repositories"
+        />
       }
     </div>
 
@@ -32,8 +33,9 @@ function showRepoAbList(props) {
 
 function RepoAbList(props) {
 
-  const { filters, pathname, query, onFilterChange, repoWithRecents, loading, repoNumAll, dispatch } = props;
-
+  const { filters, onFilterChange, repoWithRecents, loading, repoNumAll, dispatch } = props;
+  const { pathname, query } = props.location;
+  // console.log('loading', loading)
   return (
     <div
       className="repoAbstract"
@@ -61,10 +63,7 @@ function RepoAbList(props) {
       />
 
       {!loading &&
-        <showRepoAbList
-          repoWithRecents={repoWithRecents}
-          repoNumAll={repoNumAll}
-        />
+        showRepoAbList(props)
       }
 
     </div>
@@ -73,8 +72,7 @@ function RepoAbList(props) {
 
 RepoAbList.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.string),
-  pathname: PropTypes.string.isRequired,
-  query: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   loading: PropTypes.bool,
   repoWithRecents: PropTypes.object,
   repoNumAll: PropTypes.number,

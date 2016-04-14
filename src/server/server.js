@@ -67,7 +67,10 @@ app.use((req, res, next) => {
       .then(status => {
         console.log('status', status)
         if (status[0] && status[0] != 200) {
-          return res.redirect(`/error${status[0]}`);
+          if (status[0] == 'error')
+            return res.redirect('/error');
+          else
+            return res.redirect(`/error${status[0]}`);
         }
         const initView = renderToString(
           <Provider store={store}>

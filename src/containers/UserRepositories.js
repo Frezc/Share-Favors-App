@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import RepoAbList from '../components/RepoAbList';
 import { needAuth } from '../helpers';
 import NeedAuth from '../components/NeedAuth';
+import { fetchUserRepos } from "../actions/fetchAction";
+import { checkInArray } from '../helpers';
 
 const repoFilters = ['Recent Updated', 'Most Star', 'Most Items'];
 const starFilters = [];
@@ -12,18 +14,17 @@ class UserRepositories extends React.Component {
 
   static propTypes = {
     auth: PropTypes.shape({
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired
+      }),
       token: PropTypes.string,
       expired_at: PropTypes.number
     }).isRequired,
-    pathname: PropTypes.string.isRequired,
-    query: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     selfReposStatus: PropTypes.string,
     selfStarsStatus: PropTypes.string,
-    cache: PropTypes.object
-  };
-
-  static defaultProps = {
-    cache: {}
+    cache: PropTypes.object,
+    status: PropTypes.string
   };
 
   onFilterChange = (index, filter) => {
@@ -31,28 +32,48 @@ class UserRepositories extends React.Component {
   };
 
   currentPageLoading() {
-    const isStar = checkStar(this.props.pathname);
-    const loadingStatus = isStar ? this.props.selfStarsStatus : this.props.selfReposStatus;
-
+    const { location, selfStarsStatus, selfReposStatus } = this.props;
+    
+    const isStar = checkStar(location.pathname);
+    const loadingStatus = isStar ? selfStarsStatus : selfReposStatus;
+    console.log('loadingStatus', loadingStatus)
     return loadingStatus == 'loading';
   }
 
-  renderContent() {
-    const { cache, pathname, query, dispatch } = this.props;
+  loadData({ auth, dispatch, location, cache }) {
 
-    const isStar = checkStar(pathname);
+    if (!needAuth(auth.token, auth.expired_at) && !cache && !this.currentPageLoading()) {
+      if (checkStar(location.pathname)) {
+        // todo: fetch /stars
+      } else {
+        const i = checkInArray(location.query.filter, repoFilters);
+        dispatch(fetchUserRepos(auth.user.id, repoFilters[i], 0, auth.token));
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.loadData(this.props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.loadData(newProps);
+  }
+
+  renderContent() {
+    const { cache, location, dispatch } = this.props;
+    const isStar = checkStar(location.pathname);
     const filters = isStar ? starFilters : repoFilters;
 
     return (
       <RepoAbList
         filters={filters}
-        pathname={pathname}
-        query={query}
+        location={location}
         onFilterChange={this.onFilterChange}
         dispatch={dispatch}
         loading={this.currentPageLoading()}
-        repoWithRecents={cache.repoList}
-        repoNumAll={cache.repoNumAll}
+        repoWithRecents={cache && cache.repoList}
+        repoNumAll={cache && cache.repoNumAll}
       />
     );
   }
@@ -85,16 +106,15 @@ function checkStar(pathname) {
 function select(state, ownProps) {
   let newState = {
     auth: state.view.auth,
-    pathname: ownProps.location.pathname,
-    query: ownProps.location.query,
+    location: ownProps.location,
     selfReposStatus: state.view.componentStatus.selfRepos,
     selfStarsStatus: state.view.componentStatus.selfStars
   };
 
-  if (checkStar(newState.pathname)) {
+  if (checkStar(ownProps.location.pathname)) {
     newState.cache = state.cache[`/user/${newState.auth.user.id}/stars`];
   } else {
-    let filter = newState.query.filter;
+    let filter = ownProps.location.query.filter;
     filter = filter ? filter : repoFilters[0];
     newState.cache = state.cache[`/user/${newState.auth.user.id}/repositories?filter=${filter}`]
   }

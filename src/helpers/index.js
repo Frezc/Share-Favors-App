@@ -115,3 +115,18 @@ export function needAuth(token, expired_at) {
 export function fetchR(url, params) {
   // todo
 }
+
+/**
+ * check the element index in string array (not case sensitivity), if not, return 0
+ * @param ele
+ * @param arr
+ */
+export function checkInArray(ele = '', arr = []) {
+  for(let i = 0; i < arr.length; i++) {
+    if (arr[i].toLowerCase() == ele.toLowerCase()) {
+      return i;
+    }
+  }
+  
+  return 0;
+}

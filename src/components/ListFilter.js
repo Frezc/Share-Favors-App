@@ -1,16 +1,12 @@
 import React, { PropTypes } from 'react';
+import { checkInArray } from '../helpers';
 
 // read filter from filter
 function getIndexByFilter(props) {
   const { filters, activeFilter } = props;
   let index = 0;
   if (activeFilter) {
-    filters.map((f, i) => {
-      console.log(f+' '+i)
-      if (f.toLowerCase() == activeFilter.toLowerCase()) {
-        index = i;
-      }
-    });
+    index = checkInArray(activeFilter, filters);
   }
 
   return index;

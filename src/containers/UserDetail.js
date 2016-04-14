@@ -8,18 +8,26 @@ import { generateAvatarUrl } from '../helpers';
 import { fetchUserNetwork, fetchUser } from '../actions/fetchAction';
 import { isBrowser } from '../helpers';
 import { defaultUser } from '../constants/defaultStates';
+import ContentMask from '../components/ContentMask';
 
 class UserDetail extends React.Component {
 
   static propTypes = {
     cache: PropTypes.object,
-    pathname: PropTypes.string.isRequired
+    userId: PropTypes.string,
+    status: PropTypes.string
   };
 
   // server fetch
   static fetchData = (params) => {
     return fetchUserNetwork(params.id)
   };
+  
+  checkLoading() {
+    const { status } = this.props;
+    
+    return status == 'loading';
+  }
 
   componentDidMount() {
     const { cache } = this.props;
@@ -35,8 +43,7 @@ class UserDetail extends React.Component {
 
   componentWillReceiveProps(props) {
     const { cache } = props;
-    if (!cache) {
-      // todo: [bug] 
+    if (!cache && !this.checkLoading()) {
       console.log(props);
       const { dispatch, userId } = props;
       dispatch(fetchUserNetwork(userId));
@@ -51,6 +58,11 @@ class UserDetail extends React.Component {
     // console.log(user)
     return (
       <div className="userDetail">
+        <ContentMask
+          loading={false}
+          error=""
+        />
+
         <Avatar
           src={generateAvatarUrl(user.email, 160)}
           size={160}
@@ -62,7 +74,7 @@ class UserDetail extends React.Component {
         <Divider style={{ width: '100%' }} />
         <Subheader>[Repositories] (<a href='#'>view all</a>)</Subheader>
         <div className="repoList">
-          {user.repositories.map(repoWithRecent =>
+          {user.repositories.slice(0, 3).map(repoWithRecent =>
             <RepositoryAbstract
               key={repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
@@ -74,7 +86,7 @@ class UserDetail extends React.Component {
         <Divider style={{ width: '100%' }}/>
         <Subheader>[Star Repositories] (<a href='#'>view all</a>)</Subheader>
         <div className="repoList">
-          {user.starlist.map(repoWithRecent =>
+          {user.starlist.slice(0, 3).map(repoWithRecent =>
             <RepositoryAbstract
               key={'star' + repoWithRecent.repository.id}
               style={{ marginTop: '8px' }}
@@ -90,9 +102,9 @@ class UserDetail extends React.Component {
 
 function select(state, ownProps) {
   return {
-    pathname: ownProps.location.pathname,
     cache: state.cache[ownProps.location.pathname],
-    userId: ownProps.params.id
+    userId: ownProps.params.id,
+    status: state.view.componentStatus.userDetail
   }
 }
 

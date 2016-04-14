@@ -13,7 +13,7 @@ function cache(state = {}, action) {
         [`/user/${action.user.id}`]: action.user
       });
     case FETCH_USER_REPOS_SUCCESS:
-      const key = `/user/${action.attr.userId}/repositories?filter=${action.attr.orderby}`;
+      const key = `/user/${action.attr.userId}/repositories?filter=${action.attr.orderby.toLowerCase()}`;
       let cache = state[key];
       let repoList;
       if (cache) {

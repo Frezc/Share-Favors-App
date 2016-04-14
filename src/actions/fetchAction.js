@@ -58,14 +58,14 @@ function handleError(response, dispatch, state) {
 
 export function fetchUserNetwork(id) {
   return (dispatch) => {
-    dispatch(setContentStatus(true));
+    dispatch(setComponentStatus(COMPONENT.userDetail));
     return Api.userInfo(id)
       .then(response => {
         // console.log(response)
         if (response.ok) {
           // return new promise
           return response.json().then(json => {
-            dispatch(setContentStatus(false));
+            dispatch(setComponentStatus(COMPONENT.userDetail, ''));
             dispatch(fetchUserSuccess(json));
 
             // 让服务端能判断是否请求成功
@@ -91,19 +91,19 @@ export function fetchUserNetwork(id) {
           //     state: { type: 'user' }
           //   }))
           // }
-          
-          dispatch(setContentStatus(false));
+
+          dispatch(setComponentStatus(COMPONENT.userDetail, ''));
           return handleError(response, dispatch, { type: 'user' });
         }
 
       })
       .catch(error => {
-        dispatch(setContentStatus(false, error.message));
+        dispatch(setComponentStatus(COMPONENT.userDetail, ''));
         dispatch(replace({
           pathname: '/error',
           state: { type: 'user' }
         }));
-        return '';
+        return 'error';
       });
   }
 }
@@ -145,16 +145,16 @@ export function fetchUserRepos(id, orderby = 'recent updated', page = 0, token) 
               orderby: orderby,
               page: page
             }, json));
-            dispatch(setComponentStatus(comp, null));
+            dispatch(setComponentStatus(comp, ''));
             return response.status;
           });
         } else {
-          dispatch(setComponentStatus(comp, null));
+          dispatch(setComponentStatus(comp, ''));
           return handleError(response, dispatch, { type: 'repository' });
         }
       })
       .catch(error => {
-        dispatch(setComponentStatus(comp, null));
+        dispatch(setComponentStatus(comp, ''));
         dispatch(replace({
           pathname: '/error',
           state: { type: 'repository' }
