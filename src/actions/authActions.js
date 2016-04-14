@@ -41,7 +41,6 @@ export function auth(email, password) {
   }
 }
 
-let refreshRetry = 0;
 export function refreshToken(token) {
   return dispatch => {
     return Api.refreshToken(token)
@@ -54,19 +53,9 @@ export function refreshToken(token) {
           dispatch(showSnackbar('Token expired. Please re-auth.'));
           dispatch(failAuth())
         }
-        refreshRetry = 0;
       })
       .catch(error => {
-        refreshRetry = 0;
-        if (refreshRetry >= 3) {
           dispatch(showSnackbar('Failed after 3 retries. Please re-auth or Refresh.'));
-        } else {
-          dispatch(showSnackbar('Network error. Retry after 3 seconds.'));
-          setTimeout(() => {
-            refreshRetry++;
-            dispatch(refreshToken(token));
-          }, 3000);
-        }
       })
   }
 }

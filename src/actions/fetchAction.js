@@ -133,6 +133,7 @@ export function fetchUserReposSuccess(attr, json) {
 }
 
 export function fetchUserRepos(id, orderby = 'recent updated', page = 0, token) {
+  // console.log('fetchUserRepos: token', token)
   return (dispatch) => {
     const comp = !token ? COMPONENT.userRepos : COMPONENT.selfRepos;
     dispatch(setComponentStatus(comp, 'loading'));

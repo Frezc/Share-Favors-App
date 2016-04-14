@@ -4,7 +4,7 @@ import createLogger from 'redux-logger';
 import { browserHistory } from 'react-router'
 import { routerMiddleware } from 'react-router-redux'
 import rootReducer from '../reducers';
-import { isNode } from '../helpers';
+import { isNode, isBrowser } from '../helpers';
 import globals from '../../config/globals';
 
 const loggerMiddleware = createLogger();
@@ -29,10 +29,19 @@ if (isNode()) {
 }
 
 export default function configureStore(initialState) {
-  const store = createStore(rootReducer, initialState, compose(
-    applyMiddleware(...middleware)
-    // window && (window.devToolsExtension ? window.devToolsExtension() : f => f)
-  ));
+  let enhancer;
+  if (isBrowser()) {
+    enhancer = compose(
+      applyMiddleware(...middleware),
+      window.devToolsExtension ? window.devToolsExtension() : f => f
+    );
+  } else {
+    enhancer = compose(
+      applyMiddleware(...middleware)
+    );
+  }
+
+  const store = createStore(rootReducer, initialState, enhancer);
 
   return store;
 }

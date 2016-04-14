@@ -31,18 +31,20 @@ class UserRepositories extends React.Component {
     console.log('filter change');
   };
 
-  currentPageLoading() {
-    const { location, selfStarsStatus, selfReposStatus } = this.props;
+  currentPageLoading(props = this.props) {
+    const { location, selfStarsStatus, selfReposStatus } = props;
     
     const isStar = checkStar(location.pathname);
+    // console.log('selfReposStatus', selfReposStatus)
     const loadingStatus = isStar ? selfStarsStatus : selfReposStatus;
-    console.log('loadingStatus', loadingStatus)
+    // console.log('loadingStatus', loadingStatus)
     return loadingStatus == 'loading';
   }
 
-  loadData({ auth, dispatch, location, cache }) {
+  loadData(props = this.props) {
+    const { auth, dispatch, location, cache } = props;
 
-    if (!needAuth(auth.token, auth.expired_at) && !cache && !this.currentPageLoading()) {
+    if (!needAuth(auth.token, auth.expired_at) && !cache && !this.currentPageLoading(props)) {
       if (checkStar(location.pathname)) {
         // todo: fetch /stars
       } else {
@@ -53,10 +55,12 @@ class UserRepositories extends React.Component {
   }
 
   componentDidMount() {
-    this.loadData(this.props);
+    // console.log('componentDidMount')
+    // this.loadData(this.props);
   }
 
   componentWillReceiveProps(newProps) {
+    // console.log('componentWillReceiveProps')
     this.loadData(newProps);
   }
 
@@ -114,10 +118,13 @@ function select(state, ownProps) {
   if (checkStar(ownProps.location.pathname)) {
     newState.cache = state.cache[`/user/${newState.auth.user.id}/stars`];
   } else {
-    let filter = ownProps.location.query.filter;
-    filter = filter ? filter : repoFilters[0];
+    const filterIndex = checkInArray(ownProps.location.query.filter, repoFilters);
+    const filter = repoFilters[filterIndex].toLowerCase();
+
     newState.cache = state.cache[`/user/${newState.auth.user.id}/repositories?filter=${filter}`]
   }
+  
+  // console.log('newState', newState)
 
   return newState;
 }

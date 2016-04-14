@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import { fetchR } from '../helpers';
 import { 
   AUTH_URL, sendEmailUrl,
   userInfoUrl, REGISTER_URL, refreshTokenUrl,
@@ -11,7 +12,7 @@ export function auth(email, password) {
   data.append('email', email);
   data.append('password', password);
 
-  return fetch(AUTH_URL, {
+  return fetchR(AUTH_URL, {
     method: 'POST',
     mode: 'cors',
     body: data
@@ -19,7 +20,7 @@ export function auth(email, password) {
 }
 
 export function sendEmail(email) {
-  return fetch(sendEmailUrl(email));
+  return fetchR(sendEmailUrl(email));
 }
 
 export function register(email, password, nickname, code) {
@@ -29,7 +30,7 @@ export function register(email, password, nickname, code) {
   data.append('nickname', nickname);
   data.append('code', code);
 
-  return fetch(REGISTER_URL, {
+  return fetchR(REGISTER_URL, {
     method: 'POST',
     mode: 'cors',
     body: data
@@ -37,17 +38,17 @@ export function register(email, password, nickname, code) {
 }
 
 export function refreshToken(token) {
-  return fetch(refreshTokenUrl(token));
+  return fetchR(refreshTokenUrl(token));
 }
 
 export function userInfo(id) {
-  return fetch(userInfoUrl(id));
+  return fetchR(userInfoUrl(id));
 }
 
 export function userRepository(id, orderby = 'recent updated', offset = 0, token, limit = 50) {
-  return fetch(userReposUrl(id, offset, limit, orderby, token))
+  return fetchR(userReposUrl(id, offset, limit, orderby, token))
 }
 
 export function userStarlist(id, offset = 0, limit = 50, token) {
-  return fetch(userStarlistUrl(id, offset, limit, token));  
+  return fetchR(userStarlistUrl(id, offset, limit, token));  
 }
