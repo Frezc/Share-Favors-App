@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import RepoAbList from '../components/RepoAbList';
 import { needAuth } from '../helpers';
 import NeedAuth from '../components/NeedAuth';
-import { fetchUserRepos } from "../actions/fetchAction";
+import { fetchUserRepos, fetchUserStars } from "../actions/fetchAction";
 import { checkInArray } from '../helpers';
 
 const repoFilters = ['Recent Updated', 'Most Star', 'Most Items'];
@@ -41,12 +41,13 @@ class UserRepositories extends React.Component {
     return loadingStatus == 'loading';
   }
 
-  loadData(props = this.props) {
+  loadInitData(props = this.props) {
     const { auth, dispatch, location, cache } = props;
 
     if (!needAuth(auth.token, auth.expired_at) && !cache && !this.currentPageLoading(props)) {
       if (checkStar(location.pathname)) {
         // todo: fetch /stars
+        dispatch(fetchUserStars(auth.user.id, 0, auth.token));
       } else {
         const i = checkInArray(location.query.filter, repoFilters);
         dispatch(fetchUserRepos(auth.user.id, repoFilters[i], 0, auth.token));
@@ -56,12 +57,12 @@ class UserRepositories extends React.Component {
 
   componentDidMount() {
     // console.log('componentDidMount')
-    // this.loadData(this.props);
+    // this.loadInitData(this.props);
   }
 
   componentWillReceiveProps(newProps) {
-    // console.log('componentWillReceiveProps')
-    this.loadData(newProps);
+    console.log('componentWillReceiveProps');
+    this.loadInitData(newProps);
   }
 
   renderContent() {

@@ -49,11 +49,6 @@ var webpackConfig = {
 			include: APP_DIR,
 			loaders: ['react-hot', 'babel']
 		},{
-			test: /\.(scss|css)$/,
-			exclude: /node_modules/,
-			// loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass']),
-			loaders: ['style', 'css', 'postcss', 'sass']
-		},{
 			test: /\.(svg|woff([\?]?.*)|ttf([\?]?.*)|eot([\?]?.*)|svg([\?]?.*))$/i,
 			loader: 'url-loader?limit=10000'
 		},{
@@ -83,6 +78,20 @@ if (globals.__PROD__) {
 			}
 		})
 	);
+
+  webpackConfig.module.loaders.push({
+    test: /\.(scss|css)$/,
+    exclude: /node_modules/,
+    loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass'])
+  });
+} else {
+
+  // hot loader
+  webpackConfig.module.loaders.push({
+    test: /\.(scss|css)$/,
+    exclude: /node_modules/,
+    loaders: ['style', 'css', 'postcss', 'sass']
+  });
 }
 
 module.exports = webpackConfig;

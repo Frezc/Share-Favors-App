@@ -138,7 +138,7 @@ class ListControlBar extends React.Component {
   }
 
   // index -> offsetTop
-  // desperate
+  // deprecated
   pinToLocation (index, transition = true) {
     // console.log('pin to', index)
 

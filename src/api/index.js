@@ -49,6 +49,6 @@ export function userRepository(id, orderby = 'recent updated', offset = 0, token
   return fetchR(userReposUrl(id, offset, limit, orderby, token))
 }
 
-export function userStarlist(id, offset = 0, limit = 50, token) {
+export function userStarlist(id, offset = 0, token, limit = 50) {
   return fetchR(userStarlistUrl(id, offset, limit, token));  
 }

@@ -1,8 +1,31 @@
 import {
-  AUTH_SUCCESS, SHOW_USER_SET, FETCH_USER_REPOS_SUCCESS
+  AUTH_SUCCESS, SHOW_USER_SET, FETCH_USER_REPOS_SUCCESS,
+  FETCH_USER_STARS_SUCCESS
 } from '../constants/actionTypes';
 
+function reduceRepos(state, key, page, data) {
+  const cache = state[key];
+  let repoList;
+  if (cache) {
+    repoList = Object.assign({}, cache.repoList, {
+      [page]: data.repoList
+    });
+  } else {
+    repoList = {
+      [page]: data.repoList
+    };
+  }
+  return Object.assign({}, state, {
+    [key]: {
+      repoNumAll: data.repoNumAll,
+      showAll: data.showAll,
+      repoList: repoList
+    }
+  });
+}
+
 function cache(state = {}, action) {
+  let key;
   switch (action.type) {
     case AUTH_SUCCESS:
       return Object.assign({}, state, {
@@ -13,25 +36,11 @@ function cache(state = {}, action) {
         [`/user/${action.user.id}`]: action.user
       });
     case FETCH_USER_REPOS_SUCCESS:
-      const key = `/user/${action.attr.userId}/repositories?filter=${action.attr.orderby.toLowerCase()}`;
-      let cache = state[key];
-      let repoList;
-      if (cache) {
-        repoList = Object.assign({}, cache.repoList, {
-          [action.attr.page]: action.data.repoList
-        });
-      } else {
-        repoList = {
-          [action.attr.page]: action.data.repoList
-        };
-      }
-      return Object.assign({}, state, {
-        [key]: Object.assign({}, cache, {
-          repoNumAll: action.data.repoNumAll,
-          showAll: action.data.showAll,
-          repoList: repoList
-        })
-      });
+      key = `/user/${action.attr.userId}/repositories?filter=${action.attr.orderby.toLowerCase()}`;
+      return reduceRepos(state, key, action.attr.page, action.data);
+    case FETCH_USER_STARS_SUCCESS:
+      key = `/user/${action.attr.userId}/stars`;
+      return reduceRepos(state, key, action.attr.page, action.data);
   }
 
   return state;

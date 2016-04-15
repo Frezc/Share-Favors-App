@@ -1,7 +1,8 @@
 import * as Api from '../api';
 import { setContentStatus, setComponentStatus } from './index';
 import { 
-  SHOW_USER_SET, SHOW_USER_ID_SET, FETCH_USER_REPOS_SUCCESS
+  SHOW_USER_SET, SHOW_USER_ID_SET, FETCH_USER_REPOS_SUCCESS,
+  FETCH_USER_STARS_SUCCESS
 } from '../constants/actionTypes';
 import { COMPONENT } from '../constants';
 import { replace } from 'react-router-redux';
@@ -160,7 +161,46 @@ export function fetchUserRepos(id, orderby = 'recent updated', page = 0, token) 
           pathname: '/error',
           state: { type: 'repository' }
         }));
-        return '';
+        return 'error';
+      })
+  }
+}
+
+export function fetchUserStarsSuccess(attr, json) {
+  return {
+    type: FETCH_USER_STARS_SUCCESS,
+    attr: attr,
+    data: json
+  }
+}
+
+export function fetchUserStars(id, page = 0, token) {
+  return dispatch => {
+    const comp = !token ? COMPONENT.userStars : COMPONENT.selfStars;
+    dispatch(setComponentStatus(comp, 'loading'));
+    return Api.userStarlist(id, page * 50, token)
+      .then(response => {
+        if (response.ok) {
+          return response.json().then(json => {
+            dispatch(fetchUserStarsSuccess({
+              userId: id,
+              page: page
+            }, json));
+            dispatch(setComponentStatus(comp, ''));
+            return response.status;
+          });
+        } else {
+          dispatch(setComponentStatus(comp, ''));
+          return handleError(response, dispatch, { type: 'repository' });
+        }
+      })
+      .catch(error => {
+        dispatch(setComponentStatus(comp, ''));
+        dispatch(replace({
+          pathname: '/error',
+          state: { type: 'repository' }
+        }));
+        return 'error';
       })
   }
 }
