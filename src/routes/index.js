@@ -8,6 +8,7 @@ import ErrorPage from '../components/ErrorPage';
 import NotImplementPage from '../components/NotImplementPage';
 import SearchLinkResult from "../containers/SearchLinkResult";
 import SearchUserResult from "../containers/SearchUserResult";
+import SelfRepositories from '../containers/SelfRepositories';
 import UserRepositories from '../containers/UserRepositories';
 
 const routes = {
@@ -21,15 +22,15 @@ const routes = {
   }, {
     path: 'repository/:id/editor'
   }, {
-    path: 'repositories', component: UserRepositories
+    path: 'repositories', component: SelfRepositories
   }, {
-    path: 'stars', component: UserRepositories
+    path: 'stars', component: SelfRepositories
   }, {
     path: 'user/:id', component: UserDetail
   }, {
-    path: 'user/:id/repositories', component: NotImplementPage
+    path: 'user/:id/repositories', component: UserRepositories
   }, {
-    path: 'user/:id/stars', component: NotImplementPage
+    path: 'user/:id/stars', component: UserRepositories
   }, {
     path: 'search', component: SearchPage,
     childRoutes: [{

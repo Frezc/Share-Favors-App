@@ -11,6 +11,8 @@
     a {
       text-decoration: none;
       cursor: pointer;
+      // fix Link Component Color bug
+      color: $linkColor;
 
       &:hover {
         color: lighten($linkColor, 10%);

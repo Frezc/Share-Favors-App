@@ -9,6 +9,7 @@ import { fetchUserNetwork, fetchUser } from '../actions/fetchAction';
 import { isBrowser } from '../helpers';
 import { defaultUser } from '../constants/defaultStates';
 import ContentMask from '../components/ContentMask';
+import { Link } from 'react-router';
 
 class UserDetail extends React.Component {
 
@@ -52,14 +53,22 @@ class UserDetail extends React.Component {
 
 
   render() {
-    const { cache } = this.props;
+    const { cache, isSelf, status } = this.props;
 
     const user = cache ? cache : defaultUser;
     // console.log(user)
+    
+    let links;
+    if(isSelf) {
+      links = [`/repositories`, `/stars`];
+    } else {
+      links = [`/user/${user.id}/repositories`, `/user/${user.id}/stars`];
+    }
+
     return (
       <div className="userDetail">
         <ContentMask
-          loading={false}
+          loading={status == 'loading'}
           error=""
         />
 
@@ -72,7 +81,7 @@ class UserDetail extends React.Component {
         <div className="email">{user.email}</div>
         <div className="sign">{user.sign || 'There is no description.'}</div>
         <Divider style={{ width: '100%' }} />
-        <Subheader>[Repositories] (<a href='#'>view all</a>)</Subheader>
+        <Subheader>[Repositories] (<Link to={links[0]}>view all</Link>)</Subheader>
         <div className="repoList">
           {user.repositories.slice(0, 3).map(repoWithRecent =>
             <RepositoryAbstract
@@ -84,7 +93,7 @@ class UserDetail extends React.Component {
           )}
         </div>
         <Divider style={{ width: '100%' }}/>
-        <Subheader>[Star Repositories] (<a href='#'>view all</a>)</Subheader>
+        <Subheader>[Star Repositories] (<Link to={links[1]}>view all</Link>)</Subheader>
         <div className="repoList">
           {user.starlist.slice(0, 3).map(repoWithRecent =>
             <RepositoryAbstract
@@ -103,6 +112,7 @@ class UserDetail extends React.Component {
 function select(state, ownProps) {
   return {
     cache: state.cache[ownProps.location.pathname],
+    isSelf: state.view.auth.user.id == ownProps.params.id,
     userId: ownProps.params.id,
     status: state.view.componentStatus.userDetail
   }

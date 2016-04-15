@@ -1,17 +1,27 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import RepoAbList from '../components/RepoAbList';
+import { needAuth } from '../helpers';
+import NeedAuth from '../components/NeedAuth';
 import { fetchUserRepos, fetchUserStars } from "../actions/fetchAction";
 import { checkInArray } from '../helpers';
 import { repoFilters, starFilters } from '../constants/filters';
 
-class UserRepositories extends React.Component {
+export const routes = ['/repositories', '/stars'];
+
+class SelfRepositories extends React.Component {
 
   static propTypes = {
+    auth: PropTypes.shape({
+      user: PropTypes.shape({
+        id: PropTypes.number.isRequired
+      }),
+      token: PropTypes.string,
+      expired_at: PropTypes.number
+    }).isRequired,
     location: PropTypes.object.isRequired,
-    userId: PropTypes.string,
-    userReposStatus: PropTypes.string,
-    userStarsStatus: PropTypes.string,
+    selfReposStatus: PropTypes.string,
+    selfStarsStatus: PropTypes.string,
     cache: PropTypes.object
   };
 
@@ -20,26 +30,31 @@ class UserRepositories extends React.Component {
   };
 
   currentPageLoading(props = this.props) {
-    const { location, userReposStatus, userStarsStatus } = props;
-
+    const { location, selfStarsStatus, selfReposStatus } = props;
+    
     const isStar = checkStar(location.pathname);
     // console.log('selfReposStatus', selfReposStatus)
-    const loadingStatus = isStar ? userReposStatus : userStarsStatus;
+    const loadingStatus = isStar ? selfStarsStatus : selfReposStatus;
     // console.log('loadingStatus', loadingStatus)
     return loadingStatus == 'loading';
   }
 
   loadInitData(props = this.props) {
-    const { userId, dispatch, location, cache } = props;
+    const { auth, dispatch, location, cache } = props;
 
-    if (!cache && !this.currentPageLoading(props)) {
+    if (!needAuth(auth.token, auth.expired_at) && !cache && !this.currentPageLoading(props)) {
       if (checkStar(location.pathname)) {
-        dispatch(fetchUserStars(userId, 0));
+        dispatch(fetchUserStars(auth.user.id, 0, auth.token));
       } else {
         const i = checkInArray(location.query.filter, repoFilters);
-        dispatch(fetchUserRepos(userId, repoFilters[i], 0));
+        dispatch(fetchUserRepos(auth.user.id, repoFilters[i], 0, auth.token));
       }
     }
+  }
+
+  componentDidMount() {
+    // console.log('componentDidMount')
+    this.loadInitData(this.props);
   }
 
   componentWillReceiveProps(newProps) {
@@ -47,7 +62,7 @@ class UserRepositories extends React.Component {
     this.loadInitData(newProps);
   }
 
-  render() {
+  renderContent() {
     const { cache, location, dispatch } = this.props;
     const isStar = checkStar(location.pathname);
     const filters = isStar ? starFilters : repoFilters;
@@ -64,35 +79,52 @@ class UserRepositories extends React.Component {
       />
     );
   }
+  
+  render() {
+    const { auth, dispatch } = this.props;
+
+    return (
+      <div>
+        {needAuth(auth.token, auth.expired_at) ?
+          <NeedAuth 
+            dispatch={dispatch}
+          />
+          :
+          this.renderContent()
+        }
+      </div>
+    );
+  }
 }
 
 /**
- * check if pathname is /user/:id/stars
- * @param pathname
+ * if pathname is /stars
+ * @returns {boolean}
  */
 function checkStar(pathname) {
-  const re = /\S+\/stars$/i;
-  return re.test(pathname);
+  return pathname.toLowerCase() == routes[1];
 }
 
 function select(state, ownProps) {
   let newState = {
+    auth: state.view.auth,
     location: ownProps.location,
-    userId: ownProps.params.id,
-    userReposStatus: state.view.componentStatus.userRepos,
-    userStarsStatus: state.view.componentStatus.userStars
+    selfReposStatus: state.view.componentStatus.selfRepos,
+    selfStarsStatus: state.view.componentStatus.selfStars
   };
 
   if (checkStar(ownProps.location.pathname)) {
-    newState.cache = state.cache[`/user/${ownProps.params.id}/stars`];
+    newState.cache = state.cache[`/user/${newState.auth.user.id}/stars`];
   } else {
     const filterIndex = checkInArray(ownProps.location.query.filter, repoFilters);
     const filter = repoFilters[filterIndex].toLowerCase();
 
-    newState.cache = state.cache[`/user/${ownProps.params.id}/repositories?filter=${filter}`]
+    newState.cache = state.cache[`/user/${newState.auth.user.id}/repositories?filter=${filter}`]
   }
+  
+  // console.log('newState', newState)
 
   return newState;
 }
 
-export default connect(select)(UserRepositories);
+export default connect(select)(SelfRepositories);

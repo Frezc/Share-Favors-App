@@ -18,6 +18,7 @@ import ContentLink from 'material-ui/lib/svg-icons/content/link';
 import { grey900, grey500, teal500 } from 'material-ui/lib/styles/colors';
 import CardActions from 'material-ui/lib/card/card-actions';
 import FlatButton from 'material-ui/lib/flat-button';
+import { Link } from 'react-router';
 
 function getRootClassName (className) {
   return 'repoAbstract ' + className;
@@ -108,9 +109,12 @@ function RepositoryAbstract (props) {
             </div>
             :
             <div className="repoTitle">
-              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+              <Link
+                to={`/user/${repository.creator_id}`}
+                
+              >
                 {repository.creator_name}
-              </a>
+              </Link>
               /
               <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
                 {repository.title}

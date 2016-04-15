@@ -38,7 +38,7 @@ export function userInfoUrl(id, starListMax = 3, repositoriesMax = 3) {
 // 得到用户的仓库列表
 export function userReposUrl(id, offset = 0, limit = 50, orderby = 'recent updated', token) {
   const tokenParam = token ? `&token=${token}` : '';
-  return `${HOST}/user/${id}/repository?offset=${offset}&orderby=${orderby}&limit=${limit}${tokenParam}`;
+  return `${HOST}/user/${id}/repository?offset=${offset}&orderby=${orderby.toLowerCase()}&limit=${limit}${tokenParam}`;
 }
 
 // 得到用户的starList
