@@ -5,25 +5,28 @@ class ListControlBar extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
+    currentIndex: PropTypes.number.isRequired,
     sum: PropTypes.number.isRequired,
-    // percent: PropTypes.number.isRequired, // [0, 1]
+    topPercent: PropTypes.number.isRequired,   // the handle top location
+    bottomPercent: PropTypes.number.isRequired,  // handle bottom location
     description: PropTypes.string,
-    // onDragChange: PropTypes.func,
-    onDoneChange: PropTypes.func
+    onDragChange: PropTypes.func,        // test performance
+    onDoneChange: PropTypes.func,         // when change
+    onScroll: PropTypes.func
   };
-  
+
   static defaultProps = {
     className: '',
-    description: '0%'
+    description: 'Hold to Move'
   };
 
 
   state = {
-    showIndex: 1,
     offsetTop: 0,
     isDragging: false,
     showTransition: false,
-    percent: 0
+    topPercent: 0,
+    bottomPercent: 0.1
   };
 
   // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
@@ -33,11 +36,16 @@ class ListControlBar extends React.Component {
     // console.log('scroll', window.scrollY)
     if (this.activeScrollListener) {
       // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
-      let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
+      // let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
+      let percent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      console.log('percent', percent)
+
       percent = Math.min(Math.max(0, percent), 1);
       if (percent != this.state.percent) {
         this.setState({ percent });
       }
+      
+      // todo
     }
   };
 
@@ -47,6 +55,13 @@ class ListControlBar extends React.Component {
 
   componentWillUnmount () {
     window.removeEventListener('scroll', this.scrollListener);
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { topPercent, bottomPercent } = newProps;
+    if (topPercent != this.state.topPercent || bottomPercent != this.state.bottomPercent) {
+      this.setState({ topPercent, bottomPercent });
+    }
   }
 
   validNumber (index, sum) {
@@ -91,6 +106,7 @@ class ListControlBar extends React.Component {
     return length;
   }
 
+  // deprecated
   // offsetTop -> index
   getItemIndex (offsetTop) {
     const { handleBarContainer } = this.refs;
@@ -125,6 +141,7 @@ class ListControlBar extends React.Component {
     return (1 - Math.max(1.0 / sum, 0.15)) * percent;
   }
 
+  // deprecated
   // props.percent -> index
   // [1, sum]
   getIndexFromPercent () {
@@ -154,7 +171,7 @@ class ListControlBar extends React.Component {
       });
     } else {
 
-      let offsetTop = (handleBarContainer.offsetHeight - this.getHandlerLength()) 
+      let offsetTop = (handleBarContainer.offsetHeight - this.getHandlerLength())
         * (index - 1) / (sum - 1);
       this.setState({
         showIndex: index,
@@ -181,6 +198,7 @@ class ListControlBar extends React.Component {
     }
   }
 
+  // todo: top percent and bottom percent
   onDoneChange(percent) {
     const { onDoneChange } = this.props;
 
@@ -206,11 +224,11 @@ class ListControlBar extends React.Component {
   }
 
   render () {
-    let { description, onDragChange, onDoneChange, className, sum } = this.props;
+    let { description, onDragChange, onDoneChange, className, sum, currentIndex } = this.props;
 
     return (
       <div>
-        <div 
+        <div
           className={this.getEventHandlerClassName()}
           onMouseDown={e => {
             // 防止出现一直拖动的bug
@@ -225,7 +243,9 @@ class ListControlBar extends React.Component {
               // let newIndex = this.getItemIndex(offsetTop);
               // onDragChange && onDragChange(this.getPercentFromOffsetTop(offsetTop));
               // 改用内部state来更新，使用props传递太慢
-              this.setState({ percent: this.getPercentFromOffsetTop(offsetTop) });
+              const percent = this.getPercentFromOffsetTop(offsetTop);
+              this.setState({ percent: percent });
+              onDragChange && onDragChange(percent);
               this.lastLocation = e.clientY;
             }
           }}
@@ -246,7 +266,7 @@ class ListControlBar extends React.Component {
         >
           <div className="listControl">
             <div className="slider">
-              <div 
+              <div
                 className="slider-top"
                 onClick={e => {
                   // this.pinToLocation(1);
@@ -254,7 +274,7 @@ class ListControlBar extends React.Component {
                   this.onDoneChange(0);
                 }}
               >Top</div>
-              <div 
+              <div
                 className="slider-bar-container"
                 ref="handleBarContainer"
                 onClick={e => {
@@ -269,13 +289,13 @@ class ListControlBar extends React.Component {
                   this.onDoneChange(newPercent);
                 }}
               >
-                <div 
+                <div
                   className="slider-bar-before"
-                  style={{ height: this.generateHeightCSS(this.getPercentTopFromPercent()) }}  
+                  style={{ height: this.generateHeightCSS(this.getPercentTopFromPercent()) }}
                 ></div>
                 <div
                   className="slider-bar-handle"
-                  style={{ 
+                  style={{
                     top: this.generatePercentString(this.getPercentTopFromPercent()),
                     height: this.generateHandlerLengthStyle(),
                     transition: this.getTransition()
@@ -283,7 +303,7 @@ class ListControlBar extends React.Component {
                   ref="handler"
                   onMouseDown={e => {
                     console.log('onMouseDown')
-                    this.setState({ 
+                    this.setState({
                       showTransition: false,
                       isDragging: true
                     });
@@ -294,17 +314,17 @@ class ListControlBar extends React.Component {
                   </div>
                   <div className="slider-info">
                     <strong>
-                      <div className="slider-index">{this.getIndexFromPercent()} of {sum} items</div>
+                      <div className="slider-index">{currentIndex} of {sum} items</div>
                     </strong>
                     <div className="slider-description">{description}</div>
                   </div>
                 </div>
-                <div 
+                <div
                   className="slider-bar-after"
                   style={{ height: `calc(${this.generatePercentString(1.0 - Math.max(1.0 / sum, 0.15) - this.getPercentTopFromPercent())} - 4px)` }}
                 ></div>
               </div>
-              <div 
+              <div
                 className="slider-bottom"
                 onClick={e => {
                   // this.pinToLocation(sum);

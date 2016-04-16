@@ -155,7 +155,7 @@
 		  used
 		}
 
-		// desperate
+		// deprecated
 		data: {
 			users: {
 				[id]: {

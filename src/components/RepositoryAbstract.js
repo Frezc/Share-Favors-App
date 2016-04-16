@@ -95,6 +95,7 @@ function RepositoryAbstract (props) {
     <div 
       className={getRootClassName(className)}
       style={style}
+      ref={r => window.ref = r}
     >
       <Card>
         <CardHeader
