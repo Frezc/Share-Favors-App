@@ -23,9 +23,9 @@ class UserRepositories extends React.Component {
     const { location, userReposStatus, userStarsStatus } = props;
 
     const isStar = checkStar(location.pathname);
-    // console.log('selfReposStatus', selfReposStatus)
-    const loadingStatus = isStar ? userReposStatus : userStarsStatus;
-    // console.log('loadingStatus', loadingStatus)
+    // console.log('userReposStatus', userReposStatus)
+    const loadingStatus = isStar ? userStarsStatus : userReposStatus;
+    // console.log('loadingStatus', loadingStatus);
     return loadingStatus == 'loading';
   }
 
@@ -40,6 +40,11 @@ class UserRepositories extends React.Component {
         dispatch(fetchUserRepos(userId, repoFilters[i], 0));
       }
     }
+  }
+
+  componentDidMount() {
+    // console.log('componentDidMount')
+    this.loadInitData(this.props);
   }
 
   componentWillReceiveProps(newProps) {

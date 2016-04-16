@@ -150,29 +150,3 @@
     width: 12px;
   }
 }
-
-.repoDetail {
-  @media (min-width: 1160px) {
-    .listController {
-      left: calc(50% + 450px);
-      visibility: visible;
-    }
-  }
-  
-  @media (max-width: 1160px) {
-    .listController {
-      left: calc(50% + 300px);
-      visibility: visible;
-    }
-  }
-
-  @media (max-width: 800px) {
-    .listController {
-      visibility: hidden;
-    }
-  }
-
-  .listController {
-    top: 30%;
-  }
-}
