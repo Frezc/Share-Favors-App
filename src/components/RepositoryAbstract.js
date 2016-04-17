@@ -260,6 +260,8 @@ RepositoryAbstract.defaultProps = {
   loading: false
 }
 
+RepositoryAbstract.defaultHeight = 88;
+
 const styles = {
   subtitleIcon: {
     width: 18, 

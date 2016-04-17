@@ -7,8 +7,8 @@ class ListControlBar extends React.Component {
     className: PropTypes.string,
     currentIndex: PropTypes.number.isRequired,
     sum: PropTypes.number.isRequired,
-    topPercent: PropTypes.number.isRequired,   // the handle top location
-    bottomPercent: PropTypes.number.isRequired,  // handle bottom location
+    percent: PropTypes.number.isRequired, // [0, 1]
+    handleHeight: PropTypes.number,      // [0.1, 1]
     description: PropTypes.string,
     onDragChange: PropTypes.func,        // test performance
     onDoneChange: PropTypes.func,         // when change
@@ -17,17 +17,18 @@ class ListControlBar extends React.Component {
 
   static defaultProps = {
     className: '',
-    description: 'Hold to Move'
+    description: 'Hold to Move',
+    handleHeight: 0.15
   };
 
 
   state = {
     offsetTop: 0,
-    isDragging: false,
     showTransition: false,
-    topPercent: 0,
-    bottomPercent: 0.1
+    percent: 0
   };
+
+  isDragging = false;
 
   // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
   activeScrollListener = true;
@@ -35,17 +36,16 @@ class ListControlBar extends React.Component {
   scrollListener = () => {
     // console.log('scroll', window.scrollY)
     if (this.activeScrollListener) {
+      // todo
       // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
       // let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
       let percent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-      console.log('percent', percent)
+      // console.log('percent', percent)
 
       percent = Math.min(Math.max(0, percent), 1);
       if (percent != this.state.percent) {
         this.setState({ percent });
       }
-      
-      // todo
     }
   };
 
@@ -58,9 +58,9 @@ class ListControlBar extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const { topPercent, bottomPercent } = newProps;
-    if (topPercent != this.state.topPercent || bottomPercent != this.state.bottomPercent) {
-      this.setState({ topPercent, bottomPercent });
+    const { percent } = newProps;
+    if (percent != this.state.percent) {
+      this.setState({ percent });
     }
   }
 
@@ -98,12 +98,11 @@ class ListControlBar extends React.Component {
     return offsetHeight;
   }
 
-  // get length of handle bar. min: 15%.
+  // get length of handle bar. min: 10%.
   generateHandlerLengthStyle () {
-    const { sum } = this.props;
+    const { handleHeight } = this.props;
 
-    let length = this.generatePercentString(Math.max(1.0 / sum, 0.15));
-    return length;
+    return this.generatePercentString(Math.min(Math.max(handleHeight, 0.1), 1));
   }
 
   // deprecated
@@ -136,9 +135,11 @@ class ListControlBar extends React.Component {
 
   // props.percent -> offsetTop(percent) of handler
   getPercentTopFromPercent () {
-    const { sum } = this.props;
+    const { handleHeight } = this.props;
     const { percent } = this.state;
-    return (1 - Math.max(1.0 / sum, 0.15)) * percent;
+
+    const validHeight = Math.min(Math.max(handleHeight, 0.1), 1);
+    return (1 - validHeight) * percent;
   }
 
   // deprecated
@@ -166,18 +167,16 @@ class ListControlBar extends React.Component {
     this.setState({ showTransition: transition });
 
     if (sum === 1) {
-      this.setState({
-        isDragging: false
-      });
+      this.isDragging = false;
     } else {
 
       let offsetTop = (handleBarContainer.offsetHeight - this.getHandlerLength())
         * (index - 1) / (sum - 1);
       this.setState({
         showIndex: index,
-        offsetTop: offsetTop,
-        isDragging: false
+        offsetTop: offsetTop
       });
+      this.isDragging = false;
     }
   }
 
@@ -191,14 +190,14 @@ class ListControlBar extends React.Component {
   }
 
   getEventHandlerClassName () {
-    if (this.state.isDragging) {
+    if (this.isDragging) {
       return 'eventHandler active';
     } else {
       return 'eventHandler inactive';
     }
   }
 
-  // todo: top percent and bottom percent
+  // todo: no need to scroll in this component
   onDoneChange(percent) {
     const { onDoneChange } = this.props;
 
@@ -232,12 +231,12 @@ class ListControlBar extends React.Component {
           className={this.getEventHandlerClassName()}
           onMouseDown={e => {
             // 防止出现一直拖动的bug
-            if (this.state.isDragging) {
-              this.setState({ isDragging: false });
+            if (this.isDragging) {
+              this.isDragging = false;
             }
           }}
           onMouseMove={e => {
-            if (this.state.isDragging) {
+            if (this.isDragging) {
               // console.log('onMouseMove')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               // let newIndex = this.getItemIndex(offsetTop);
@@ -250,12 +249,12 @@ class ListControlBar extends React.Component {
             }
           }}
           onMouseUp={e => {
-            if (this.state.isDragging) {
+            if (this.isDragging) {
               // console.log('onMouseUp')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               // this.pinToLocation(index, false);
               this.onDoneChange(this.getPercentFromOffsetTop(offsetTop));
-              this.setState({ isDragging: false })
+              this.isDragging = false;
             }
           }}
         ></div>
@@ -304,9 +303,9 @@ class ListControlBar extends React.Component {
                   onMouseDown={e => {
                     console.log('onMouseDown')
                     this.setState({
-                      showTransition: false,
-                      isDragging: true
+                      showTransition: false
                     });
+                    this.isDragging = true;
                     this.lastLocation = e.clientY;
                   }}
                 >

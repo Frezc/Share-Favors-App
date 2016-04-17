@@ -33,9 +33,24 @@ class RepoAbList extends React.Component {
 
   state = {
     index: 0,
-    topPercent: 0,
-    bottomPercent: .1
+    percent: 0,
+    handleHeight: 1
   };
+
+
+  getHandleHeight() {
+    const { repoNumAll } = this.props;
+    console.log('repoNumAll', repoNumAll);
+    if (repoNumAll <= 0) {
+      return 1;
+    } else {
+      return window.innerHeight / (RepoAbstract.defaultHeight * repoNumAll);
+    }
+  }
+
+  componentDidMount() {
+    this.setState({ handleHeight: this.getHandleHeight() })
+  }
 
   showRepoAbList() {
     const { repoWithRecents, repoNumAll } = this.props;
@@ -45,8 +60,7 @@ class RepoAbList extends React.Component {
           className="listController"
           sum={6}
           percent={this.state.percent}
-          topPercent={this.state.topPercent}
-          bottomPercent={this.state.bottomPercent}
+          handleHeight={this.state.handleHeight}
           currentIndex={this.state.index / 10}
           description={'This is Repos'}
           onDoneChange={percent => {
@@ -113,6 +127,7 @@ class RepoAbList extends React.Component {
       </div>
     );
   }
+
 }
 
 export default RepoAbList;
