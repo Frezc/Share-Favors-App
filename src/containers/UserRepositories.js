@@ -56,7 +56,7 @@ class UserRepositories extends React.Component {
     const { cache, location, dispatch } = this.props;
     const isStar = checkStar(location.pathname);
     const filters = isStar ? starFilters : repoFilters;
-    console.log('reponumall', cache.repoNumAll)
+    // console.log('reponumall', cache.repoNumAll)
     return (
       <RepoAbList
         filters={filters}

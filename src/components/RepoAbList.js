@@ -37,31 +37,48 @@ class RepoAbList extends React.Component {
     handleHeight: 1
   };
 
-
-  getHandleHeight() {
-    const { repoNumAll } = this.props;
-    console.log('repoNumAll', repoNumAll);
-    if (repoNumAll <= 0) {
-      return 1;
+  updateHandleHeight(repoAll = this.props.repoNumAll) {
+    if (repoAll <= 0) {
+      this.setState({ handleHeight: 1 });
     } else {
-      return window.innerHeight / (RepoAbstract.defaultHeight * repoNumAll);
+      // 在Loading时不存在
+      if (this.refs.listContainer) {
+        const listContainer = this.refs.listContainer;
+        const handleHeight = window.innerHeight / listContainer.offsetHeight;
+        this.setState({ handleHeight })
+      } else {
+        const handleHeight = window.innerHeight / (RepoAbstract.defaultHeight * repoAll);
+        this.setState({ handleHeight });
+      }
     }
   }
+  
+  abExpandChange = isExpanded => {
+    this.updateHandleHeight();
+  };
 
   componentDidMount() {
-    this.setState({ handleHeight: this.getHandleHeight() })
+    this.updateHandleHeight();
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.repoNumAll != this.props.repoNumAll) {
+      this.updateHandleHeight(newProps.repoNumAll);
+    }
   }
 
   showRepoAbList() {
     const { repoWithRecents, repoNumAll } = this.props;
     return (
-      <div>
+      <div
+        ref="listContainer"
+      >
         <ListControlBar
           className="listController"
           sum={6}
           percent={this.state.percent}
           handleHeight={this.state.handleHeight}
-          currentIndex={this.state.index / 10}
+          currentIndex={this.state.index}
           description={'This is Repos'}
           onDoneChange={percent => {
             // console.log(percent);
@@ -77,6 +94,7 @@ class RepoAbList extends React.Component {
               repository={repoWithRecent.repository}
               recentItems={repoWithRecent.recentItems}
               loading={false}
+              onExpandChange={this.abExpandChange}
             />
           )
           :

@@ -87,7 +87,7 @@ function showRencentBlock (props) {
 }
 
 function RepositoryAbstract (props) {
-  const { actions, className, style, repository, recentItems, loading } = props;
+  const { actions, className, style, repository, recentItems, loading, onExpandChange } = props;
 
   // console.log(repository)
 
@@ -97,7 +97,9 @@ function RepositoryAbstract (props) {
       style={style}
       ref={r => window.ref = r}
     >
-      <Card>
+      <Card
+        onExpandChange={onExpandChange}
+      >
         <CardHeader
           actAsExpander={false}
           showExpandableButton={!loading}
@@ -246,7 +248,8 @@ RepositoryAbstract.propTypes = {
     linkNum: PropTypes.number.isRequired
   }),
   recentItems: PropTypes.array,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  onExpandChange: PropTypes.func
 };
 
 RepositoryAbstract.defaultProps = {
