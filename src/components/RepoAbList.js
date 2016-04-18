@@ -6,6 +6,7 @@ import NoResult from './NoResult';
 import ContentMask from './ContentMask';
 import ListControlBar from '../components/ListControlBar';
 
+const LISTTOP = 132;
 
 class RepoAbList extends React.Component {
   
@@ -43,22 +44,40 @@ class RepoAbList extends React.Component {
     } else {
       // 在Loading时不存在
       if (this.refs.listContainer) {
-        const listContainer = this.refs.listContainer;
-        const handleHeight = window.innerHeight / listContainer.offsetHeight;
-        this.setState({ handleHeight })
+        setTimeout(() => {
+          const listContainer = this.refs.listContainer;
+          const handleHeight = window.innerHeight / listContainer.offsetHeight;
+          this.setState({ handleHeight });
+          this.updatePercent()
+        }, 100);
       } else {
         const handleHeight = window.innerHeight / (RepoAbstract.defaultHeight * repoAll);
         this.setState({ handleHeight });
       }
     }
   }
+
+  updatePercent() {
+    const offsetTop = (window.scrollY - LISTTOP) / (document.documentElement.scrollHeight - window.innerHeight - LISTTOP);
+    const percent = Math.min(Math.max(offsetTop, 0), 1);
+    this.setState({ percent });
+  }
   
   abExpandChange = isExpanded => {
     this.updateHandleHeight();
   };
 
+  onWindowResize = () => {
+    this.updateHandleHeight();
+  };
+
   componentDidMount() {
     this.updateHandleHeight();
+    window && window.addEventListener('resize', this.onWindowResize);
+  }
+
+  componentWillUnmount() {
+    window && window.addEventListener('resize', this.onWindowResize);
   }
 
   componentWillReceiveProps(newProps) {
@@ -80,8 +99,10 @@ class RepoAbList extends React.Component {
           handleHeight={this.state.handleHeight}
           currentIndex={this.state.index}
           description={'This is Repos'}
+          scrollOffset={LISTTOP}
           onDoneChange={percent => {
             // console.log(percent);
+            this.setState({ percent })
           }}
         />
         {repoNumAll > 0 ?

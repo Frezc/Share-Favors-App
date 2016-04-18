@@ -12,13 +12,15 @@ class ListControlBar extends React.Component {
     description: PropTypes.string,
     onDragChange: PropTypes.func,        // test performance
     onDoneChange: PropTypes.func,         // when change
-    onScroll: PropTypes.func
+    onScroll: PropTypes.func,
+    scrollOffset: PropTypes.number       // top offset
   };
 
   static defaultProps = {
     className: '',
     description: 'Hold to Move',
-    handleHeight: 0.15
+    handleHeight: 0.15,
+    scrollOffset: 0
   };
 
 
@@ -36,10 +38,10 @@ class ListControlBar extends React.Component {
   scrollListener = () => {
     // console.log('scroll', window.scrollY)
     if (this.activeScrollListener) {
+      const { scrollOffset } = this.props;
       // todo
       // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
-      // let percent = (window.scrollY + window.innerHeight - 156 - 64 - 72) / (49 * this.props.sum);
-      let percent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      let percent = (window.scrollY - scrollOffset) / (document.documentElement.scrollHeight - window.innerHeight - scrollOffset);
       // console.log('percent', percent)
 
       percent = Math.min(Math.max(0, percent), 1);
@@ -199,11 +201,12 @@ class ListControlBar extends React.Component {
 
   // todo: no need to scroll in this component
   onDoneChange(percent) {
-    const { onDoneChange } = this.props;
+    const { onDoneChange, scrollOffset } = this.props;
 
     // 测试数据 同上
-    let scrollOffset = 156 + 64 + 72 + 49 * this.props.sum * percent - window.innerHeight;
-    const scrollStep = (scrollOffset - window.scrollY) / 10;
+    const offset = (document.documentElement.scrollHeight - window.innerHeight - scrollOffset) * percent + scrollOffset;
+    // console.log('offset', offset)
+    const scrollStep = (offset - window.scrollY) / 10;
     let step = 0;
 
     window.clearInterval(this.timer);
@@ -223,7 +226,7 @@ class ListControlBar extends React.Component {
   }
 
   render () {
-    let { description, onDragChange, onDoneChange, className, sum, currentIndex } = this.props;
+    let { description, onDragChange, onDoneChange, className, sum, currentIndex, handleHeight } = this.props;
 
     return (
       <div>
@@ -320,7 +323,7 @@ class ListControlBar extends React.Component {
                 </div>
                 <div
                   className="slider-bar-after"
-                  style={{ height: `calc(${this.generatePercentString(1.0 - Math.max(1.0 / sum, 0.15) - this.getPercentTopFromPercent())} - 4px)` }}
+                  style={{ height: `calc(${this.generatePercentString(1.0 - handleHeight - this.getPercentTopFromPercent())} - 4px)` }}
                 ></div>
               </div>
               <div
@@ -330,7 +333,7 @@ class ListControlBar extends React.Component {
                   this.setState({ showTransition: true });
                   this.onDoneChange(1);
                 }}
-              >Last</div>
+              >Bottom</div>
             </div>
           </div>
         </div>
