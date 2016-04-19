@@ -67,30 +67,6 @@ export function generateCutString(string = '', len = 1, ellipse = '...') {
   return newString;
 }
 
-// map to memory times
-const timesMap = new WeakMap();
-/**
- * retry code with delay and limit.
- * @param code Be sure code at same variable.
- * @param retryDelay milliseconds. [0, ]
- * @param retryLimit retry times [0, ]
- * @return the times code has retried. return 0 when retry end.
- */
-export function retry(code, retryDelay = 1000, retryLimit = 3) {
-  let times = timesMap.get(code);
-  if (!times) {
-    times = 0;
-  }
-
-  if (times >= retryLimit) {
-    return 0;
-  }
-
-  setTimeout(code, retryDelay);
-  times++;
-  return times;
-}
-
 /**
  * Need auth in browser ?
  * Notice: In Node environment, needn't auth.
@@ -151,4 +127,18 @@ export function checkInArray(ele = '', arr = []) {
   }
   
   return 0;
+}
+
+/**
+ * calculate the items number of one page
+ * @param itemsAll
+ * @param page    page index (begin from 0)
+ * @param perPage items per page
+ */
+export function getPageItemsNumber(itemsAll, page, perPage) {
+  if ((page + 1) * perPage > itemsAll) {
+    return itemsAll - page * perPage;
+  }
+  
+  return perPage;
 }

@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 
 class ListControlBar extends React.Component {
 
-
   static propTypes = {
     className: PropTypes.string,
     currentIndex: PropTypes.number.isRequired,
@@ -19,7 +18,7 @@ class ListControlBar extends React.Component {
   static defaultProps = {
     className: '',
     description: 'Hold to Move',
-    handleHeight: 0.15,
+    handleHeight: 0.1,
     scrollOffset: 0
   };
 
@@ -32,44 +31,9 @@ class ListControlBar extends React.Component {
 
   isDragging = false;
 
-  // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
-  activeScrollListener = true;
-
-  scrollListener = () => {
-    // console.log('scroll', window.scrollY)
-    if (this.activeScrollListener) {
-      const { scrollOffset } = this.props;
-      // todo
-      // 测试数据 正式由于条目不会全部加载 所以需要另外的方法
-      let percent = (window.scrollY - scrollOffset) / (document.documentElement.scrollHeight - window.innerHeight - scrollOffset);
-      // console.log('percent', percent)
-
-      percent = Math.min(Math.max(0, percent), 1);
-      if (percent != this.state.percent) {
-        this.setState({ percent });
-      }
-    }
-  };
-
-  componentDidMount () {
-    window.addEventListener('scroll', this.scrollListener);
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('scroll', this.scrollListener);
-  }
-
-  componentWillReceiveProps(newProps) {
-    const { percent } = newProps;
-    if (percent != this.state.percent) {
-      this.setState({ percent });
-    }
-  }
-
-  validNumber (index, sum) {
-    sum = Math.max(1, sum);
-    index = Math.min(Math.max(index, 1), sum);
-    return { index, sum };
+  // make sure height of handle in [.1, 1]
+  static validHandleHeight(height) {
+    return Math.max(Math.min(height, 1), 0.1);
   }
 
   generatePercentString (number) {
@@ -104,19 +68,7 @@ class ListControlBar extends React.Component {
   generateHandlerLengthStyle () {
     const { handleHeight } = this.props;
 
-    return this.generatePercentString(Math.min(Math.max(handleHeight, 0.1), 1));
-  }
-
-  // deprecated
-  // offsetTop -> index
-  getItemIndex (offsetTop) {
-    const { handleBarContainer } = this.refs;
-    const { sum } = this.props;
-
-    let index = Math.ceil(offsetTop / ((handleBarContainer.offsetHeight - this.getHandlerLength()) / sum));
-    if (index == 0) index = 1;
-    return index;
-    // return Math.floor(offsetTop / handleBarContainer.offsetHeight * (sum - 1)) + 1;
+    return this.generatePercentString(handleHeight);
   }
 
   getOffsetTop (offsetY) {
@@ -140,46 +92,7 @@ class ListControlBar extends React.Component {
     const { handleHeight } = this.props;
     const { percent } = this.state;
 
-    const validHeight = Math.min(Math.max(handleHeight, 0.1), 1);
-    return (1 - validHeight) * percent;
-  }
-
-  // deprecated
-  // props.percent -> index
-  // [1, sum]
-  getIndexFromPercent () {
-    const { sum } = this.props;
-    const { percent } = this.state;
-    if (sum == 1) {
-      return 1;
-    } else {
-      return Math.max(Math.ceil(sum * percent), 1);
-    }
-  }
-
-  // index -> offsetTop
-  // deprecated
-  pinToLocation (index, transition = true) {
-    // console.log('pin to', index)
-
-    const { sum } = this.props;
-    const { handleBarContainer } = this.refs;
-
-    // play transition
-    this.setState({ showTransition: transition });
-
-    if (sum === 1) {
-      this.isDragging = false;
-    } else {
-
-      let offsetTop = (handleBarContainer.offsetHeight - this.getHandlerLength())
-        * (index - 1) / (sum - 1);
-      this.setState({
-        showIndex: index,
-        offsetTop: offsetTop
-      });
-      this.isDragging = false;
-    }
+    return (1 - handleHeight) * percent;
   }
 
   // fix transition bug
@@ -199,30 +112,26 @@ class ListControlBar extends React.Component {
     }
   }
 
-  // todo: no need to scroll in this component
-  onDoneChange(percent) {
-    const { onDoneChange, scrollOffset } = this.props;
+  /**
+   * return the bottom click-able area offset now (after mount)
+   */
+  getBottomOffset () {
+    const { percent } = this.state;
 
-    // 测试数据 同上
-    const offset = (document.documentElement.scrollHeight - window.innerHeight - scrollOffset) * percent + scrollOffset;
-    // console.log('offset', offset)
-    const scrollStep = (offset - window.scrollY) / 10;
-    let step = 0;
+    if (this.refs.handleBarContainer) {
+      const { offsetHeight } = this.refs.handleBarContainer;
 
-    window.clearInterval(this.timer);
-    this.activeScrollListener = false;
-    this.timer = window.setInterval(() => {
-      step++;
-      if (step > 10) {
-        window.clearInterval(this.timer);
-        this.activeScrollListener = true;
-      } else {
-        window.scrollBy(0, scrollStep);
-      }
-    }, 17);
+      return percent * (offsetHeight - this.getHandlerLength()) + this.getHandlerLength();
+    }
 
-    this.setState({ percent: percent });
-    onDoneChange && onDoneChange(percent);
+    return 0;
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { percent } = newProps;
+    if (percent != this.state.percent) {
+      this.setState({ percent });
+    }
   }
 
   render () {
@@ -256,7 +165,7 @@ class ListControlBar extends React.Component {
               // console.log('onMouseUp')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
               // this.pinToLocation(index, false);
-              this.onDoneChange(this.getPercentFromOffsetTop(offsetTop));
+              onDoneChange && onDoneChange(this.getPercentFromOffsetTop(offsetTop));
               this.isDragging = false;
             }
           }}
@@ -271,9 +180,8 @@ class ListControlBar extends React.Component {
               <div
                 className="slider-top"
                 onClick={e => {
-                  // this.pinToLocation(1);
                   this.setState({ showTransition: true });
-                  this.onDoneChange(0);
+                  onDoneChange && onDoneChange(0);
                 }}
               >Top</div>
               <div
@@ -284,11 +192,16 @@ class ListControlBar extends React.Component {
                   const { offsetTop } = this.refs.container;
                   const { offsetHeight } = this.refs.handleBarContainer;
                   let offsetY = e.clientY - offsetTop - 24;
-                  offsetY = Math.min(Math.max(offsetY, 0), offsetHeight - this.getHandlerLength());
+                  const availableLength = offsetHeight - this.getHandlerLength();
+                  const bottomOffset = this.getBottomOffset();
+                  if (offsetY > bottomOffset) {
+                    offsetY -= this.getHandlerLength();
+                  }
+                  offsetY = Math.min(Math.max(offsetY, 0), availableLength);
                   // let newIndex = this.getItemIndex(offsetY);
                   let newPercent = this.getPercentFromOffsetTop(offsetY);
                   this.setState({ showTransition: true });
-                  this.onDoneChange(newPercent);
+                  onDoneChange && onDoneChange(newPercent);
                 }}
               >
                 <div
@@ -331,7 +244,7 @@ class ListControlBar extends React.Component {
                 onClick={e => {
                   // this.pinToLocation(sum);
                   this.setState({ showTransition: true });
-                  this.onDoneChange(1);
+                  onDoneChange && onDoneChange(1);
                 }}
               >Bottom</div>
             </div>
