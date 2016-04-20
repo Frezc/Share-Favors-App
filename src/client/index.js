@@ -28,3 +28,12 @@ render(
   </Provider>,
   document.getElementById('app')
 );
+
+// for chrome debug
+window.showElementsBorder = () => {
+  [].forEach.call($$("*"),function(a){
+
+    a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16)
+
+  })
+};

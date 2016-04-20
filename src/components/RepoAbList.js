@@ -24,7 +24,8 @@ class RepoAbList extends React.Component {
     //   }).isRequired,
     //   recentItems: PropTypes.array
     // })),
-    onFilterChange: PropTypes.func
+    onFilterChange: PropTypes.func,
+    needLoadPage: PropTypes.func
   };
   
   static defaultProps = {
@@ -41,17 +42,24 @@ class RepoAbList extends React.Component {
     showList: []               // the elements visible in list
   };
 
+  showPage = 0;                // 当前的页数
+
   // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
   activeScrollListener = true;
+
+  // 列表元素对应的节点
+  elements = [];
   
   constructPageList(pageIndex, page, num) {
     let list = [];
+    this.elements = [];
     for(let i = 0; i < num; i++) {
-      const key = (pageIndex * 50 + i) / 100;
+      const key = (pageIndex * 50 + i) % 100;
       if (page) {
         list.push(
           <RepoAbstract
             key={key}
+            rootRef={r => this.elements[key] = r}
             className="item"
             repository={page[i].repository}
             recentItems={page[i].recentItems}
@@ -62,6 +70,7 @@ class RepoAbList extends React.Component {
         list.push(
           <RepoAbstract
             key={key}
+            rootRef={r => this.elements[key] = r}
             className="item"
             loading
             onExpandChange={this.abExpandChange}
@@ -118,11 +127,8 @@ class RepoAbList extends React.Component {
       if (this.refs.listContainer) {
         // 由于Card的onExpandChange方法是在改变state，即更新前调用的，
         // 所以这里设置延时来等待重新渲染（当然只能算取巧的方案）
-        setTimeout(() => {
-          const handleHeight = ListControlBar.validHandleHeight(window.innerHeight / this.calculateListHeight(repoAll));
-          this.setState({ handleHeight });
-          this.updatePercent()
-        }, 33);
+        const handleHeight = ListControlBar.validHandleHeight(window.innerHeight / this.calculateListHeight(repoAll));
+        this.setState({ handleHeight });
       } else {
         const handleHeight = ListControlBar.validHandleHeight(window.innerHeight / (RepoAbstract.defaultHeight * repoAll));
         this.setState({ handleHeight });
@@ -131,25 +137,70 @@ class RepoAbList extends React.Component {
   }
 
   /**
-   * update percent by scrollY now
+   * update percent
    */
   updatePercent() {
-    const offsetTop = (window.scrollY - LISTTOP) / (document.documentElement.scrollHeight - window.innerHeight - LISTTOP);
-    const percent = Math.min(Math.max(offsetTop, 0), 1);
+    const percent = this.getPercent();
     this.setState({ percent });
   }
 
-  getLastShowIndex() {
-
+  /**
+   * wait for view updated
+   */
+  updateIndex() {
+    this.setState({
+      index: this.getLastShowIndex()
+    })
   }
-  
+
+  getLastShowIndex() {
+    let startIndex = 0;
+    if (this.elements.length > PAGE_NUM) {
+      startIndex = PAGE_NUM;
+    }
+    for(let i = startIndex; i < this.elements.length; i++) {
+      const rect = this.elements[i].getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom + 16 >= window.innerHeight) {
+        return this.showPage * PAGE_NUM + i;
+      }
+    }
+
+    return this.props.repoNumAll - 1;
+  }
+
+  getPercent() {
+    const { repoNumAll } = this.props;
+    if (this.refs.listContainer) {
+      const totalHeight = this.refs.listContainer.offsetHeight
+        + (repoNumAll - this.state.showList.length) * RepoAbstract.defaultHeight;
+      const rect = this.refs.listContainer.getBoundingClientRect();
+      let topPage = this.showPage;
+      if (this.state.showList.length > PAGE_NUM) {
+        topPage -= 1;
+      }
+      const top = Math.min(rect.top, 0);
+      const offsetTop = Math.abs(top) + topPage * PAGE_NUM * RepoAbstract.defaultHeight;
+      return offsetTop / (totalHeight - window.innerHeight);
+    }
+
+    return 0;
+  }
+
   abExpandChange = isExpanded => {
-    this.updateHandleHeight();
+    // 由于Card的onExpandChange方法是在改变state，即更新前调用的，
+    // 所以这里设置延时来等待重新渲染（当然只能算取巧的方案）
+    setTimeout(() => {
+      this.updateHandleHeight();
+      this.updateIndex();
+      this.updatePercent();
+    }, 9);
   };
 
   
   onWindowResize = () => {
     this.updateHandleHeight();
+    this.updateIndex();
+    this.updatePercent();
   };
 
   scrollListener = () => {
@@ -164,11 +215,23 @@ class RepoAbList extends React.Component {
        this.setState({ percent });
        }
        */
-      
-      // todo
+
+      const { index, showList } = this.state;
+      const offsetIndex = index % PAGE_NUM;
+
+      if (this.elements.length > PAGE_NUM) {
+        window.com = this.elements[PAGE_NUM + offsetIndex];
+      } else {
+        window.com = this.elements[offsetIndex];
+      }
+
+      this.setState({
+        index: this.getLastShowIndex(),
+        percent: this.getPercent()
+      })
     }
   };
-  
+
   onDoneChange = percent => {
     // todo: calculate offset
     // 测试数据 同上
@@ -207,6 +270,8 @@ class RepoAbList extends React.Component {
     if (newProps.repoNumAll != this.props.repoNumAll) {
       this.updateShowList(newProps);
       this.updateHandleHeight(newProps.repoNumAll);
+      this.updateIndex();
+      this.updatePercent();
     }
   }
 

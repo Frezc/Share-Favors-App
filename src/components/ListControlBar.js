@@ -33,7 +33,7 @@ class ListControlBar extends React.Component {
 
   // make sure height of handle in [.1, 1]
   static validHandleHeight(height) {
-    return Math.max(Math.min(height, 1), 0.1);
+    return Math.max(Math.min(height, 1), 0.12);
   }
 
   generatePercentString (number) {
