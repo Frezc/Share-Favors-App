@@ -2,8 +2,8 @@ import { fetchR } from '../helpers';
 
 
 // notice: fetch默认https. 这里需要注明
-const HOST = 'http://192.168.2.236';
-// const HOST = 'http://sharefavors.com';
+// const HOST = 'http://192.168.2.236';
+const HOST = 'http://sharefavors.com';
 
 
 // 登录

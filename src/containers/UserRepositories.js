@@ -66,6 +66,9 @@ class UserRepositories extends React.Component {
         loading={this.currentPageLoading()}
         repoWithRecents={cache && cache.repoList}
         repoNumAll={cache && cache.repoNumAll}
+        needLoadPage={page => {
+          console.log(page)
+        }}
       />
     );
   }

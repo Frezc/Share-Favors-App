@@ -24,6 +24,12 @@ function getRootClassName (className) {
   return 'repoAbstract ' + className;
 }
 
+function showRencentBlock (props) {
+  const { recentItems } = props;
+
+  return recentItems && recentItems.length > 0;
+}
+
 function renderRecentItems (recentItems) {
   // console.log('recentItems', recentItems)
   return (
@@ -80,19 +86,12 @@ function renderRecentItems (recentItems) {
   );
 }
 
-function showRencentBlock (props) {
-  const { recentItems } = props;
-
-  return recentItems && recentItems.length > 0;
-}
-
-function RepositoryAbstract (props) {
-  const { actions, className, style, repository, recentItems, loading, onExpandChange, rootRef } = props;
-
-  // console.log(repository)
+// not loading
+function render(props) {
+  const { actions, className, style, repository, recentItems, onExpandChange, rootRef } = props;
 
   return (
-    <div 
+    <div
       className={getRootClassName(className)}
       style={style}
       ref={rootRef}
@@ -102,81 +101,71 @@ function RepositoryAbstract (props) {
       >
         <CardHeader
           actAsExpander={false}
-          showExpandableButton={!loading}
+          showExpandableButton={true}
         >
-          {loading ?
-            <div className="repoTitle">
-              <a>
-                Loading...
-              </a>
-            </div>
-            :
-            <div className="repoTitle">
-              <Link
-                to={`/user/${repository.creator_id}`}
-                
-              >
-                {repository.creator_name}
-              </Link>
-              /
-              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-                {repository.title}
-              </a>
-            </div>
-          }
-          {loading ||
-            <div className="repoSubTitle">
-              <ToggleStar
-                className="starIcon"
-                style={styles.subtitleIcon}
-                color={grey500}
-              />
+          <div className="repoTitle">
+            <Link
+              to={`/user/${repository.creator_id}`}
+
+            >
+              {repository.creator_name}
+            </Link>
+            /
+            <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+              {repository.title}
+            </a>
+          </div>
+          <div className="repoSubTitle">
+            <ToggleStar
+              className="starIcon"
+              style={styles.subtitleIcon}
+              color={grey500}
+            />
             <span>
               {repository.stars}
             </span>
-              {
-                repository.status == 0 ?
-                  <ActionVisibilityOff
-                    className="visibilityIcon"
-                    style={styles.subtitleIcon}
-                    color={grey500}
-                  />
-                  :
-                  <ActionVisibility
-                    className="visibilityIcon"
-                    style={styles.subtitleIcon}
-                    color={grey500}
-                  />
-              }
-              <ActionDateRange
-                className="dateIcon"
-                style={styles.subtitleIcon}
-                color={grey500}
-              />
+            {
+              repository.status == 0 ?
+                <ActionVisibilityOff
+                  className="visibilityIcon"
+                  style={styles.subtitleIcon}
+                  color={grey500}
+                />
+                :
+                <ActionVisibility
+                  className="visibilityIcon"
+                  style={styles.subtitleIcon}
+                  color={grey500}
+                />
+            }
+            <ActionDateRange
+              className="dateIcon"
+              style={styles.subtitleIcon}
+              color={grey500}
+            />
             <span
               className="dateText">
               {repository.created_at.slice(0, 10)}
             </span>
-              <ContentLink
-                className="linkIcon"
-                style={styles.subtitleIcon}
-                color={grey500}
-              />
+            <ContentLink
+              className="linkIcon"
+              style={styles.subtitleIcon}
+              color={grey500}
+            />
             <span
               className="linkText">
               {repository.repoNum}
             </span>
-              <FileFolderShared
-                className="folderIcon"
-                style={styles.subtitleIcon}
-                color={grey500}
-              />
+            <FileFolderShared
+              className="folderIcon"
+              style={styles.subtitleIcon}
+              color={grey500}
+            />
             <span
               className="folderText">
               {repository.linkNum}
             </span>
-            </div>
-          }
+          </div>
         </CardHeader>
         <CardText expandable={true}>
           <Divider />
@@ -188,7 +177,7 @@ function RepositoryAbstract (props) {
           <Subheader>Tags</Subheader>
           <div className="tagList">
             {repository.tags.map(tag =>
-              <div 
+              <div
                 className="tagContainer"
                 key={tag.id}
               >
@@ -208,13 +197,13 @@ function RepositoryAbstract (props) {
         </CardText>
         { actions.length > 0 &&
           <CardActions expandable={false}>
-            { actions.map((action, i) => 
-              <FlatButton 
-                  key={action.label} 
-                  label={action.label} 
-                  onTouchTap={action.onTap}
-                  primary={i % 2 == 0}
-                  secondary={i % 2 == 1}
+            { actions.map((action, i) =>
+              <FlatButton
+                key={action.label}
+                label={action.label}
+                onTouchTap={action.onTap}
+                primary={i % 2 == 0}
+                secondary={i % 2 == 1}
               />
             )}
           </CardActions>
@@ -222,6 +211,50 @@ function RepositoryAbstract (props) {
       </Card>
     </div>
   );
+}
+
+function renderLoading(props) {
+  const { className, style, onExpandChange, rootRef } = props;
+
+  return (
+    <div
+      className={getRootClassName(className)}
+      style={style}
+      ref={rootRef}
+    >
+      <Card
+        onExpandChange={onExpandChange}
+      >
+        <CardHeader
+          actAsExpander={false}
+          showExpandableButton={false}
+        >
+          <div className="repoTitle">
+            <a>
+              Loading...
+            </a>
+          </div>
+        </CardHeader>
+        <CardText expandable={true}>
+          <Divider />
+          <Subheader>Description</Subheader>
+          <div className="description"></div>
+          <Divider />
+          <Subheader>Tags</Subheader>
+          <div className="tagList"></div>
+        </CardText>
+      </Card>
+    </div>
+  );
+}
+
+function RepositoryAbstract (props) {
+  const { loading } = props;
+  if (loading) {
+    return renderLoading(props);
+  } else {
+    return render(props);
+  }
 }
 
 RepositoryAbstract.propTypes = {
@@ -257,9 +290,6 @@ RepositoryAbstract.defaultProps = {
   actions: [],
   className: '',
   style: {},
-  repository: {
-    tags: []
-  },
   recentItems: [],
   loading: false
 }
