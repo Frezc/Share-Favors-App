@@ -14,4 +14,4 @@ export const COMPONENT = {
 
 export const WINDOW_BOUNDARY = 1700;
 
-export const PAGE_NUM = 50;
+export const PAGE_NUM = 30;

@@ -109,7 +109,7 @@ export function fetchUserNetwork(id) {
   }
 }
 
-// desperate. Cache will be charge in component.
+// deprecated. Cache will be charge in component.
 export function fetchUser(id) {
   return (dispatch, getState) => {
 

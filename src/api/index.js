@@ -1,5 +1,5 @@
 import { fetchR } from '../helpers';
-
+import { PAGE_NUM } from '../constants';
 
 // notice: fetch默认https. 这里需要注明
 // const HOST = 'http://192.168.2.236';
@@ -57,14 +57,14 @@ export function userInfo(id, starListMax = 3, repositoriesMax = 3) {
 
 
 // 得到用户的仓库列表
-export function userRepository(id, orderby = 'recent updated', offset = 0, token, limit = 50) {
+export function userRepository(id, orderby = 'recent updated', offset = 0, token, limit = PAGE_NUM) {
   const tokenParam = token ? `&token=${token}` : '';
 
   return fetchR(`${HOST}/user/${id}/repository?offset=${offset}&orderby=${orderby.toLowerCase()}&limit=${limit}${tokenParam}`)
 }
 
 // 得到用户的starList
-export function userStarlist(id, offset = 0, token, limit = 50) {
+export function userStarlist(id, offset = 0, token, limit = PAGE_NUM) {
   const tokenParam = token ? `&token=${token}` : '';
 
   return fetchR(`${HOST}/user/${id}/starList?offset=${offset}&limit=${limit}${tokenParam}`);  
