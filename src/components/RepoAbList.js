@@ -10,9 +10,6 @@ import { getPageItemsNumber } from '../helpers';
 
 const LISTTOP = 132;
 
-// 列表元素对应的节点 elements[0][0~29]
-let elements = {};
-
 class RepoAbList extends React.Component {
   
   static propTypes = {
@@ -51,9 +48,13 @@ class RepoAbList extends React.Component {
   // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
   activeScrollListener = true;
 
+  // 列表元素对应的节点
+  elements = {};
+
   // call after mount
   /**
    * get the length of whole list (include not rendered)
+   * todo
    */
   calculateListHeight(repoNumAll) {
     const { listContainer } = this.refs;
@@ -100,34 +101,45 @@ class RepoAbList extends React.Component {
 
   /**
    * update state.showPage
+   * todo: bug
    */
   updateShowPage({ repoNumAll } = this.props) {
     if (this.refs.listContainer) {
-      console.log('update show page', elements)
+      console.log('update show page', this.elements)
       const rect = this.refs.listContainer.getBoundingClientRect();
 
       let showPages = this.state.showPages;
       const lastPage = showPages[showPages.length - 1];
+
+      // scroll to end of page
       if (lastPage < Math.floor(repoNumAll / PAGE_NUM) && rect.bottom <= window.innerHeight) {
         showPages.push(lastPage + 1);
         this.checkIfNeed(lastPage + 1);
         if (showPages.length > 3) {
+          // 清空没用的数组
+          console.log('useless page', showPages[0])
+          // todo: bug 清空后会马上恢复
+          this.elements[showPages[0]] = [];
+          console.log('after remove', this.elements)
           showPages = showPages.slice(1, showPages.length);
 
           // 页面中最多90项，所以要滚动到正确的位置
-          const rect = elements[lastPage][0].getBoundingClientRect();
+          const rect = this.elements[lastPage][0].getBoundingClientRect();
           console.log('down', rect)
           window.scrollBy(0, rect.top);
         }
         this.setState({ showPages });
 
       }
+
+      // scroll to top of page
       if (showPages[0] > 0 && rect.top >= 0) {
         this.checkIfNeed(showPages[0] - 1);
         showPages = [showPages[0] - 1, ...showPages];
         if (showPages.length > 3) {
+          this.elements[showPages[3]] = [];
           showPages = showPages.slice(0, 3);
-          const rect = elements[showPages[2]][0].getBoundingClientRect();
+          const rect = this.elements[showPages[2]][0].getBoundingClientRect();
           console.log('up', rect)
           window.scrollBy(0, rect.top);
         }
@@ -146,15 +158,16 @@ class RepoAbList extends React.Component {
 
   /**
    * 得到显示的最新的数量索引
+   * todo: bug
    * @param repoNumAll
    * @returns {number}
    */
   getLastShowIndex({ repoNumAll } = this.props) {
-    console.log('get last show index', elements)
+    console.log('get last show index', this.elements)
 
     for (let i = 0; i < this.state.showPages.length; i++) {
       const page = this.state.showPages[i];
-      const pageEls = elements[page];
+      const pageEls = this.elements[page];
       for (let j = 0; j < pageEls.length; j++) {
         const rect = pageEls[j].getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom + 16 >= window.innerHeight) {
@@ -166,6 +179,11 @@ class RepoAbList extends React.Component {
     return repoNumAll - 1;
   }
 
+  /**
+   * todo
+   * @param repoNumAll
+   * @returns {number}
+   */
   getPercent({ repoNumAll } = this.props) {
     if (this.refs.listContainer) {
       const totalHeight = this.refs.listContainer.offsetHeight
@@ -202,35 +220,9 @@ class RepoAbList extends React.Component {
 
   scrollListener = () => {
     if (this.activeScrollListener) {
-      /*
-       const { scrollOffset } = this.props;
-       let percent = (window.scrollY - scrollOffset) / (document.documentElement.scrollHeight - window.innerHeight - scrollOffset);
-       // console.log('percent', percent)
-
-       percent = Math.min(Math.max(0, percent), 1);
-       if (percent != this.state.percent) {
-       this.setState({ percent });
-       }
-       */
-
       if (this.refs.listContainer) {
-        /*
-        const rect = this.refs.listContainer.getBoundingClientRect();
-
-        if (rect.bottom <= window.innerHeight || (rect.top >= 0 && this.showPage != 0)) {
-          this.updateShowList();
-        }
-        */
-
         this.updateShowPage();
       }
-
-      // console.log('onscroll', this.getPercent())
-      // this.setState({
-      //   index: this.getLastShowIndex(),
-      //   percent: this.getPercent()
-      // })
-      
       console.log('scroll-before', Date.now())
       
       this.setState({
@@ -278,14 +270,47 @@ class RepoAbList extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.repoNumAll != this.props.repoNumAll || newProps.repoWithRecents != this.props.repoWithRecents) {
-      // this.updateShowList(newProps);
       this.updateShowPage(newProps);
       setTimeout(() => {
-        this.updateHandleHeight();
-        this.updateIndex();
-        this.updatePercent();
+        // this.updateHandleHeight();
+        // this.updateIndex();
+        // this.updatePercent();
       }, 9);
     }
+  }
+
+  /**
+   * construct one page list
+   */
+  constructPageList(pageIndex, page, num) {
+    let list = [];
+    if (!this.elements[pageIndex]) this.elements[pageIndex] = [];
+    for(let i = 0; i < num; i++) {
+      const key = (pageIndex * PAGE_NUM + i) % (PAGE_NUM * 3);
+      if (page) {
+        list.push(
+          <RepoAbstract
+            key={key}
+            rootRef={r => {this.elements[pageIndex][i] = r; console.log('get ref', pageIndex)}}
+            className="item"
+            repository={page[i].repository}
+            recentItems={page[i].recentItems}
+            onExpandChange={this.abExpandChange}
+          />
+        );
+      } else {
+        list.push(
+          <RepoAbstract
+            key={key}
+            rootRef={r => {this.elements[pageIndex][i] = r; console.log('get ref', pageIndex)}}
+            className="item"
+            loading
+            onExpandChange={this.abExpandChange}
+          />
+        );
+      }
+    }
+    return list;
   }
 
   showRepoAbList() {
@@ -302,9 +327,8 @@ class RepoAbList extends React.Component {
         scrollOffset={LISTTOP}
         onDoneChange={this.onDoneChange}
         onDragChange={percent => {
-            // 在这里更新percent效率比较低
             // this.setState({ percent })
-          }}
+        }}
       />
     );
 
@@ -314,12 +338,10 @@ class RepoAbList extends React.Component {
       >
         {this.listContronl}
         {repoNumAll > 0 ?
-          <AbList
-            showPages={this.state.showPages}
-            repoWithRecents={repoWithRecents}
-            repoNumAll={repoNumAll}
-            abExpandChange={this.abExpandChange}
-          />
+          this.state.showPages.map(pageIndex =>
+            this.constructPageList(pageIndex, repoWithRecents[pageIndex],
+              getPageItemsNumber(repoNumAll, pageIndex, PAGE_NUM))
+          )
           :
           <NoResult
             msg="No Repositories"
@@ -331,9 +353,9 @@ class RepoAbList extends React.Component {
   }
 
   render() {
-    console.log('render', Date.now())
+    console.log('render', Date.now() + " " + this.state.showPages)
 
-    const { filters, onFilterChange, repoWithRecents, loading, repoNumAll, dispatch } = this.props;
+    const { filters, onFilterChange,  loading,  dispatch } = this.props;
     const { pathname, query } = this.props.location;
     // console.log('loading', loading)
     return (
@@ -341,20 +363,20 @@ class RepoAbList extends React.Component {
         className="repoAbstract"
       >
         {filters.length > 0 &&
-        <ListFilter
-          filters={filters}
-          activeFilter={query.filter}
-          onFilterChange={(index, filter) => {
-            dispatch(push({
-              pathname: pathname,
-              query: Object.assign({}, query, {
-                filter: filter.toLowerCase()
-              })
-            }));
+          <ListFilter
+            filters={filters}
+            activeFilter={query.filter}
+            onFilterChange={(index, filter) => {
+              dispatch(push({
+                pathname: pathname,
+                query: Object.assign({}, query, {
+                  filter: filter.toLowerCase()
+                })
+              }));
 
-            onFilterChange && onFilterChange(index, filter)
-          }}
-        />
+              onFilterChange && onFilterChange(index, filter)
+            }}
+          />
         }
 
         <ContentMask
@@ -366,72 +388,6 @@ class RepoAbList extends React.Component {
           this.showRepoAbList()
         }
 
-      </div>
-    );
-  }
-}
-
-class AbList extends React.Component {
-
-  static propTypes = {
-    showPages: PropTypes.array.isRequired,
-    repoWithRecents: PropTypes.object,
-    repoNumAll: PropTypes.number,
-    abExpandChange: PropTypes.func
-  };
-
-  static defaultProps = {
-    repoWithRecents: {},
-    repoNumAll: 0
-  };
-
-  constructPageList(pageIndex, page, num) {
-    let list = [];
-    elements[pageIndex] = [];
-    for(let i = 0; i < num; i++) {
-      const key = (pageIndex * PAGE_NUM + i) % (PAGE_NUM * 3);
-      if (page) {
-        list.push(
-          <RepoAbstract
-            key={key}
-            rootRef={r => elements[pageIndex][i] = r}
-            className="item"
-            repository={page[i].repository}
-            recentItems={page[i].recentItems}
-            onExpandChange={this.props.abExpandChange}
-          />
-        );
-      } else {
-        list.push(
-          <RepoAbstract
-            key={key}
-            rootRef={r => elements[pageIndex][i] = r}
-            className="item"
-            loading
-            onExpandChange={this.props.abExpandChange}
-          />
-        );
-      }
-    }
-    return list;
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.showPages.toString() != nextProps.showPages.toString()
-      || this.props.repoWithRecents != nextProps.repoWithRecents
-  }
-
-  render() {
-    const { repoWithRecents, repoNumAll } = this.props;
-    console.log('ablist render', Date.now())
-    return (
-      <div>
-        {
-          this.props.showPages.map(pageIndex =>
-            this.constructPageList(pageIndex, repoWithRecents[pageIndex],
-              getPageItemsNumber(repoNumAll, pageIndex, PAGE_NUM))
-          )
-        }
       </div>
     );
   }

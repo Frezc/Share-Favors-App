@@ -19,183 +19,269 @@ import { grey900, grey500, teal500 } from 'material-ui/lib/styles/colors';
 import CardActions from 'material-ui/lib/card/card-actions';
 import FlatButton from 'material-ui/lib/flat-button';
 import { Link } from 'react-router';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
-function getRootClassName (className) {
-  return 'repoAbstract ' + className;
+const styles = {
+  subtitleIcon: {
+    width: 18,
+    height: 18
+  },
+  columnIcon: {
+    width: 24,
+    height: 24
+  }
 }
 
-function showRencentBlock (props) {
-  const { recentItems } = props;
+class RepositoryAbstract extends React.Component {
 
-  return recentItems && recentItems.length > 0;
-}
+  static propTypes = {
+    actions: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      onTap: PropTypes.func
+    })),
+    className: PropTypes.string,
+    style: PropTypes.object,
+    repository: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      creator_id: PropTypes.number.isRequired,
+      creator_name: PropTypes.string.isRequired,
+      status: PropTypes.number.isRequired,
+      stars: PropTypes.number.isRequired,
+      created_at: PropTypes.string.isRequired,
+      tags: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        text: PropTypes.string.isRequired,
+        used: PropTypes.number.isRequired
+      })).isRequired,
+      description: PropTypes.string.isRequired,
+      repoNum: PropTypes.number.isRequired,
+      linkNum: PropTypes.number.isRequired
+    }),
+    recentItems: PropTypes.array,
+    loading: PropTypes.bool,
+    onExpandChange: PropTypes.func,
+    rootRef: PropTypes.func
+  };
 
-function renderRecentItems (recentItems) {
-  // console.log('recentItems', recentItems)
-  return (
-    <div
-      className="recentItems"
-    >
-      <Divider />
-      <Subheader>Recent Updated Items</Subheader>
-      <Table className="abstractTable">
-        <TableBody
-          displayRowCheckbox={false}
-          selectable={false}>
-          {recentItems.map(item =>
-            <TableRow
-              key={item.type == 0 ?
+  static defaultProps = {
+    actions: [],
+    className: '',
+    style: {},
+    recentItems: [],
+    loading: false
+  };
+
+  static defaultHeight = 88;
+
+  getRootClassName (className) {
+    return 'repoAbstract ' + className;
+  }
+
+  showRencentBlock (props) {
+    const { recentItems } = props;
+
+    return recentItems && recentItems.length > 0;
+  }
+
+  renderRecentItems (recentItems) {
+    // console.log('recentItems', recentItems)
+    return (
+      <div
+        className="recentItems"
+      >
+        <Divider />
+        <Subheader>Recent Updated Items</Subheader>
+        <Table className="abstractTable">
+          <TableBody
+            displayRowCheckbox={false}
+            selectable={false}>
+            {recentItems.map(item =>
+              <TableRow
+                key={item.type == 0 ?
                 item.repository.id
                 :
                 item.link.id
               }
-            >
-              <TableRowColumn
-                style={{ width: 8 }}>
-                {item.type == 0 ?
-                  <FileFolderShared
-                    style={styles.columnIcon}
-                    color={grey900}
-                  />
-                  :
-                  <ContentLink
-                    style={styles.columnIcon}
-                    color={grey900}
-                  />
-                }
-              </TableRowColumn>
-              <TableRowColumn
-                className="columnName">
-                <a href="#">
+              >
+                <TableRowColumn
+                  style={{ width: 8 }}>
                   {item.type == 0 ?
-                    item.repository.title
+                    <FileFolderShared
+                      style={styles.columnIcon}
+                      color={grey900}
+                    />
                     :
-                    item.link.title
+                    <ContentLink
+                      style={styles.columnIcon}
+                      color={grey900}
+                    />
                   }
-                </a>
-              </TableRowColumn>
-              <TableRowColumn
-                className="columnDate">
-                {item.created_at.slice(0, 10)}
-              </TableRowColumn>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
+                </TableRowColumn>
+                <TableRowColumn
+                  className="columnName">
+                  <a href="#">
+                    {item.type == 0 ?
+                      item.repository.title
+                      :
+                      item.link.title
+                    }
+                  </a>
+                </TableRowColumn>
+                <TableRowColumn
+                  className="columnDate">
+                  {item.created_at.slice(0, 10)}
+                </TableRowColumn>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
 
-// not loading
-function render(props) {
-  const { actions, className, style, repository, recentItems, onExpandChange, rootRef } = props;
+  renderLoading(props) {
+    const { className, style, onExpandChange, rootRef } = props;
 
-  return (
-    <div
-      className={getRootClassName(className)}
-      style={style}
-      ref={rootRef}
-    >
-      <Card
-        onExpandChange={onExpandChange}
+    return (
+      <div
+        className={this.getRootClassName(className)}
+        style={style}
+        ref={rootRef}
       >
-        <CardHeader
-          actAsExpander={false}
-          showExpandableButton={true}
+        <Card
+          onExpandChange={onExpandChange}
         >
-          <div className="repoTitle">
-            <Link
-              to={`/user/${repository.creator_id}`}
+          <CardHeader
+            actAsExpander={false}
+            showExpandableButton={false}
+          >
+            <div className="repoTitle">
+              <a>
+                Loading...
+              </a>
+            </div>
+          </CardHeader>
+          <CardText expandable={true}>
+            <Divider />
+            <Subheader>Description</Subheader>
+            <div className="description"></div>
+            <Divider />
+            <Subheader>Tags</Subheader>
+            <div className="tagList"></div>
+          </CardText>
+        </Card>
+      </div>
+    );
+  }
 
-            >
-              {repository.creator_name}
-            </Link>
-            /
-            <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
-              {repository.title}
-            </a>
-          </div>
-          <div className="repoSubTitle">
-            <ToggleStar
-              className="starIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+  renderContent(props) {
+    const { actions, className, style, repository, recentItems, onExpandChange, rootRef } = props;
+
+    return (
+      <div
+        className={this.getRootClassName(className)}
+        style={style}
+        ref={rootRef}
+      >
+        <Card
+          onExpandChange={onExpandChange}
+        >
+          <CardHeader
+            actAsExpander={false}
+            showExpandableButton={true}
+          >
+            <div className="repoTitle">
+              <Link
+                to={`/user/${repository.creator_id}`}
+              >
+                {repository.creator_name}
+              </Link>
+              /
+              <a onClick={e => {e.preventDefault();e.stopPropagation();}}>
+                {repository.title}
+              </a>
+            </div>
+            <div className="repoSubTitle">
+              <ToggleStar
+                className="starIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span>
               {repository.stars}
             </span>
-            {
-              repository.status == 0 ?
-                <ActionVisibilityOff
-                  className="visibilityIcon"
-                  style={styles.subtitleIcon}
-                  color={grey500}
-                />
-                :
-                <ActionVisibility
-                  className="visibilityIcon"
-                  style={styles.subtitleIcon}
-                  color={grey500}
-                />
-            }
-            <ActionDateRange
-              className="dateIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              {
+                repository.status == 0 ?
+                  <ActionVisibilityOff
+                    className="visibilityIcon"
+                    style={styles.subtitleIcon}
+                    color={grey500}
+                  />
+                  :
+                  <ActionVisibility
+                    className="visibilityIcon"
+                    style={styles.subtitleIcon}
+                    color={grey500}
+                  />
+              }
+              <ActionDateRange
+                className="dateIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="dateText">
               {repository.created_at.slice(0, 10)}
             </span>
-            <ContentLink
-              className="linkIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              <ContentLink
+                className="linkIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="linkText">
               {repository.repoNum}
             </span>
-            <FileFolderShared
-              className="folderIcon"
-              style={styles.subtitleIcon}
-              color={grey500}
-            />
+              <FileFolderShared
+                className="folderIcon"
+                style={styles.subtitleIcon}
+                color={grey500}
+              />
             <span
               className="folderText">
               {repository.linkNum}
             </span>
-          </div>
-        </CardHeader>
-        <CardText expandable={true}>
-          <Divider />
-          <Subheader>Description</Subheader>
-          <div className="description">
-            {repository.description}
-          </div>
-          <Divider />
-          <Subheader>Tags</Subheader>
-          <div className="tagList">
-            {repository.tags.map(tag =>
-              <div
-                className="tagContainer"
-                key={tag.id}
-              >
-                <MapsLocalOffer
-                  style={{ width: 16, height: 16 }}
-                  color={teal500}
-                />
+            </div>
+          </CardHeader>
+          <CardText expandable={true}>
+            <Divider />
+            <Subheader>Description</Subheader>
+            <div className="description">
+              {repository.description}
+            </div>
+            <Divider />
+            <Subheader>Tags</Subheader>
+            <div className="tagList">
+              {repository.tags.map(tag =>
+                <div
+                  className="tagContainer"
+                  key={tag.id}
+                >
+                  <MapsLocalOffer
+                    style={{ width: 16, height: 16 }}
+                    color={teal500}
+                  />
                 <span className="tagText">
                   {tag.text}
                 </span>
-              </div>
-            )}
-          </div>
-          {showRencentBlock(props) &&
-            renderRecentItems(recentItems)
-          }
-        </CardText>
-        { actions.length > 0 &&
+                </div>
+              )}
+            </div>
+            {this.showRencentBlock(props) &&
+              this.renderRecentItems(recentItems)
+            }
+          </CardText>
+          { actions.length > 0 &&
           <CardActions expandable={false}>
             { actions.map((action, i) =>
               <FlatButton
@@ -207,103 +293,31 @@ function render(props) {
               />
             )}
           </CardActions>
-        }
-      </Card>
-    </div>
-  );
-}
-
-function renderLoading(props) {
-  const { className, style, onExpandChange, rootRef } = props;
-
-  return (
-    <div
-      className={getRootClassName(className)}
-      style={style}
-      ref={rootRef}
-    >
-      <Card
-        onExpandChange={onExpandChange}
-      >
-        <CardHeader
-          actAsExpander={false}
-          showExpandableButton={false}
-        >
-          <div className="repoTitle">
-            <a>
-              Loading...
-            </a>
-          </div>
-        </CardHeader>
-        <CardText expandable={true}>
-          <Divider />
-          <Subheader>Description</Subheader>
-          <div className="description"></div>
-          <Divider />
-          <Subheader>Tags</Subheader>
-          <div className="tagList"></div>
-        </CardText>
-      </Card>
-    </div>
-  );
-}
-
-function RepositoryAbstract (props) {
-  const { loading } = props;
-  if (loading) {
-    return renderLoading(props);
-  } else {
-    return render(props);
+          }
+        </Card>
+      </div>
+    );
   }
-}
 
-RepositoryAbstract.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    onTap: PropTypes.func
-  })),
-  className: PropTypes.string,
-  style: PropTypes.object,
-  repository: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    creator_id: PropTypes.number.isRequired,
-    creator_name: PropTypes.string.isRequired,
-    status: PropTypes.number.isRequired,
-    stars: PropTypes.number.isRequired,
-    created_at: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
-      used: PropTypes.number.isRequired
-    })).isRequired,
-    description: PropTypes.string.isRequired,
-    repoNum: PropTypes.number.isRequired,
-    linkNum: PropTypes.number.isRequired
-  }),
-  recentItems: PropTypes.array,
-  loading: PropTypes.bool,
-  onExpandChange: PropTypes.func,
-  rootRef: PropTypes.func
-};
+  // rootRef会导致每次都更新
+  // shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  shouldComponentUpdate(nextProps, nextState) {
+    // console.log('pre', this.props)
+    // console.log('next', nextProps)
+    // console.log(PureRenderMixin.shouldComponentUpdate.bind(this)(nextProps, nextState))
+    // todo: 实现自己的Compare函数
+    return this.props.loading != nextProps.loading;
+  } 
 
-RepositoryAbstract.defaultProps = {
-  actions: [],
-  className: '',
-  style: {},
-  recentItems: [],
-  loading: false
-}
-
-RepositoryAbstract.defaultHeight = 88;
-
-const styles = {
-  subtitleIcon: {
-    width: 18, 
-    height: 18
-  },
-  columnIcon: {
-    width: 24,
-    height: 24
+  render() {
+    console.log('repo ab', Date.now())
+    
+    const { loading } = this.props;
+    if (loading) {
+      return this.renderLoading(this.props);
+    } else {
+      return this.renderContent(this.props);
+    }
   }
 }
 
