@@ -9,7 +9,7 @@ class ListControlBar extends React.Component {
     percent: PropTypes.number.isRequired, // [0, 1]
     handleHeight: PropTypes.number,      // [0.1, 1]
     description: PropTypes.string,
-    onDragChange: PropTypes.func,        // test performance
+    onDragChange: PropTypes.func,        // test performance useless
     onDoneChange: PropTypes.func,         // when change
     onScroll: PropTypes.func,
     scrollOffset: PropTypes.number       // top offset
@@ -26,7 +26,8 @@ class ListControlBar extends React.Component {
   state = {
     offsetTop: 0,
     showTransition: false,
-    percent: 0
+    percent: 0,
+    currentIndex: 1
   };
 
   isDragging = false;
@@ -95,6 +96,12 @@ class ListControlBar extends React.Component {
     return (1 - handleHeight) * percent;
   }
 
+  // percent -> currentIndex
+  getIndexFromPercent (percent) {
+    const { sum } = this.props;
+    return Math.floor((sum - 1) * percent) + 1;
+  }
+
   // fix transition bug
   getTransition () {
     if (this.state.showTransition) {
@@ -128,14 +135,18 @@ class ListControlBar extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const { percent } = newProps;
-    if (percent != this.state.percent) {
-      this.setState({ percent });
+    const { percent, currentIndex } = newProps;
+    if (percent != this.state.percent || currentIndex != this.state.currentIndex) {
+      this.setState({
+        percent,
+        currentIndex
+      });
     }
   }
 
   render () {
-    let { description, onDragChange, onDoneChange, className, sum, currentIndex, handleHeight } = this.props;
+    let { description, onDoneChange, className, sum, handleHeight } = this.props;
+    const { currentIndex } = this.state;
 
     return (
       <div>
@@ -151,12 +162,12 @@ class ListControlBar extends React.Component {
             if (this.isDragging) {
               // console.log('onMouseMove')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
-              // let newIndex = this.getItemIndex(offsetTop);
               // onDragChange && onDragChange(this.getPercentFromOffsetTop(offsetTop));
-              // 改用内部state来更新，使用props传递太慢
               const percent = this.getPercentFromOffsetTop(offsetTop);
-              this.setState({ percent: percent });
-              onDragChange && onDragChange(percent);
+              this.setState({
+                percent: percent,
+                currentIndex: this.getIndexFromPercent(percent)
+              });
               this.lastLocation = e.clientY;
             }
           }}

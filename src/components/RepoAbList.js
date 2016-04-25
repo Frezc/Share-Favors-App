@@ -9,6 +9,7 @@ import { PAGE_NUM } from '../constants';
 import { getPageItemsNumber } from '../helpers';
 
 const LISTTOP = 132;
+const BARHEIGHT = 64;
 
 class RepoAbList extends React.Component {
   
@@ -43,8 +44,6 @@ class RepoAbList extends React.Component {
     showPages: [0]                // max length: 4
   };
 
-  showPage = 0;                // 当前的页数
-
   // 解决在scroll bar在更新时相应时间而导致ListControlBar显示出错的问题
   activeScrollListener = true;
 
@@ -54,16 +53,19 @@ class RepoAbList extends React.Component {
   // call after mount
   /**
    * get the length of whole list (include not rendered)
-   * todo
    */
   calculateListHeight(repoNumAll) {
     const { listContainer } = this.refs;
     if (listContainer) {
       // console.log('list height', repoNumAll)
-      return listContainer.offsetHeight + (repoNumAll - this.state.showList.length) * RepoAbstract.defaultHeight;
+      let count = 0;
+      for (const page of this.state.showPages) {
+        count += this.elements[page].length;
+      }
+      return listContainer.offsetHeight + (repoNumAll - count) * RepoAbstract.defaultHeight;
     }
 
-    return 1;
+    return repoNumAll * RepoAbstract.defaultHeight;
   }
 
   updateHandleHeight({ repoNumAll } = this.props) {
@@ -73,7 +75,7 @@ class RepoAbList extends React.Component {
       // 在Loading时不存在
       if (this.refs.listContainer) {
         const handleHeight = ListControlBar.validHandleHeight(window.innerHeight / this.calculateListHeight(repoNumAll));
-        // console.log('update handle height', handleHeight)
+        console.log('update handle height', window.innerHeight + ", " + this.calculateListHeight(repoNumAll))
         this.setState({ handleHeight });
       } else {
         const handleHeight = ListControlBar.validHandleHeight(window.innerHeight / (RepoAbstract.defaultHeight * repoNumAll));
@@ -101,9 +103,8 @@ class RepoAbList extends React.Component {
 
   /**
    * update state.showPage
-   * todo: bug
    */
-  updateShowPage({ repoNumAll } = this.props) {
+  updateShowPageOnScroll({ repoNumAll } = this.props) {
     if (this.refs.listContainer) {
       console.log('update show page', this.elements)
       const rect = this.refs.listContainer.getBoundingClientRect();
@@ -118,8 +119,8 @@ class RepoAbList extends React.Component {
         if (showPages.length > 3) {
           // 清空没用的数组
           console.log('useless page', showPages[0])
-          // todo: bug 清空后会马上恢复
-          this.elements[showPages[0]] = [];
+          // todo: bug 清空后会马上恢复 可能由于渲染机制问题，现在就不管了
+          // this.elements[showPages[0]] = [];
           console.log('after remove', this.elements)
           showPages = showPages.slice(1, showPages.length);
 
@@ -137,7 +138,7 @@ class RepoAbList extends React.Component {
         this.checkIfNeed(showPages[0] - 1);
         showPages = [showPages[0] - 1, ...showPages];
         if (showPages.length > 3) {
-          this.elements[showPages[3]] = [];
+          // this.elements[showPages[3]] = [];
           showPages = showPages.slice(0, 3);
           const rect = this.elements[showPages[2]][0].getBoundingClientRect();
           console.log('up', rect)
@@ -148,6 +149,40 @@ class RepoAbList extends React.Component {
     }
   }
 
+  /**
+   * update state.showPages from change percent
+   * @param percent [0, 1]
+   * @return number scroll offset
+   */
+  updateShowPageFromPercent(percent) {
+    const { repoNumAll } = this.props;
+    const totalHeight = this.calculateListHeight(repoNumAll);
+    const offset = totalHeight * percent;
+    const defaultPageHeight = PAGE_NUM * RepoAbstract.defaultHeight;
+    let page;
+
+    if (this.refs.listContainer) {
+      const showTop = this.state.showPages[0] * defaultPageHeight;
+      const showBottom = showTop + this.refs.listContainer.offsetHeight;
+      if (offset <= showTop) {
+        // [0, top of show list]
+        page = Math.floor(offset / defaultPageHeight);
+      } else if (offset <= showBottom) {
+        // (top of show list, bottom of show list]
+        return (offset - showTop) + LISTTOP;
+      } else {
+        // (bottom of show list, ]
+        // todo
+        // page = Math.floor((offset - showBottom) / defaultPageHeight) + this.state.showPages[]
+      }
+    }
+
+  }
+
+  /**
+   * page need to fetch ?
+   * @param page
+   */
   checkIfNeed(page) {
     const { repoWithRecents, needLoadPage } = this.props;
 
@@ -158,12 +193,15 @@ class RepoAbList extends React.Component {
 
   /**
    * 得到显示的最新的数量索引
-   * todo: bug
    * @param repoNumAll
    * @returns {number}
    */
   getLastShowIndex({ repoNumAll } = this.props) {
     console.log('get last show index', this.elements)
+
+    const rect = this.refs.listContainer.getBoundingClientRect();
+    if (rect.top + 16 > window.innerHeight) return 0;
+    if (rect.bottom < window.innerHeight) return repoNumAll - 1;
 
     for (let i = 0; i < this.state.showPages.length; i++) {
       const page = this.state.showPages[i];
@@ -180,22 +218,23 @@ class RepoAbList extends React.Component {
   }
 
   /**
-   * todo
    * @param repoNumAll
    * @returns {number}
    */
   getPercent({ repoNumAll } = this.props) {
     if (this.refs.listContainer) {
-      const totalHeight = this.refs.listContainer.offsetHeight
-        + (repoNumAll - this.state.showList.length) * RepoAbstract.defaultHeight;
+      const totalHeight = this.calculateListHeight(repoNumAll);
+      const viewport = window.innerHeight - BARHEIGHT;
+      if (totalHeight <= viewport) return 0;
+
       const rect = this.refs.listContainer.getBoundingClientRect();
-      let topPage = this.showPage;
-      if (this.state.showList.length > PAGE_NUM) {
-        topPage -= 1;
-      }
-      const top = Math.min(rect.top, 0);
+
+      let topPage = this.state.showPages[0];
+
+      const top = Math.min(rect.top - BARHEIGHT, 0);
       const offsetTop = Math.abs(top) + topPage * PAGE_NUM * RepoAbstract.defaultHeight;
-      return offsetTop / (totalHeight - window.innerHeight);
+      const percent = offsetTop / (totalHeight - viewport);
+      return Math.min(1, percent);
     }
 
     return 0;
@@ -221,12 +260,12 @@ class RepoAbList extends React.Component {
   scrollListener = () => {
     if (this.activeScrollListener) {
       if (this.refs.listContainer) {
-        this.updateShowPage();
+        this.updateShowPageOnScroll();
       }
-      console.log('scroll-before', Date.now())
+      console.log('scroll-before', Date.now() + " " + this.getPercent())
       
       this.setState({
-        currentIndex: this.getLastShowIndex(),
+        index: this.getLastShowIndex(),
         percent: this.getPercent()
       });
       
@@ -258,7 +297,7 @@ class RepoAbList extends React.Component {
   };
 
   componentDidMount() {
-    // this.updateHandleHeight();
+    this.updateHandleHeight();
     window && window.addEventListener('resize', this.onWindowResize);
     window && window.addEventListener('scroll', this.scrollListener);
   }
@@ -270,11 +309,11 @@ class RepoAbList extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.repoNumAll != this.props.repoNumAll || newProps.repoWithRecents != this.props.repoWithRecents) {
-      this.updateShowPage(newProps);
+      this.updateShowPageOnScroll(newProps);
       setTimeout(() => {
-        // this.updateHandleHeight();
-        // this.updateIndex();
-        // this.updatePercent();
+        this.updateHandleHeight();
+        this.updateIndex();
+        this.updatePercent();
       }, 9);
     }
   }
@@ -326,11 +365,10 @@ class RepoAbList extends React.Component {
         description={'This is Repos'}
         scrollOffset={LISTTOP}
         onDoneChange={this.onDoneChange}
-        onDragChange={percent => {
-            // this.setState({ percent })
-        }}
       />
     );
+
+    console.log('state', this.state)
 
     return (
       <div

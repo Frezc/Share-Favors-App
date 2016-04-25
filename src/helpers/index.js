@@ -1,6 +1,7 @@
 import md5 from './md5';
 import { checkAuthExpired } from '../client/auth';
 import fetch from 'isomorphic-fetch';
+import shallowCompare from 'react-addons-shallow-compare';
 
 export function generateAvatarUrl(email, size) {
   let hash = md5(email.toLowerCase());
@@ -141,4 +142,30 @@ export function getPageItemsNumber(itemsAll, page, perPage) {
   }
   
   return perPage;
+}
+
+/**
+ * https://github.com/spybot/react-pure-render-ignore-functions/blob/master/lib/shouldComponentUpdate.js
+ */
+function excludeFunctions(obj) {
+  let result = {};
+
+  for (const prop in obj) {
+    if (typeof obj[prop] !== "function") {
+      result[prop] = obj[prop];
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Same as PureRenderMixin but ignore function props
+ */
+export function shouldComponentUpdate(nextProps, nextState) {
+  const instance = {
+    props: excludeFunctions(this.props),
+    state: excludeFunctions(this.state)
+  };
+  return shallowCompare(instance, excludeFunctions(nextProps), excludeFunctions(nextState));
 }

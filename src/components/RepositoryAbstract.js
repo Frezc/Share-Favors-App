@@ -19,7 +19,7 @@ import { grey900, grey500, teal500 } from 'material-ui/lib/styles/colors';
 import CardActions from 'material-ui/lib/card/card-actions';
 import FlatButton from 'material-ui/lib/flat-button';
 import { Link } from 'react-router';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import { shouldComponentUpdate } from '../helpers';
 
 const styles = {
   subtitleIcon: {
@@ -299,15 +299,7 @@ class RepositoryAbstract extends React.Component {
     );
   }
 
-  // rootRef会导致每次都更新
-  // shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  shouldComponentUpdate(nextProps, nextState) {
-    // console.log('pre', this.props)
-    // console.log('next', nextProps)
-    // console.log(PureRenderMixin.shouldComponentUpdate.bind(this)(nextProps, nextState))
-    // todo: 实现自己的Compare函数
-    return this.props.loading != nextProps.loading;
-  } 
+  shouldComponentUpdate = shouldComponentUpdate.bind(this);
 
   render() {
     console.log('repo ab', Date.now())
