@@ -151,6 +151,7 @@ class RepoAbList extends React.Component {
 
   /**
    * update state.showPages from change percent
+   * bug
    * @param percent [0, 1]
    * @return number scroll offset
    */
@@ -159,24 +160,58 @@ class RepoAbList extends React.Component {
     const totalHeight = this.calculateListHeight(repoNumAll);
     const offset = totalHeight * percent;
     const defaultPageHeight = PAGE_NUM * RepoAbstract.defaultHeight;
-    let page;
+    const showPages = this.state.showPages;
 
+    // update state.showPages
     if (this.refs.listContainer) {
-      const showTop = this.state.showPages[0] * defaultPageHeight;
+      const showTop = showPages[0] * defaultPageHeight;
       const showBottom = showTop + this.refs.listContainer.offsetHeight;
       if (offset <= showTop) {
         // [0, top of show list]
-        page = Math.floor(offset / defaultPageHeight);
-      } else if (offset <= showBottom) {
-        // (top of show list, bottom of show list]
-        return (offset - showTop) + LISTTOP;
-      } else {
+        const page = Math.floor(offset / defaultPageHeight);
+        this.updateAddShowPages(page);
+      } else if (offset > showBottom) {
         // (bottom of show list, ]
-        // todo
-        // page = Math.floor((offset - showBottom) / defaultPageHeight) + this.state.showPages[]
+        const page = Math.floor((offset - showBottom) / defaultPageHeight) + showPages[showPages.length - 1] + 1;
+        this.updateAddShowPages(page);
       }
+    } else {
+      const page = Math.floor(offset / defaultPageHeight);
+      this.updateAddShowPages(page);
     }
+    console.log('updateShowPageFromPercent', offset);
+    return (offset - this.state.showPages[0] * defaultPageHeight) + LISTTOP;
+  }
 
+  /**
+   * scroll to a new page, update the state.showPages.
+   * example:
+   * newPage = 0, state.showPages = [1, 2, 3], update [0, 1, 2]
+   * newPage = 1, ..., update [1, 2, 3]
+   * newPage = 4, ..., update [2, 3, 4]
+   * newPage = 5, ..., update [5]
+   * @param newPage the page add to state.showPages
+   * @return array newPages. todo 
+   */
+  updateAddShowPages(newPage) {
+    const { repoNumAll } = this.props;
+    const showPages = this.state.showPages;
+    if (newPage >= 0 && newPage == showPages[0] - 1) {
+      const newPages = [showPages[0] - 1, ...showPages];
+      this.setState({
+        showPages: newPages.slice(0, 3)
+      });
+    } else if (newPage <= (repoNumAll - 1) / PAGE_NUM && newPage == showPages[showPages.length - 1] + 1) {
+      const newPages = [...showPages, showPages[showPages.length - 1] + 1];
+      this.setState({
+        showPages: newPages.length > 3 ? newPages.slice(1) : newPages
+      });
+    } else if (!(newPage in showPages)) {
+      this.setState({
+        showPages: [parseInt(newPage)]
+      });
+      console.log('updateAddShowPages', this.state.showPages);
+    }
   }
 
   /**
@@ -197,7 +232,6 @@ class RepoAbList extends React.Component {
    * @returns {number}
    */
   getLastShowIndex({ repoNumAll } = this.props) {
-    console.log('get last show index', this.elements)
 
     const rect = this.refs.listContainer.getBoundingClientRect();
     if (rect.top + 16 > window.innerHeight) return 0;
@@ -209,6 +243,7 @@ class RepoAbList extends React.Component {
       for (let j = 0; j < pageEls.length; j++) {
         const rect = pageEls[j].getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom + 16 >= window.innerHeight) {
+          console.log('get last show index', page * PAGE_NUM + j)
           return page * PAGE_NUM + j;
         }
       }
@@ -269,14 +304,24 @@ class RepoAbList extends React.Component {
         percent: this.getPercent()
       });
       
-      console.log('scroll-end', Date.now())
+      console.log('scroll-end', Date.now() + ", " + this.state.index)
     }
   };
 
-  onDoneChange = percent => {
+  // todo
+  onDragChange = percent => {
+    console.log('onDragChange', percent);
+    this.setState({
+      percent
+    })
+  };
+
+  onDoneChange = (percent) => {
     // todo: calculate offset
     // 测试数据 同上
-    const offset = (document.documentElement.scrollHeight - window.innerHeight - LISTTOP) * percent + LISTTOP;
+    // const offset = (document.documentElement.scrollHeight - window.innerHeight - LISTTOP) * percent + LISTTOP;
+    const offset = this.updateShowPageFromPercent(percent);
+    console.log('done change', 'percent: ' + percent + ', offset: ' + offset);
 
     const scrollStep = (offset - window.scrollY) / 10;
     let step = 0;
@@ -288,16 +333,20 @@ class RepoAbList extends React.Component {
       if (step > 10) {
         window.clearInterval(this.timer);
         this.activeScrollListener = true;
+        // 更新到精确的index
+        this.updateIndex();
       } else {
         window.scrollBy(0, scrollStep);
       }
     }, 17);
     
-    this.setState({ percent });
+    this.setState({
+      percent,
+      index: this.getLastShowIndex()
+    });
   };
 
   componentDidMount() {
-    this.updateHandleHeight();
     window && window.addEventListener('resize', this.onWindowResize);
     window && window.addEventListener('scroll', this.scrollListener);
   }
@@ -309,6 +358,8 @@ class RepoAbList extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.repoNumAll != this.props.repoNumAll || newProps.repoWithRecents != this.props.repoWithRecents) {
+      console.log('receive props', this.props);
+      console.log('receive props', newProps);
       this.updateShowPageOnScroll(newProps);
       setTimeout(() => {
         this.updateHandleHeight();
@@ -364,6 +415,7 @@ class RepoAbList extends React.Component {
         currentIndex={this.state.index + 1}
         description={'This is Repos'}
         scrollOffset={LISTTOP}
+        onDragChange={this.onDragChange}
         onDoneChange={this.onDoneChange}
       />
     );
@@ -374,7 +426,9 @@ class RepoAbList extends React.Component {
       <div
         ref="listContainer"
       >
-        {this.listContronl}
+        {repoNumAll > 0 &&
+          this.listContronl
+        }
         {repoNumAll > 0 ?
           this.state.showPages.map(pageIndex =>
             this.constructPageList(pageIndex, repoWithRecents[pageIndex],

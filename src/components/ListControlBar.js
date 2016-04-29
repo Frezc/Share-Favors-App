@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { shouldComponentUpdate } from '../helpers';
 
 class ListControlBar extends React.Component {
 
@@ -9,7 +10,7 @@ class ListControlBar extends React.Component {
     percent: PropTypes.number.isRequired, // [0, 1]
     handleHeight: PropTypes.number,      // [0.1, 1]
     description: PropTypes.string,
-    onDragChange: PropTypes.func,        // test performance useless
+    onDragChange: PropTypes.func,        // when drag
     onDoneChange: PropTypes.func,         // when change
     onScroll: PropTypes.func,
     scrollOffset: PropTypes.number       // top offset
@@ -91,7 +92,7 @@ class ListControlBar extends React.Component {
   // props.percent -> offsetTop(percent) of handler
   getPercentTopFromPercent () {
     const { handleHeight } = this.props;
-    const { percent } = this.state;
+    const { percent } = this.props;
 
     return (1 - handleHeight) * percent;
   }
@@ -123,7 +124,7 @@ class ListControlBar extends React.Component {
    * return the bottom click-able area offset now (after mount)
    */
   getBottomOffset () {
-    const { percent } = this.state;
+    const { percent } = this.props;
 
     if (this.refs.handleBarContainer) {
       const { offsetHeight } = this.refs.handleBarContainer;
@@ -134,6 +135,10 @@ class ListControlBar extends React.Component {
     return 0;
   }
 
+  // bug 会导致onMouseMove方法出错
+  // shouldComponentUpdate = shouldComponentUpdate.bind(this);
+
+  /*
   componentWillReceiveProps(newProps) {
     const { percent, currentIndex } = newProps;
     if (percent != this.state.percent || currentIndex != this.state.currentIndex) {
@@ -143,9 +148,10 @@ class ListControlBar extends React.Component {
       });
     }
   }
+  */
 
   render () {
-    let { description, onDoneChange, className, sum, handleHeight } = this.props;
+    let { description, onDragChange, onDoneChange, className, sum, handleHeight } = this.props;
     const { currentIndex } = this.state;
 
     return (
@@ -162,12 +168,13 @@ class ListControlBar extends React.Component {
             if (this.isDragging) {
               // console.log('onMouseMove')
               let offsetTop = this.getOffsetTop(e.clientY - this.lastLocation);
-              // onDragChange && onDragChange(this.getPercentFromOffsetTop(offsetTop));
               const percent = this.getPercentFromOffsetTop(offsetTop);
-              this.setState({
-                percent: percent,
-                currentIndex: this.getIndexFromPercent(percent)
-              });
+              console.log('mouse move');
+              onDragChange && onDragChange(percent);
+              // this.setState({
+              //   percent: percent,
+              //   currentIndex: this.getIndexFromPercent(percent)
+              // });
               this.lastLocation = e.clientY;
             }
           }}
