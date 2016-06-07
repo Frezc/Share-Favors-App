@@ -33,6 +33,12 @@ class ListControlBar extends React.Component {
 
   isDragging = false;
 
+  /**
+   * 连续拖动bug
+   * @type {boolean}
+   */
+  canDrag = true;
+
   // make sure height of handle in [.1, 1]
   static validHandleHeight(height) {
     return Math.max(Math.min(height, 1), 0.12);
@@ -152,7 +158,7 @@ class ListControlBar extends React.Component {
 
   render () {
     let { description, onDragChange, onDoneChange, className, sum, handleHeight } = this.props;
-    const { currentIndex } = this.state;
+    const { currentIndex } = this.props;
 
     return (
       <div>
@@ -185,6 +191,9 @@ class ListControlBar extends React.Component {
               // this.pinToLocation(index, false);
               onDoneChange && onDoneChange(this.getPercentFromOffsetTop(offsetTop));
               this.isDragging = false;
+              setTimeout(() => {
+                this.canDrag = true
+              }, 400)
             }
           }}
         ></div>
@@ -236,11 +245,14 @@ class ListControlBar extends React.Component {
                   ref="handler"
                   onMouseDown={e => {
                     console.log('onMouseDown')
-                    this.setState({
-                      showTransition: false
-                    });
-                    this.isDragging = true;
-                    this.lastLocation = e.clientY;
+                    if (this.canDrag && !this.isDragging) {
+                      this.setState({
+                        showTransition: false
+                      });
+                      this.isDragging = true;
+                      this.canDrag = false;
+                      this.lastLocation = e.clientY;
+                    }
                   }}
                 >
                   <div className="slider-bar">
